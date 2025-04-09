@@ -1,7 +1,7 @@
-import { Document } from './document';
+import { Documents } from '../document.schema';
 
-describe('Document', () => {
+describe('Documents', () => {
   it('should be defined', () => {
-    expect(new Document()).toBeDefined();
+    expect(new Documents()).toBeDefined();
   });
 });
