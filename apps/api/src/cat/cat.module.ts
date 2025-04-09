@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CatController } from './cat.controller';
-import { CatService } from './cat.service';
-import { CatSchema } from './schemas/cat.schema';
+import { CatSchema } from './cat.schema';
+import { CatController } from './controller/cat.controller';
+import { CatService } from './service/cat.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'Cat', schema: CatSchema }])],

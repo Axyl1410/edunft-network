@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Cat } from './entities/cat';
-import { CatDocument } from './schemas/cat.schema';
+import { CatDocument } from '../cat.schema';
+import { Cat } from '../entities/cat';
 
 @Injectable()
 export class CatService {
