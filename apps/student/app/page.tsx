@@ -1,5 +1,6 @@
 "use client";
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { add } from "@workspace/math/add";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -94,6 +95,7 @@ export default function Page() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ConnectButton />
       </div>
     </div>
   );

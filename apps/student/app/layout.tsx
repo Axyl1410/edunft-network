@@ -2,6 +2,7 @@ import { Providers } from "@/components/providers";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
+import "@rainbow-me/rainbowkit/styles.css";
 
 const fontSans = Geist({
   subsets: ["latin"],
