@@ -9,6 +9,7 @@ import * as React from "react";
 
 export function AppContent({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
+
   return (
     <RainbowKitProvider
       modalSize="compact"
