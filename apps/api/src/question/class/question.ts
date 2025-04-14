@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Students } from 'src/students/entities/students';
+import { Students } from 'src/students/class/students';
 
 export class Question {
   /**

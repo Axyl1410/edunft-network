@@ -12,6 +12,7 @@ import { QuestionModule } from './question/question.module';
 import { SchoolModule } from './school/school.module';
 import { StudentsModule } from './students/students.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TransactionModule } from './transaction/transaction.module';
     HiringPostModule,
     QuestionModule,
     TransactionModule,
+    CollectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

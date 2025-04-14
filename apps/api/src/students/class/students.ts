@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { School } from '../../school/entities/school';
+import { School } from '../../school/class/school';
 
 export class Students {
   /**

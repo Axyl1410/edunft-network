@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Cat } from '../entities/cat';
+import { Cat } from '../class/cat';
 import { CatService } from '../service/cat.service';
 
 @Controller('cat')
