@@ -14,6 +14,7 @@ export function AppContent({ children }: { children: React.ReactNode }) {
     <RainbowKitProvider
       modalSize="compact"
       theme={theme === "dark" ? darkTheme() : lightTheme()}
+      appInfo={{ appName: "EduNFT" }}
     >
       <Toaster closeButton position="bottom-right" />
       {children}

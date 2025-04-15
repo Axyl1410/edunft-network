@@ -1,8 +1,9 @@
 import { Providers } from "@/components/providers";
+import "@rainbow-me/rainbowkit/styles.css";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
+import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "@rainbow-me/rainbowkit/styles.css";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -13,6 +14,11 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
+
+export const metadata: Metadata = {
+  title: "EduNFT",
+  description: "EduNFT for student",
+};
 
 export default function RootLayout({
   children,
@@ -25,7 +31,7 @@ export default function RootLayout({
         className={cn(
           "font-sans antialiased",
           fontSans.variable,
-          fontMono.variable
+          fontMono.variable,
         )}
       >
         <Providers>{children}</Providers>
