@@ -14,7 +14,7 @@ export class Answer {
   answerer: Student;
 
   @Prop({ required: true })
-  answererWeb3Address: string; // Để hiển thị nhanh
+  answererWeb3Address: string; // For quick display
 
   @Prop({ required: true })
   content: string;
