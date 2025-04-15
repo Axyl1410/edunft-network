@@ -1,13 +1,14 @@
-import { add } from "@workspace/math/add";
-import { Button } from "@workspace/ui/components/button";
+"use client";
+
+import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 
 export default function Page() {
   return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <Button size="sm">Button</Button>
-        <div>{add(1, 2)}</div>
+    <div className="flex min-h-svh items-center justify-center">
+      <div className="flex items-center justify-center gap-4">
+        <ModeToggle />
+        <WalletConnectButton />
       </div>
     </div>
   );
