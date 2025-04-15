@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
-import { arbitrum, base, mainnet, optimism, polygon } from "viem/chains";
+import { polygonZkEvmCardona } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import { AppContent } from "./app-content";
 
@@ -13,7 +13,7 @@ if (!projectId) {
   throw new Error("NEXT_PUBLIC_PROJECT_ID is not defined");
 }
 
-const chains = [mainnet, polygon, optimism, arbitrum, base] as const;
+const chains = [polygonZkEvmCardona] as const;
 
 const config = getDefaultConfig({
   appName: "EduNFT",

@@ -15,7 +15,7 @@ export function AppContent({ children }: { children: React.ReactNode }) {
       modalSize="compact"
       theme={theme === "dark" ? darkTheme() : lightTheme()}
     >
-      <Toaster closeButton position="top-right" />
+      <Toaster closeButton position="bottom-right" />
       {children}
     </RainbowKitProvider>
   );
