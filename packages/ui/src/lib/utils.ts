@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getErrorMessage = (error: unknown): string => {
+  return error instanceof Error ? error.message : "Unknown error";
+};
+
 export function generateColorFromAddress(address: string): string {
   let hash = 0;
   for (let i = 0; i < address.length; i++) {
