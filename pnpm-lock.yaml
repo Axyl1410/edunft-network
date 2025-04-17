@@ -171,10 +171,14 @@ importers:
         version: 5.7.3
 
   apps/hardhat:
+    dependencies:
+      '@openzeppelin/contracts':
+        specifier: ^5.3.0
+        version: 5.3.0
     devDependencies:
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^3.0.0
-        version: 3.0.0(riloiarydpntq4qrmdres5t6ze)
+        version: 3.0.0(3b1367c608bc17c18b64ac50b391af3d)
       hardhat:
         specifier: ^2.23.0
         version: 2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10)
@@ -1753,6 +1757,9 @@ packages:
     resolution: {integrity: sha512-GXD3wy50qYbxCJ652bDrDzgMr3NFEkIS374+IgFQKkCvk9yiYcLvX2XDYr7UyQxf4wK0e+yqDYRubZ0DtOxnmQ==}
     engines: {node: ^14.18.0 || >=16.10.0, npm: '>=5.10.0'}
     hasBin: true
+
+  '@openzeppelin/contracts@5.3.0':
+    resolution: {integrity: sha512-zj/KGoW7zxWUE8qOI++rUM18v+VeLTTzKs/DJFkSzHpQFPD/jKKF0TrMxBfGLl3kpdELCNccvB3zmofSzm4nlA==}
 
   '@paulmillr/qr@0.2.1':
     resolution: {integrity: sha512-IHnV6A+zxU7XwmKFinmYjUcwlyK9+xkG3/s9KcQhI9BjQKycrJ1JRO+FbNYPwZiPKW3je/DR0k7w8/gLa5eaxQ==}
@@ -9178,7 +9185,7 @@ snapshots:
       '@nomicfoundation/edr-linux-x64-musl': 0.10.0
       '@nomicfoundation/edr-win32-x64-msvc': 0.10.0
 
-  '@nomicfoundation/hardhat-ignition-viem@0.15.11(x2fax2pkd5e46hcwjhafbqgj4i)':
+  '@nomicfoundation/hardhat-ignition-viem@0.15.11(a23876e01082ce1f5b99aab4c46778a9)':
     dependencies:
       '@nomicfoundation/hardhat-ignition': 0.15.11(@nomicfoundation/hardhat-verify@2.0.13(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10)))(bufferutil@4.0.9)(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       '@nomicfoundation/hardhat-viem': 2.0.6(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10))(typescript@5.7.3)(viem@2.26.5(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2))(zod@3.24.2)
@@ -9207,9 +9214,9 @@ snapshots:
       ethereumjs-util: 7.1.5
       hardhat: 2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10)
 
-  '@nomicfoundation/hardhat-toolbox-viem@3.0.0(riloiarydpntq4qrmdres5t6ze)':
+  '@nomicfoundation/hardhat-toolbox-viem@3.0.0(3b1367c608bc17c18b64ac50b391af3d)':
     dependencies:
-      '@nomicfoundation/hardhat-ignition-viem': 0.15.11(x2fax2pkd5e46hcwjhafbqgj4i)
+      '@nomicfoundation/hardhat-ignition-viem': 0.15.11(a23876e01082ce1f5b99aab4c46778a9)
       '@nomicfoundation/hardhat-network-helpers': 1.0.12(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-verify': 2.0.13(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-viem': 2.0.6(hardhat@2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.14.0)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10))(typescript@5.7.3)(viem@2.26.5(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2))(zod@3.24.2)
@@ -9303,6 +9310,8 @@ snapshots:
   '@nuxt/opencollective@0.4.1':
     dependencies:
       consola: 3.4.2
+
+  '@openzeppelin/contracts@5.3.0': {}
 
   '@paulmillr/qr@0.2.1': {}
 
