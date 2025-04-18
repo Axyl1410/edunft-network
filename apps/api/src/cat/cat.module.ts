@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CatSchema } from './cat.schema';
 import { CatController } from './controller/cat.controller';
+import { CatSchema } from './schemas/cat.schema';
 import { CatService } from './service/cat.service';
 
 @Module({

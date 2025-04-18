@@ -40,17 +40,6 @@ export default function Page() {
           >
             Visit Our Work
           </a>
-          {/* <div className="text-balance text-sm font-medium">
-            <a
-              href="https://ui.shadcn.com?ref=shadcn.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              If you&apos;re looking for <span>shadcn/ui</span>, you can find it
-              here
-            </a>
-            .
-          </div> */}
         </div>
       </div>
     </main>
