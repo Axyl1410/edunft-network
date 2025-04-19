@@ -1,5 +1,3 @@
-"server-only";
-
 import { PinataSDK } from "pinata";
 
 const jwt = process.env.NEXT_PUBLIC_PINATA_JWT;
