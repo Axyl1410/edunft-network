@@ -3,7 +3,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import * as React from "react";
 import { polygonZkEvmCardona } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import { AppContent } from "./app-content";

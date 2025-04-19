@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FileController } from './controller/file.controller';
-import { FileCID, FileCIDSchema } from './schemas/file-cid.schema';
-import { File, FileSchema } from './schemas/file.schema';
-import { FileService } from './service/file.service';
+import { FileController } from 'src/controller/file.controller';
+import { FileCID, FileCIDSchema } from 'src/schema/file-cid.schema';
+import { FileSchema } from 'src/schema/file.schema';
+import { FileService } from 'src/service/file.service';
 
 @Module({
   imports: [

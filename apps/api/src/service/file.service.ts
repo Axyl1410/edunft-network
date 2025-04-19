@@ -6,13 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FileCID, FileCIDDocument } from '../schemas/file-cid.schema';
-import { File, FileDocument } from '../schemas/file.schema';
-
-interface CreateItemDto {
-  itemId: string;
-  name?: string;
-}
+import { CreateItemDto } from 'src/dto/file.dto';
+import { FileCID, FileCIDDocument } from '../schema/file-cid.schema';
+import { File, FileDocument } from '../schema/file.schema';
 
 @Injectable()
 export class FileService {
@@ -66,27 +62,33 @@ export class FileService {
     const ownerFile = await this.fileModel
       .findOne({ address: ownerAddress })
       .exec();
+
     if (!ownerFile) {
       throw new NotFoundException(
         `Owner file with address "${ownerAddress}" not found.`,
       );
     }
+
     const fileCIDDoc = await this.filecidModel
       .findOne({ file: ownerFile._id })
       .exec();
+
     if (!fileCIDDoc) {
       throw new NotFoundException(
         `FileCID for owner "${ownerAddress}" not found.`,
       );
     }
+
     const existingItem = fileCIDDoc.items.find(
       (item) => item.itemId === itemData.itemId,
     );
+
     if (existingItem) {
       throw new BadRequestException(
         `Item with itemId "${itemData.itemId}" already exists.`,
       );
     }
+
     const newItem = { ...itemData, isNFT: false };
     const updatedFileCID = await this.filecidModel
       .findOneAndUpdate(
@@ -95,11 +97,13 @@ export class FileService {
         { new: true },
       )
       .exec();
+
     if (!updatedFileCID) {
       throw new NotFoundException(
         `FileCID for owner "${ownerAddress}" not found when updating.`,
       );
     }
+
     return updatedFileCID;
   }
 
@@ -108,11 +112,13 @@ export class FileService {
     const ownerFile = await this.fileModel
       .findOne({ address: ownerAddress })
       .exec();
+
     if (!ownerFile) {
       throw new NotFoundException(
         `Owner file with address "${ownerAddress}" not found.`,
       );
     }
+
     const updatedFileCID = await this.filecidModel
       .findOneAndUpdate(
         { file: ownerFile._id, 'items.itemId': itemId },
@@ -120,6 +126,7 @@ export class FileService {
         { new: true },
       )
       .exec();
+
     if (!updatedFileCID) {
       throw new NotFoundException(
         `Item with itemId "${itemId}" not found for owner "${ownerAddress}".`,
@@ -139,16 +146,19 @@ export class FileService {
     const newOwnerFile = await this.fileModel
       .findOne({ address: newOwnerAddress })
       .exec();
+
     if (!ownerFile) {
       throw new NotFoundException(
         `Owner file with address "${ownerAddress}" not found.`,
       );
     }
+
     if (!newOwnerFile) {
       throw new NotFoundException(
         `New owner file with address "${newOwnerAddress}" not found.`,
       );
     }
+
     const updatedFileCID = await this.filecidModel
       .findOneAndUpdate(
         { file: ownerFile._id },
@@ -157,11 +167,13 @@ export class FileService {
       )
       .populate('file')
       .exec();
+
     if (!updatedFileCID) {
       throw new NotFoundException(
         `FileCID for owner "${ownerAddress}" not found.`,
       );
     }
+
     return updatedFileCID;
   }
 

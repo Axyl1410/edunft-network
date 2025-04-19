@@ -4,11 +4,31 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { Toaster } from "@workspace/ui/components/sonner";
+import axios from "axios";
 import { useTheme } from "next-themes";
-import * as React from "react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { useAccount } from "wagmi";
 
 export function AppContent({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
+  const account = useAccount();
+
+  useEffect(() => {
+    if (account.isConnected) {
+      axios
+        .post("http://localhost:8080/file-cid/create", {
+          ownerAddress: account.address,
+        })
+        .catch((error) => {
+          if (error.response.status !== 400) {
+            toast.error("Failed to connect to EduNFT", {
+              description: error.message,
+            });
+          }
+        });
+    }
+  }, [account]);
 
   return (
     <RainbowKitProvider

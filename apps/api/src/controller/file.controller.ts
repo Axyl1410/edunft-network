@@ -8,16 +8,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { FileCID } from '../schemas/file-cid.schema';
+import { FileCID } from '../schema/file-cid.schema';
 import { FileService } from '../service/file.service';
-
-interface CreateItemDto {
-  itemId: string;
-  name?: string;
-}
-interface TransferFileCIDDto {
-  newOwnerAddress: string;
-}
+import { CreateItemDto, TransferFileCIDDto } from 'src/dto/file.dto';
 
 @Controller('file-cid')
 export class FileController {
@@ -27,8 +20,10 @@ export class FileController {
   async createFileCID(
     @Body('ownerAddress') ownerAddress: string,
   ): Promise<FileCID> {
-    if (!ownerAddress)
+    if (!ownerAddress) {
       throw new BadRequestException('ownerAddress is required.');
+    }
+
     return this.fileService.create(ownerAddress);
   }
 
@@ -37,8 +32,10 @@ export class FileController {
     @Param('ownerAddress') ownerAddress: string,
     @Body() createItemDto: CreateItemDto,
   ): Promise<FileCID> {
-    if (!createItemDto.itemId)
+    if (!createItemDto.itemId) {
       throw new BadRequestException('itemId is required.');
+    }
+
     return this.fileService.addItemToFileCID(ownerAddress, createItemDto);
   }
 
@@ -47,7 +44,10 @@ export class FileController {
     @Param('ownerAddress') ownerAddress: string,
     @Param('itemId') itemId: string,
   ): Promise<FileCID> {
-    if (!itemId) throw new BadRequestException('itemId is required.');
+    if (!itemId) {
+      throw new BadRequestException('itemId is required.');
+    }
+
     return this.fileService.markItemAsNFT(ownerAddress, itemId);
   }
 
@@ -57,15 +57,17 @@ export class FileController {
     @Body() transferDto: TransferFileCIDDto,
   ): Promise<FileCID> {
     const { newOwnerAddress } = transferDto;
-    if (!newOwnerAddress)
+    if (!newOwnerAddress) {
       throw new BadRequestException('newOwnerAddress is required.');
+    }
+
     return this.fileService.transferFileCID(ownerAddress, newOwnerAddress);
   }
 
   @Get(':ownerAddress')
   async getFileCID(
     @Param('ownerAddress') ownerAddress: string,
-  ): Promise<FileCID | null> {
+  ): Promise<{ address: string; items: any[] } | null> {
     const fileCIDDetails =
       await this.fileService.findOneByOwnerAddress(ownerAddress);
     if (!fileCIDDetails) {
@@ -73,6 +75,10 @@ export class FileController {
         `FileCID for owner "${ownerAddress}" not found.`,
       );
     }
-    return fileCIDDetails;
+    // Only return address and items
+    return {
+      address: fileCIDDetails.address,
+      items: fileCIDDetails.items,
+    };
   }
 }
