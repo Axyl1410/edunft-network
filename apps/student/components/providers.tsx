@@ -3,6 +3,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThirdwebProvider } from "thirdweb/react";
 import { polygonZkEvmCardona } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import { AppContent } from "./app-content";
@@ -26,11 +27,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <AppContent>{children}</AppContent>
-        </QueryClientProvider>
-      </WagmiProvider>
+      <ThirdwebProvider>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <AppContent>{children}</AppContent>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </ThirdwebProvider>
     </ThemeProvider>
   );
 }
