@@ -18,20 +18,18 @@ import {
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-export function NavMain({
-  items,
-}: {
-  items: {
+interface SidebarMenuItemProps {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: {
     title: string;
     url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
   }[];
-}) {
+}
+
+export function NavMain({ items }: { items: SidebarMenuItemProps[] }) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>

@@ -1,7 +1,5 @@
 "use client";
 
-import { type LucideIcon } from "lucide-react";
-
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,16 +7,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
+import { type LucideIcon } from "lucide-react";
 import Link from "next/link";
+
+interface SidebarMenuItemProps {
+  name: string;
+  url: string;
+  icon: LucideIcon;
+}
 
 export function NavProjects({
   projects,
 }: {
-  projects: {
-    name: string;
-    url: string;
-    icon: LucideIcon;
-  }[];
+  projects: SidebarMenuItemProps[];
 }) {
   return (
     <SidebarGroup>

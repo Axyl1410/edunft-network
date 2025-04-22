@@ -43,7 +43,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="h-12 border-b">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md dark:bg-neutral-800">
@@ -59,7 +59,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         </div>
       </SidebarHeader>
-      <Separator />
       <SidebarContent>
         <NavMain items={SidebarData.navMain} />
         <Separator />
@@ -74,21 +73,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  disabled={!account.address}
                 >
                   <div
-                    className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full dark:bg-neutral-800"
+                    className="bg-primary text-sidebar-primary-foreground flex aspect-square h-8 w-8 items-center justify-center rounded-full dark:bg-neutral-800"
                     style={{
                       background: generateColorFromAddress(
                         account.address ?? "",
                       ),
                     }}
                   />
-                  <span className="truncate font-semibold">
-                    {account.address
-                      ? formatAddress(account.address)
-                      : "Your address..."}
-                  </span>
+
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate text-sm font-semibold">
+                      {formatAddress(account.address ?? "")}
+                    </span>
+                  </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -108,11 +107,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         ),
                       }}
                     />
-                    <span className="truncate font-semibold">
-                      {account.address
-                        ? formatAddress(account.address)
-                        : "Please login"}
-                    </span>
+
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate text-sm font-semibold">
+                        {formatAddress(account.address ?? "")}
+                      </span>
+                    </div>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
