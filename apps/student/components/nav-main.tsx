@@ -43,16 +43,22 @@ export function NavMain({ items }: { items: SidebarMenuItemProps[] }) {
           >
             <SidebarMenuItem>
               {item.items?.length === 0 ? (
-                <SidebarMenuButton tooltip={item.title}>
-                  <Link href={item.url} className="flex items-center gap-2">
+                <Link href={item.url}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    className="cursor-pointer"
+                  >
                     {item.icon && <item.icon size={16} />}
                     <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
+                  </SidebarMenuButton>
+                </Link>
               ) : (
                 <>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="cursor-pointer"
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />

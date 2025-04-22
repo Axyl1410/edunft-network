@@ -12,7 +12,7 @@ export const SidebarData = {
   navMain: [
     {
       title: "Discover",
-      url: "#",
+      url: "/",
       icon: Map,
       isActive: true,
       items: [
@@ -33,7 +33,7 @@ export const SidebarData = {
 
     {
       title: "Files",
-      url: "#",
+      url: "/file",
       icon: FileText,
       items: [
         // {

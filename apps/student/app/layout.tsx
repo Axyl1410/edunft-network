@@ -1,10 +1,10 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import NavAccount from "@/components/nav-acoount";
 import { Providers } from "@/components/providers";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
@@ -44,8 +44,8 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <div className="bg-sidebar sticky left-0 top-0 z-10 flex h-12 w-full items-center border-b backdrop-blur-sm">
-                <SidebarTrigger className="cursor-pointer" />
+              <div className="bg-sidebar sticky left-0 top-0 z-10 flex h-16 w-full items-center justify-between border-b px-4 backdrop-blur-sm">
+                <NavAccount />
               </div>
               {children}
             </SidebarInset>
