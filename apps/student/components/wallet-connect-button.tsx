@@ -1,9 +1,15 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "@workspace/ui/components/button";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { generateColorFromAddress } from "@workspace/ui/lib/utils";
+import { cn, generateColorFromAddress } from "@workspace/ui/lib/utils";
 
-export const WalletConnectButton = () => {
+interface WalletConnectButtonProps {
+  className?: string;
+}
+
+export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
+  className,
+}) => {
   return (
     <ConnectButton.Custom>
       {({
@@ -58,7 +64,7 @@ export const WalletConnectButton = () => {
           <Button
             onClick={onClick}
             variant={variant}
-            className="cursor-pointer transition-colors"
+            className={cn("cursor-pointer transition-colors", className)}
             disabled={!ready}
           >
             {content}

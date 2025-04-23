@@ -17,15 +17,14 @@ export function AppContent({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (account.isConnected) {
       axios
-        .post("http://localhost:8080/file-cid/create", {
-          ownerAddress: account.address,
+        .post("http://localhost:8080/user/login", {
+          WalletAddress: account.address,
         })
         .catch((error) => {
-          if (error.response.status !== 400) {
-            toast.error("Failed to connect to EduNFT", {
-              description: error.message,
-            });
-          }
+          console.error(error);
+          toast.error("Failed to connect to EduNFT", {
+            description: error.message,
+          });
         });
     }
   }, [account]);

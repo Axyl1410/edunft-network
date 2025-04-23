@@ -1,4 +1,4 @@
-import pinata from "@/lib/pinata";
+import pinataClient from "@/lib/pinata-client";
 
 interface uploadFileProps {
   file: File;
@@ -7,7 +7,7 @@ interface uploadFileProps {
 
 export async function uploadFile({ file, name }: uploadFileProps) {
   try {
-    const upload = await pinata.upload.public
+    const upload = await pinataClient.upload.public
       .file(file)
       .name(name ?? file.name);
     return upload;

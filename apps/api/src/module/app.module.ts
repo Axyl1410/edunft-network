@@ -6,6 +6,7 @@ import { AppService } from '../service/app.service';
 import { CatModule } from './cat.module';
 import { CollectionModule } from './collection.module';
 import { FileModule } from './file.module';
+import { UserModule } from './user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FileModule } from './file.module';
     CatModule,
     FileModule,
     CollectionModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

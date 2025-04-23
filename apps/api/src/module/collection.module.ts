@@ -1,8 +1,16 @@
 import { Module } from '@nestjs/common';
-import { CollectionService } from '../service/collection.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Collection } from 'src/class/collection';
+import { CollectionSchema } from 'src/schema/collection.schema';
 import { CollectionController } from '../controller/collection.controller';
+import { CollectionService } from '../service/collection.service';
 
 @Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: Collection.name, schema: CollectionSchema },
+    ]),
+  ],
   controllers: [CollectionController],
   providers: [CollectionService],
 })
