@@ -6,7 +6,7 @@ export class File {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   User: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true, index: true })
   Hash: string;
 
   @Prop()
