@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from '../controller/app.controller';
 import { AppService } from '../service/app.service';
-import { CatModule } from './cat.module';
 import { CollectionModule } from './collection.module';
 import { FileModule } from './file.module';
 import { UserModule } from './user.module';
@@ -21,7 +20,6 @@ import { UserModule } from './user.module';
       }),
       inject: [ConfigService],
     }),
-    CatModule,
     FileModule,
     CollectionModule,
     UserModule,
