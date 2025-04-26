@@ -12,9 +12,9 @@ export default function NavHeader() {
           <span className="truncate text-xs">Student version</span>
         </div>
       </div>
-      <div className="bg-secondary truncate rounded-md px-3 py-1.5 text-sm font-semibold">
+      {/* <div className="bg-secondary truncate rounded-md px-3 py-1.5 text-sm font-semibold">
         EduNFT
-      </div>
+      </div> */}
     </div>
   );
 }

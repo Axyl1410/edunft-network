@@ -1,6 +1,6 @@
 import pinataClient from "@/lib/pinata-client";
 
-export async function retrieveFile(hash: string) {
+export async function retrievePublicFile(hash: string) {
   try {
     const data = await pinataClient.gateways.public.get(hash);
     const url = await pinataClient.gateways.public.convert(hash);

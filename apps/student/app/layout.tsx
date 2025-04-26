@@ -44,9 +44,9 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <div className="bg-sidebar sticky left-0 top-0 z-10 flex h-16 w-full items-center justify-between border-b px-4 backdrop-blur-sm">
+              <nav className="border-border bg-sidebar/50 sticky top-2.5 z-10 ml-1 mr-3 flex h-14 items-center justify-between rounded-lg border px-4 shadow backdrop-blur-sm">
                 <NavAccount />
-              </div>
+              </nav>
               {children}
             </SidebarInset>
           </SidebarProvider>

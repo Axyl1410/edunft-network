@@ -66,6 +66,48 @@ export class FileService {
       return new Fail(new DatabaseFailure('Failed to retrieve files.'));
     }
   }
-}
 
-//todo : remove file and make function for transfer file
+  async removeFile(hash: string): Promise<Result<File, DatabaseFailure>> {
+    try {
+      const file = await this.fileModel.findOneAndDelete({ Hash: hash }).exec();
+
+      if (!file) {
+        return new Fail(new DatabaseFailure('File not found'));
+      }
+      return new Success(file);
+    } catch {
+      return new Fail(new DatabaseFailure('Failed to remove file.'));
+    }
+  }
+
+  async transferFile(
+    hash: string,
+    newWalletAddress: string,
+  ): Promise<Result<File, DatabaseFailure>> {
+    try {
+      const file = await this.fileModel.findOne({ Hash: hash }).exec();
+
+      if (!file) {
+        return new Fail(new DatabaseFailure('File not found'));
+      }
+
+      const user = await this.userModel
+        .findOne({
+          WalletAddress: newWalletAddress,
+        })
+        .select('User')
+        .exec();
+
+      if (!user) {
+        return new Fail(new DatabaseFailure('User not found'));
+      }
+
+      file.User = user._id;
+      const updatedFile = await file.save();
+
+      return new Success(updatedFile);
+    } catch {
+      return new Fail(new DatabaseFailure('Failed to transfer file.'));
+    }
+  }
+}

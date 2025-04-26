@@ -20,6 +20,9 @@ export class File {
 
   @Prop()
   Mime_type: string;
+
+  @Prop({ default: false })
+  isPrivate: boolean;
 }
 
 export type FileDocument = File & Document;

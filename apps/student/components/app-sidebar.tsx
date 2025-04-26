@@ -16,7 +16,7 @@ import { NavProjects } from "./nav-projects";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" variant="floating" {...props}>
       <SidebarHeader className="h-16 justify-center border-b">
         <NavHeader />
       </SidebarHeader>

@@ -5,9 +5,9 @@ interface uploadFileProps {
   name?: string;
 }
 
-export async function uploadFile({ file, name }: uploadFileProps) {
+export async function uploadPrivateFile({ file, name }: uploadFileProps) {
   try {
-    const upload = await pinataClient.upload.public
+    const upload = await pinataClient.upload.private
       .file(file)
       .name(name ?? file.name);
     return upload;

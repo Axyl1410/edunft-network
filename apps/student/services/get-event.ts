@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getContractEvents, prepareEvent } from "thirdweb";
 import getThirdwebContract from "./get-contract";
 
@@ -22,5 +23,6 @@ export default async function getThirdwebEvent({
       }),
     ],
   });
+
   return events.reverse();
 }
