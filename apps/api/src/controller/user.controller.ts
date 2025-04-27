@@ -15,6 +15,27 @@ import { UserService } from 'src/service/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  private handleResult<T>(result: {
+    isSuccess: () => boolean;
+    value?: T;
+    error?: any;
+  }): T {
+    if (result.isSuccess()) {
+      return result.value as T;
+    }
+    this.handleError(result.error);
+  }
+
+  private handleError(error: any): never {
+    if (error instanceof NotFoundFailure) {
+      throw new NotFoundException(error.message);
+    } else if (error instanceof DatabaseFailure) {
+      throw new InternalServerErrorException('A database error occurred.');
+    } else {
+      throw new InternalServerErrorException('An unexpected error occurred.');
+    }
+  }
+
   @Post('login')
   async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
     if (!WalletAddress) {
@@ -25,18 +46,7 @@ export class UserController {
       WalletAddress: WalletAddress,
     });
 
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 
   @Get(':WalletAddress')
@@ -48,18 +58,6 @@ export class UserController {
     }
 
     const result = await this.userService.getUserByWalletAddress(WalletAddress);
-
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 }

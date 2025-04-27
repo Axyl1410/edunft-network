@@ -7,7 +7,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
 } from "@workspace/ui/components/sidebar";
 import NavFooter from "./nav-footer";
 import NavHeader from "./nav-header";
@@ -29,7 +28,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavFooter />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }

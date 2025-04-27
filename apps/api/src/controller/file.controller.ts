@@ -16,22 +16,31 @@ import { CreateFileDto } from 'src/dto/file.dto';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
+  private handleResult<T>(result: {
+    isSuccess: () => boolean;
+    value?: T;
+    error?: any;
+  }): T {
+    if (result.isSuccess()) {
+      return result.value as T;
+    }
+    this.handleError(result.error);
+  }
+
+  private handleError(error: any): never {
+    if (error instanceof NotFoundFailure) {
+      throw new NotFoundException(error.message);
+    } else if (error instanceof DatabaseFailure) {
+      throw new InternalServerErrorException('A database error occurred.');
+    } else {
+      throw new InternalServerErrorException('An unexpected error occurred.');
+    }
+  }
+
   @Post()
   async addFile(@Body() createFileDto: CreateFileDto) {
     const result = await this.fileService.addFile(createFileDto);
-
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 
   @Get('hash/:hash')
@@ -39,21 +48,8 @@ export class FileController {
     if (!hash) {
       throw new NotFoundException('Hash is required.');
     }
-
     const result = await this.fileService.getFileByHash(hash);
-
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 
   @Get('user/:walletAddress')
@@ -61,39 +57,15 @@ export class FileController {
     if (!walletAddress) {
       throw new NotFoundException('Wallet address is required.');
     }
-
     const result =
       await this.fileService.getFilesByWalletAddress(walletAddress);
-
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 
   @Delete(':hash')
   async removeFile(@Param('hash') hash: string) {
     const result = await this.fileService.removeFile(hash);
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 
   @Post('transfer')
@@ -102,19 +74,7 @@ export class FileController {
     if (!hash || !newWalletAddress) {
       throw new NotFoundException('Hash and new wallet address are required.');
     }
-
     const result = await this.fileService.transferFile(hash, newWalletAddress);
-    if (result.isSuccess()) {
-      return result.value;
-    } else {
-      const error = result.error;
-      if (error instanceof NotFoundFailure) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof DatabaseFailure) {
-        throw new InternalServerErrorException('A database error occurred.');
-      } else {
-        throw new InternalServerErrorException('An unexpected error occurred.');
-      }
-    }
+    return this.handleResult(result);
   }
 }
