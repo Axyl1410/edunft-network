@@ -2,95 +2,94 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-// Inherit from Ownable to manage who can set metadata
-contract NFTMarketplace is Ownable(msg.sender) {
+/// @title Simple NFT Marketplace
+/// @dev Sellers escrow their NFT here; buyers pay and receive the NFT immediately.
+contract NFTMarketplace is ReentrancyGuard {
     struct Listing {
         address seller;
+        address collection;
+        uint256 tokenId;
         uint256 price;
     }
 
-    // Contract metadata
-    string public contractImage;
-    string public contractDescription;
+    uint256 public listingCount;
+    mapping(uint256 => Listing) public listings;
 
-    // Constructor is now empty as Ownable is initialized in the inheritance list
-    constructor() {
-        // Ownable constructor called with msg.sender above
-    }
-
-    // Function to set contract metadata (only owner)
-    function setContractMetadata(
-        string memory image_,
-        string memory description_
-    ) external onlyOwner {
-        contractImage = image_;
-        contractDescription = description_;
-    }
-
-    // nft contract => tokenId => Listing
-    mapping(address => mapping(uint256 => Listing)) public listings;
-
-    // simple reentrancy guard
-    bool private _locked;
-
-    modifier nonReentrant() {
-        require(!_locked, "Reentrant call");
-        _locked = true;
-        _;
-        _locked = false;
-    }
-
-    event ItemListed(
-        address indexed nft,
-        uint256 indexed tokenId,
-        address seller,
+    event Listed(
+        uint256 indexed listingId,
+        address indexed seller,
+        address collection,
+        uint256 tokenId,
         uint256 price
     );
-    event ItemCanceled(address indexed nft, uint256 indexed tokenId);
-    event ItemBought(
-        address indexed nft,
-        uint256 indexed tokenId,
-        address buyer,
-        uint256 price
-    );
+    event Sale(uint256 indexed listingId, address indexed buyer);
+    event ListingCancelled(uint256 indexed listingId);
 
-    /// @notice List an NFT for sale. Transfers NFT into marketplace custody.
-    function listItem(address nft, uint256 tokenId, uint256 price) external {
+    /// @notice Create a new listing; transfers NFT into escrow
+    function createListing(
+        address collection,
+        uint256 tokenId,
+        uint256 price
+    ) external nonReentrant {
         require(price > 0, "Price must be > 0");
-        IERC721(nft).transferFrom(msg.sender, address(this), tokenId);
-        listings[nft][tokenId] = Listing(msg.sender, price);
-        emit ItemListed(nft, tokenId, msg.sender, price);
+        IERC721 nft = IERC721(collection);
+        require(nft.ownerOf(tokenId) == msg.sender, "Not the owner");
+        require(
+            nft.getApproved(tokenId) == address(this) ||
+                nft.isApprovedForAll(msg.sender, address(this)),
+            "Marketplace not approved"
+        );
+
+        nft.transferFrom(msg.sender, address(this), tokenId);
+        listingCount++;
+        listings[listingCount] = Listing(
+            msg.sender,
+            collection,
+            tokenId,
+            price
+        );
+        emit Listed(listingCount, msg.sender, collection, tokenId, price);
     }
 
-    /// @notice Cancel a listing and return NFT to seller
-    function cancelListing(address nft, uint256 tokenId) external {
-        Listing memory l = listings[nft][tokenId];
-        require(l.seller == msg.sender, "Not seller");
-        delete listings[nft][tokenId];
-        IERC721(nft).transferFrom(address(this), msg.sender, tokenId);
-        emit ItemCanceled(nft, tokenId);
+    /// @notice Purchase a listed NFT; ETH is forwarded to seller
+    function buy(uint256 listingId) external payable nonReentrant {
+        Listing storage listing = listings[listingId];
+        require(listing.price > 0, "Listing does not exist");
+        require(msg.value >= listing.price, "Insufficient payment");
+
+        uint256 price = listing.price;
+        address seller = listing.seller;
+        address collection = listing.collection;
+        uint256 tokenId = listing.tokenId;
+
+        delete listings[listingId];
+
+        payable(seller).transfer(price);
+        IERC721(collection).safeTransferFrom(
+            address(this),
+            msg.sender,
+            tokenId
+        );
+        emit Sale(listingId, msg.sender);
     }
 
-    /// @notice Buy a listed NFT. Sends funds to seller, transfers NFT to buyer.
-    function buyItem(
-        address nft,
-        uint256 tokenId
-    ) external payable nonReentrant {
-        Listing memory l = listings[nft][tokenId];
-        require(l.price > 0, "Not listed");
-        require(msg.value == l.price, "Incorrect price");
+    /// @notice Cancel your own listing and get your NFT back
+    function cancelListing(uint256 listingId) external nonReentrant {
+        Listing storage listing = listings[listingId];
+        require(listing.seller == msg.sender, "Not the seller");
 
-        // clear listing first to prevent reentrancy
-        delete listings[nft][tokenId];
+        address collection = listing.collection;
+        uint256 tokenId = listing.tokenId;
 
-        // pay seller
-        (bool ok, ) = payable(l.seller).call{value: msg.value}("");
-        require(ok, "Payment failed");
+        delete listings[listingId];
 
-        // transfer NFT to buyer
-        IERC721(nft).transferFrom(address(this), msg.sender, tokenId);
-        emit ItemBought(nft, tokenId, msg.sender, l.price);
+        IERC721(collection).safeTransferFrom(
+            address(this),
+            msg.sender,
+            tokenId
+        );
+        emit ListingCancelled(listingId);
     }
 }

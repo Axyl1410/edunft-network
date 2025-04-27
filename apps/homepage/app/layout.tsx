@@ -16,7 +16,7 @@ const fontMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EduNFT",
-  description: "EduNFT for student",
+  description: "EduNFT Homepage navigation",
 };
 
 export default function RootLayout({

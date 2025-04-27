@@ -18,7 +18,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@workspace/ui/components/drawer.js";
-import * as React from "react";
 import { useIsMobile } from "../hooks/use-mobile.js";
 
 interface ResponsiveDialogProps {
