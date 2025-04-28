@@ -1,9 +1,14 @@
 import {
+  Body,
   Controller,
+  Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  Post,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
+import { Collection } from 'src/schema/collection.schema';
 import { CollectionService } from 'src/service/collection.service';
 
 @Controller('collections')
@@ -29,5 +34,22 @@ export class CollectionController {
     } else {
       throw new InternalServerErrorException('An unexpected error occurred.');
     }
+  }
+
+  @Post(':walletAddress/owner')
+  async addOwner(
+    @Param('walletAddress') walletAddress: string,
+    @Body('addressContract') addressContract: string,
+  ): Promise<Collection> {
+    const result = await this.collectionService.addOwner(
+      walletAddress,
+      addressContract,
+    );
+    return this.handleResult(result);
+  }
+
+  @Get('owners') async getAllOwners(): Promise<string[]> {
+    const result = await this.collectionService.getAllOwners();
+    return this.handleResult(result);
   }
 }

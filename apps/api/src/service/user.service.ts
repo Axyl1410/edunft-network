@@ -29,6 +29,7 @@ export class UserService {
         .findOne({
           WalletAddress: user.WalletAddress,
         })
+        .lean()
         .exec();
 
       if (foundUser) {
@@ -47,6 +48,7 @@ export class UserService {
     try {
       const user = await this.userModel
         .findOne({ WalletAddress: walletAddress })
+        .lean()
         .exec();
 
       if (!user) {

@@ -20,45 +20,62 @@ export class CollectionService {
   ): Promise<Result<Collection, DatabaseFailure>> {
     try {
       const user = await this.userModel
-        .findOne({
-          WalletAddress: walletAddress,
-        })
-        .select('User')
+        .findOne({ WalletAddress: walletAddress })
+        .select('_id')
+        .lean()
         .exec();
 
       if (!user) {
-        return new Fail(new DatabaseFailure('User not found'));
+        return new Fail(
+          new DatabaseFailure(
+            `User with wallet address ${walletAddress} not found.`,
+          ),
+        );
       }
 
-      let collection = await this.collectionModel
-        .findOne({ User: user._id })
-        .exec();
-
-      if (!collection) {
-        collection = new this.collectionModel({
-          User: user._id,
-          Owner: [addressContract],
-        });
-
-        await collection.save();
-        return new Success(collection);
-      }
-
-      const file = await this.collectionModel
+      const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
           { User: user._id },
-          { $addToSet: { Owner: addressContract } },
-          { new: true },
+          {
+            $addToSet: { Owner: addressContract },
+            $setOnInsert: { User: user._id },
+          },
+          {
+            new: true,
+            upsert: true,
+            runValidators: true,
+          },
         )
         .exec();
 
-      if (!file) {
-        return new Fail(new DatabaseFailure('Failed to add owner'));
+      if (!updatedCollection) {
+        return new Fail(
+          new DatabaseFailure('Failed to update or create collection.'),
+        );
       }
 
-      return new Success(file);
+      return new Success(updatedCollection);
     } catch {
-      return new Fail(new DatabaseFailure('Failed to add owner.'));
+      return new Fail(
+        new DatabaseFailure('Failed to add owner due to a database error.'),
+      );
+    }
+  }
+
+  async getAllOwners(): Promise<Result<string[], DatabaseFailure>> {
+    try {
+      const allCollections = await this.collectionModel.find().lean().exec();
+      const allOwnersSet = new Set<string>();
+
+      for (const collection of allCollections) {
+        if (collection.Owner && Array.isArray(collection.Owner)) {
+          collection.Owner.forEach((owner) => allOwnersSet.add(owner));
+        }
+      }
+
+      return new Success(Array.from(allOwnersSet));
+    } catch {
+      return new Fail(new DatabaseFailure('Failed to get owners.'));
     }
   }
 }
