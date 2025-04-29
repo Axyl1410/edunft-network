@@ -1,16 +1,16 @@
 import {
-  Controller,
-  Post,
   Body,
-  InternalServerErrorException,
-  Get,
-  Param,
-  NotFoundException,
+  Controller,
   Delete,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Post,
 } from '@nestjs/common';
-import { FileService } from '../service/file.service';
-import { DatabaseFailure, NotFoundFailure } from '../core/failure';
 import { CreateFileDto } from 'src/dto/file.dto';
+import { DatabaseFailure, NotFoundFailure } from '../core/failure';
+import { FileService } from '../service/file.service';
 
 @Controller('file')
 export class FileController {

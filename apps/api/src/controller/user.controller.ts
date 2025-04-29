@@ -7,7 +7,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { NotFoundFailure, DatabaseFailure } from 'src/core/failure';
+import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { User } from 'src/schema/user.schema';
 import { UserService } from 'src/service/user.service';
 
