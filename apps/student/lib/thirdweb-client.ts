@@ -1,5 +1,9 @@
-import { createThirdwebClient, getContract } from "thirdweb";
-import { polygonZkEvmCardona } from "viem/chains";
+import {
+  createThirdwebClient,
+  defineChain,
+  getContract,
+  type Chain,
+} from "thirdweb";
 
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
@@ -14,20 +18,30 @@ export const thirdwebClient = createThirdwebClient(
   secretKey ? { secretKey } : { clientId },
 );
 
-export const POLYGON_ZKEVM_CHAIN = {
-  ...polygonZkEvmCardona,
-  rpc: polygonZkEvmCardona.rpcUrls.default.http[0],
-  blockExplorers: [
-    {
-      name: polygonZkEvmCardona.blockExplorers.default.name,
-      url: polygonZkEvmCardona.blockExplorers.default.url,
-      apiUrl: polygonZkEvmCardona.blockExplorers.default.apiUrl,
+export const FORMA_SKETCHPAD: Chain = defineChain({
+  id: 984123,
+  name: "Forma Sketchpad",
+  nativeCurrency: {
+    name: "TIA",
+    symbol: "TIA",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.sketchpad-1.forma.art"],
     },
-  ],
-};
+  },
+  blockExplorers: {
+    default: {
+      name: "FormaScan",
+      url: "https://explorer.sketchpad-1.forma.art/",
+    },
+  },
+  testnet: true,
+});
 
 export const MARKETPLACE = getContract({
   client: thirdwebClient,
-  chain: POLYGON_ZKEVM_CHAIN,
+  chain: FORMA_SKETCHPAD,
   address: marketplace_address,
 });

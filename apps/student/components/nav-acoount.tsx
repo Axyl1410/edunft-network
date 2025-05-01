@@ -3,9 +3,12 @@
 import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Search } from "lucide-react";
+import { useTheme } from "next-themes";
 import { WalletConnectButton } from "./wallet-connect-button";
 
 export default function NavAccount() {
+  const { theme } = useTheme();
+
   return (
     <>
       <div>

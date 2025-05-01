@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import NavAccount from "@/components/nav-acoount";
 import { Providers } from "@/components/providers";
-import "@rainbow-me/rainbowkit/styles.css";
 import {
   SidebarInset,
   SidebarProvider,

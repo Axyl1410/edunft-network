@@ -12,8 +12,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "^2.2.4",
-    "@tanstack/react-query": "^5.74.3",
     "@workspace/math": "workspace:*",
     "@workspace/ui": "workspace:*",
     "axios": "^1.8.4",
@@ -24,9 +22,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sonner": "^2.0.3",
-    "thirdweb": "^5.95.2",
-    "viem": "2.x",
-    "wagmi": "^2.14.16"
+    "thirdweb": "^5.95.2"
   },
   "devDependencies": {
     "@types/node": "^20",

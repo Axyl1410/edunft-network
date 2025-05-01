@@ -48,6 +48,7 @@ export class FileController {
     if (!hash) {
       throw new NotFoundException('Hash is required.');
     }
+
     const result = await this.fileService.getFileByHash(hash);
     return this.handleResult(result);
   }
@@ -57,6 +58,7 @@ export class FileController {
     if (!walletAddress) {
       throw new NotFoundException('Wallet address is required.');
     }
+
     const result =
       await this.fileService.getFilesByWalletAddress(walletAddress);
     return this.handleResult(result);
@@ -74,6 +76,7 @@ export class FileController {
     if (!hash || !newWalletAddress) {
       throw new NotFoundException('Hash and new wallet address are required.');
     }
+
     const result = await this.fileService.transferFile(hash, newWalletAddress);
     return this.handleResult(result);
   }

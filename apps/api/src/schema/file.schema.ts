@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class File {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   User: Types.ObjectId;
@@ -16,13 +16,10 @@ export class File {
   Size: number;
 
   @Prop()
-  Created_at: string;
-
-  @Prop()
   Mime_type: string;
 
-  @Prop({ default: false })
-  isPrivate: boolean;
+  @Prop({ enum: ['public', 'private'], required: true })
+  network: string;
 }
 
 export type FileDocument = File & Document;
