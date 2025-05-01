@@ -1,16 +1,16 @@
 import {
-  Controller,
-  Post,
   Body,
-  InternalServerErrorException,
-  Get,
-  Param,
-  NotFoundException,
+  Controller,
   Delete,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Post,
 } from '@nestjs/common';
-import { FileService } from '../service/file.service';
-import { DatabaseFailure, NotFoundFailure } from '../core/failure';
 import { CreateFileDto } from 'src/dto/file.dto';
+import { DatabaseFailure, NotFoundFailure } from '../core/failure';
+import { FileService } from '../service/file.service';
 
 @Controller('file')
 export class FileController {
@@ -48,6 +48,7 @@ export class FileController {
     if (!hash) {
       throw new NotFoundException('Hash is required.');
     }
+
     const result = await this.fileService.getFileByHash(hash);
     return this.handleResult(result);
   }
@@ -57,6 +58,7 @@ export class FileController {
     if (!walletAddress) {
       throw new NotFoundException('Wallet address is required.');
     }
+
     const result =
       await this.fileService.getFilesByWalletAddress(walletAddress);
     return this.handleResult(result);
@@ -74,6 +76,7 @@ export class FileController {
     if (!hash || !newWalletAddress) {
       throw new NotFoundException('Hash and new wallet address are required.');
     }
+
     const result = await this.fileService.transferFile(hash, newWalletAddress);
     return this.handleResult(result);
   }

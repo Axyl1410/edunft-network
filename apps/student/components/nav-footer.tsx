@@ -1,32 +1,32 @@
 import { formatAddress } from "@/lib/utils";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import {
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
 import { generateColorFromAddress } from "@workspace/ui/lib/utils";
 import {
-  ChevronsUpDown,
-  Sparkles,
   BadgeCheck,
-  CreditCard,
   Bell,
+  ChevronsUpDown,
+  CreditCard,
   LogOut,
+  Sparkles,
 } from "lucide-react";
-import { useAccount } from "wagmi";
+import { useActiveAccount } from "thirdweb/react";
 
 export default function NavFooter() {
-  const account = useAccount();
+  const account = useActiveAccount();
   const { isMobile } = useSidebar();
 
   return (
@@ -41,13 +41,13 @@ export default function NavFooter() {
               <div
                 className="bg-primary text-sidebar-primary-foreground flex aspect-square h-8 w-8 items-center justify-center rounded-full dark:bg-neutral-800"
                 style={{
-                  background: generateColorFromAddress(account.address ?? ""),
+                  background: generateColorFromAddress(account?.address ?? ""),
                 }}
               />
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate text-sm font-semibold">
-                  {formatAddress(account.address ?? "")}
+                  {formatAddress(account?.address ?? "")}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -64,13 +64,15 @@ export default function NavFooter() {
                 <div
                   className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full dark:bg-neutral-800"
                   style={{
-                    background: generateColorFromAddress(account.address ?? ""),
+                    background: generateColorFromAddress(
+                      account?.address ?? "",
+                    ),
                   }}
                 />
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-sm font-semibold">
-                    {formatAddress(account.address ?? "")}
+                    {formatAddress(account?.address ?? "")}
                   </span>
                 </div>
               </div>

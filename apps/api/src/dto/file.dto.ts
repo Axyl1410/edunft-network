@@ -7,4 +7,5 @@ export class CreateFileDto {
   Size?: number;
   Created_at?: string;
   Mime_type?: string;
+  network: 'public' | 'private';
 }

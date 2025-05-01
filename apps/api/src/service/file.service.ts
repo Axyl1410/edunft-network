@@ -30,7 +30,7 @@ export class FileService {
 
   async getFileByHash(hash: string): Promise<Result<File, DatabaseFailure>> {
     try {
-      const file = await this.fileModel.findOne({ Hash: hash }).exec();
+      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
 
       if (!file) {
         return new Fail(new DatabaseFailure('File not found'));
@@ -50,7 +50,8 @@ export class FileService {
         .findOne({
           WalletAddress: walletAddress,
         })
-        .select('User')
+        .select('_id')
+        .lean()
         .exec();
 
       if (!user) {
