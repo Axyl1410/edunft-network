@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import {
+  Blobbie,
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
@@ -99,8 +100,9 @@ export const WalletConnectButton = ({}) => {
         <Button
           variant={"outline"}
           onClick={handleDetail}
-          className="cursor-pointer"
+          className="felx cursor-pointer items-center"
         >
+          <Blobbie address={account.address} className="size-6 rounded-full" />
           {formatAddress(account.address)}
         </Button>
       )}

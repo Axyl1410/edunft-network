@@ -79,7 +79,7 @@ export const SidebarData = {
     },
     {
       title: "Profile",
-      url: "#",
+      url: "/profile",
       icon: UserCircle2,
       items: [],
     },

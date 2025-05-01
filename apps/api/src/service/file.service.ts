@@ -60,6 +60,7 @@ export class FileService {
 
       const files = await this.fileModel
         .find({ User: user._id.toString() })
+        .lean()
         .exec();
 
       return new Success(files);
@@ -96,7 +97,8 @@ export class FileService {
         .findOne({
           WalletAddress: newWalletAddress,
         })
-        .select('User')
+        .select('_id')
+        .lean()
         .exec();
 
       if (!user) {

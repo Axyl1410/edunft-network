@@ -14,7 +14,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
-import { generateColorFromAddress } from "@workspace/ui/lib/utils";
 import {
   BadgeCheck,
   Bell,
@@ -23,7 +22,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
-import { useActiveAccount } from "thirdweb/react";
+import { Blobbie, useActiveAccount } from "thirdweb/react";
 
 export default function NavFooter() {
   const account = useActiveAccount();
@@ -37,12 +36,11 @@ export default function NavFooter() {
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              disabled={!account?.address}
             >
-              <div
-                className="bg-primary text-sidebar-primary-foreground flex aspect-square h-8 w-8 items-center justify-center rounded-full dark:bg-neutral-800"
-                style={{
-                  background: generateColorFromAddress(account?.address ?? ""),
-                }}
+              <Blobbie
+                address={account?.address ?? ""}
+                className="size-8 rounded-full"
               />
 
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -61,13 +59,9 @@ export default function NavFooter() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <div
-                  className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full dark:bg-neutral-800"
-                  style={{
-                    background: generateColorFromAddress(
-                      account?.address ?? "",
-                    ),
-                  }}
+                <Blobbie
+                  address={account?.address ?? ""}
+                  className="size-8 rounded-full"
                 />
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
