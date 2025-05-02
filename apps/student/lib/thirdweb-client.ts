@@ -6,7 +6,7 @@ import {
 } from "thirdweb";
 
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
+const secretKey = process.env.TW_SECRET_KEY;
 
 if (!clientId) {
   throw new Error("No client ID provided");
