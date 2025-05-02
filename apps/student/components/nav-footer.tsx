@@ -14,19 +14,26 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
+import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
+import Link from "next/link";
 import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-import { Blobbie, useActiveAccount } from "thirdweb/react";
+  Blobbie,
+  useActiveAccount,
+  useActiveWallet,
+  useDisconnect,
+} from "thirdweb/react";
 
 export default function NavFooter() {
   const account = useActiveAccount();
   const { isMobile } = useSidebar();
+  const { disconnect } = useDisconnect();
+  const wallet = useActiveWallet();
+
+  const handleDisconnect = () => {
+    if (wallet) {
+      disconnect(wallet);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -35,13 +42,15 @@ export default function NavFooter() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
               disabled={!account?.address}
             >
-              <Blobbie
-                address={account?.address ?? ""}
-                className="size-8 rounded-full"
-              />
+              <div className="aspect-square">
+                <Blobbie
+                  address={account?.address ?? ""}
+                  className="h-8 w-8 rounded-full"
+                />
+              </div>
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate text-sm font-semibold">
@@ -73,28 +82,18 @@ export default function NavFooter() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <Link href={"/profile"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <BadgeCheck />
+                  Account
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleDisconnect}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

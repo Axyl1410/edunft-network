@@ -12,9 +12,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.5.0",
     "@workspace/math": "workspace:*",
     "@workspace/ui": "workspace:*",
     "axios": "^1.8.4",
+    "ckeditor5": "^45.0.0",
     "lucide-react": "^0.475.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",

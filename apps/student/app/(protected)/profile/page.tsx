@@ -1,5 +1,6 @@
 "use client";
 
+import CKEditorComponent from "@/components/markdown-editor";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ export default function Page() {
       <div className="flex items-center justify-center gap-4">
         {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
       </div>
+      <CKEditorComponent />
     </div>
   );
 }
