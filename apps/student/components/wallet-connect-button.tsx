@@ -13,6 +13,7 @@ import {
   useConnectModal,
   useWalletDetailsModal,
 } from "thirdweb/react";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 
 export const WalletConnectButton = ({}) => {
   const { connect } = useConnectModal();
@@ -54,6 +55,19 @@ export const WalletConnectButton = ({}) => {
     }
   }, [account]);
 
+  const wallets = [
+    inAppWallet({
+      auth: {
+        options: ["google", "email"],
+      },
+    }),
+    createWallet("io.metamask"),
+    createWallet("com.coinbase.wallet"),
+    createWallet("me.rainbow"),
+    createWallet("io.rabby"),
+    createWallet("io.zerion.wallet"),
+  ];
+
   async function handleConnect() {
     await connect({
       client: thirdwebClient,
@@ -61,6 +75,7 @@ export const WalletConnectButton = ({}) => {
       showThirdwebBranding: false,
       theme: theme === "light" ? "light" : "dark",
       size: "compact",
+      wallets: wallets,
     });
   }
 
