@@ -1,11 +1,22 @@
 import { Types } from 'mongoose';
 
-export class CreateFileDto {
+export interface CreateFileDto {
   User: Types.ObjectId;
-  Hash: string;
-  Name?: string;
-  Size?: number;
-  Created_at?: string;
-  Mime_type?: string;
-  network: 'public' | 'private';
+  Name: string;
+  Description: string;
+  IpfsHash?: string;
+  MainImageIpfsHash?: string;
+  SubImagesIpfsHashes?: string[];
+  NftTokenId?: number;
+  Hash?: string;
+  RoyaltyFee: number;
+  DocumentFee: number;
+  IsFree: boolean;
+  MintCost: number;
+  Faculty: string;
+  Field: string;
+  Subject: string;
+  Network: 'public' | 'private';
+  Size: number;
+  Mime_type: string;
 }
