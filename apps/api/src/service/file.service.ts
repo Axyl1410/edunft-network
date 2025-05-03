@@ -18,7 +18,6 @@ export class FileService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-<<<<<<< HEAD
   private async checkDuplicate(hash: string): Promise<boolean> {
     const existingFile = await this.fileModel
       .findOne({ Hash: hash })
@@ -71,9 +70,6 @@ export class FileService {
     mainImage: Buffer,
     subImages: Buffer[],
   ): Promise<Result<File, DatabaseFailure>> {
-=======
-  async addFile(fileData: File): Promise<Result<File, DatabaseFailure>> {
->>>>>>> 18967a0380cd202de4435f70bad9904d1b54e287
     try {
       // Generate file hash
       const fileHash = createHash('sha256').update(mainFile).digest('hex');
