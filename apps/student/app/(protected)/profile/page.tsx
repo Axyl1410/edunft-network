@@ -1,5 +1,6 @@
 "use client";
 
+import CKEditorComponent from "@/components/markdown-editor";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -7,6 +8,7 @@ import { useActiveAccount } from "thirdweb/react";
 
 export default function Page() {
   const [data, setData] = useState(null);
+  const [editorData, setEditorData] = useState("");
   const account = useActiveAccount();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function Page() {
       <div className="flex items-center justify-center gap-4">
         {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
       </div>
+      <CKEditorComponent onChange={setEditorData} />
     </div>
   );
 }

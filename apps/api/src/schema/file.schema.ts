@@ -9,6 +9,7 @@ export class File {
   @Prop({ required: true, unique: true, index: true })
   Hash: string;
 
+<<<<<<< HEAD
   @Prop({ required: true })
   Name: string;
 
@@ -19,6 +20,15 @@ export class File {
   Size: number;
 
   @Prop({ required: true })
+=======
+  @Prop({ default: null })
+  Name: string;
+
+  @Prop({ default: null })
+  Size: number;
+
+  @Prop({ default: null })
+>>>>>>> 18967a0380cd202de4435f70bad9904d1b54e287
   Mime_type: string;
 
   @Prop({ required: true })

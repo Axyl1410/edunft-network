@@ -2,9 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DatabaseFailure } from 'src/core/failure';
+import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { Fail, Result, Success } from 'src/core/types';
-import { CreateFileDto } from 'src/dto/file.dto';
 import { File } from 'src/schema/file.schema';
 import { User } from 'src/schema/user.schema';
 import { createHash } from 'crypto';
@@ -19,6 +18,7 @@ export class FileService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
+<<<<<<< HEAD
   private async checkDuplicate(hash: string): Promise<boolean> {
     const existingFile = await this.fileModel
       .findOne({ Hash: hash })
@@ -71,6 +71,9 @@ export class FileService {
     mainImage: Buffer,
     subImages: Buffer[],
   ): Promise<Result<File, DatabaseFailure>> {
+=======
+  async addFile(fileData: File): Promise<Result<File, DatabaseFailure>> {
+>>>>>>> 18967a0380cd202de4435f70bad9904d1b54e287
     try {
       // Generate file hash
       const fileHash = createHash('sha256').update(mainFile).digest('hex');
@@ -129,7 +132,7 @@ export class FileService {
 
   async getFilesByWalletAddress(
     walletAddress: string,
-  ): Promise<Result<File[], DatabaseFailure>> {
+  ): Promise<Result<File[], DatabaseFailure | NotFoundFailure>> {
     try {
       const user = await this.userModel
         .findOne({
@@ -148,6 +151,9 @@ export class FileService {
         .lean()
         .exec();
 
+      if (!files || files.length === 0) {
+        return new Fail(new NotFoundFailure('File', walletAddress));
+      }
       return new Success(files);
     } catch {
       return new Fail(new DatabaseFailure('Failed to retrieve files.'));

@@ -60,4 +60,10 @@ export class UserController {
     const result = await this.userService.getUserByWalletAddress(WalletAddress);
     return this.handleResult(result);
   }
+
+  @Post('create')
+  async createUser(@Body() user: User): Promise<User> {
+    const result = await this.userService.createUser(user);
+    return this.handleResult(result);
+  }
 }

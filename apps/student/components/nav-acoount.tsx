@@ -1,8 +1,10 @@
 "use client";
 
+import { thirdwebClient } from "@/lib/thirdweb-client";
 import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Search } from "lucide-react";
+import { ConnectButton } from "thirdweb/react";
 import { WalletConnectButton } from "./wallet-connect-button";
 
 export default function NavAccount() {
@@ -10,7 +12,7 @@ export default function NavAccount() {
     <>
       <div>
         <SidebarTrigger className="!mr-2 cursor-pointer" />
-        <div className="inline-flex h-9 w-full cursor-text items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-5 pl-3.5 pr-2 text-sm backdrop-blur-lg transition-[background-color,box-shadow] duration-150 ease-out lg:w-[360px] dark:bg-neutral-900">
+        <div className="hidden h-9 w-full cursor-text items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-5 pl-3.5 pr-2 text-sm backdrop-blur-lg transition-[background-color,box-shadow] duration-150 ease-out md:inline-flex lg:w-[360px] dark:bg-neutral-900">
           <div className="dark:text-primary flex min-w-fit items-center">
             <Search size={18} />
           </div>
@@ -30,6 +32,9 @@ export default function NavAccount() {
       <div className="flex items-center justify-center gap-2">
         <ModeToggle />
         <WalletConnectButton />
+        <div className="sr-only">
+          <ConnectButton client={thirdwebClient} />
+        </div>
       </div>
     </>
   );

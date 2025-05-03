@@ -8,7 +8,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { CreateFileDto } from 'src/dto/file.dto';
+import { File } from 'src/schema/file.schema';
 import { DatabaseFailure, NotFoundFailure } from '../core/failure';
 import { FileService } from '../service/file.service';
 
@@ -38,8 +38,8 @@ export class FileController {
   }
 
   @Post()
-  async addFile(@Body() createFileDto: CreateFileDto) {
-    const result = await this.fileService.addFile(createFileDto);
+  async addFile(@Body() File: File) {
+    const result = await this.fileService.addFile(File);
     return this.handleResult(result);
   }
 

@@ -34,9 +34,8 @@ export class UserService {
 
       if (foundUser) {
         return new Success(foundUser);
-      } else {
-        return await this.createUser(user);
       }
+      return new Fail(new NotFoundFailure('User', user.WalletAddress));
     } catch {
       return new Fail(new DatabaseFailure('Failed to login user.'));
     }

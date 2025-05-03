@@ -151,3 +151,7 @@
     scrollbar-width: thin;
   }
 }
+
+.ck-balloon-panel {
+  display: none !important;
+}
