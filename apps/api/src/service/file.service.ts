@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DatabaseFailure } from 'src/core/failure';
+import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { Fail, Result, Success } from 'src/core/types';
-import { CreateFileDto } from 'src/dto/file.dto';
 import { File } from 'src/schema/file.schema';
 import { User } from 'src/schema/user.schema';
 
@@ -15,9 +14,7 @@ export class FileService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async addFile(
-    fileData: CreateFileDto,
-  ): Promise<Result<File, DatabaseFailure>> {
+  async addFile(fileData: File): Promise<Result<File, DatabaseFailure>> {
     try {
       const newFile = new this.fileModel(fileData);
       const saveFile = await newFile.save();
@@ -44,7 +41,7 @@ export class FileService {
 
   async getFilesByWalletAddress(
     walletAddress: string,
-  ): Promise<Result<File[], DatabaseFailure>> {
+  ): Promise<Result<File[], DatabaseFailure | NotFoundFailure>> {
     try {
       const user = await this.userModel
         .findOne({
@@ -63,6 +60,9 @@ export class FileService {
         .lean()
         .exec();
 
+      if (!files || files.length === 0) {
+        return new Fail(new NotFoundFailure('File', walletAddress));
+      }
       return new Success(files);
     } catch {
       return new Fail(new DatabaseFailure('Failed to retrieve files.'));

@@ -6,17 +6,26 @@ export class User {
   @Prop({ required: true, unique: true, index: true })
   WalletAddress: string;
 
-  @Prop()
+  @Prop({ default: null })
   Username?: string;
 
-  @Prop()
+  @Prop({ default: null })
   Bio?: string;
 
-  @Prop()
+  @Prop({ default: null })
   ProfilePicture?: string;
 
-  @Prop()
+  @Prop({ default: null })
   Banner?: string;
+
+  @Prop({ default: 100 })
+  reputation?: number;
+
+  @Prop({ default: 0 })
+  violations?: number;
+
+  @Prop({ default: null })
+  bannedUntil?: Date;
 }
 
 export type UserDocument = User & Document;

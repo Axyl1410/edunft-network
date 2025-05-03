@@ -9,13 +9,13 @@ export class File {
   @Prop({ required: true, unique: true, index: true })
   Hash: string;
 
-  @Prop()
+  @Prop({ default: null })
   Name: string;
 
-  @Prop()
+  @Prop({ default: null })
   Size: number;
 
-  @Prop()
+  @Prop({ default: null })
   Mime_type: string;
 
   @Prop({ enum: ['public', 'private'], required: true })

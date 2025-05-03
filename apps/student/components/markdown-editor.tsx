@@ -44,7 +44,6 @@ export default function CKEditorComponent({ onChange }: any) {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
-  const [editorData, setEditorData] = useState("");
 
   useEffect(() => {
     setIsLayoutReady(true);
@@ -208,7 +207,6 @@ export default function CKEditorComponent({ onChange }: any) {
 
   const handleEditorChange = (_event: any, editor: any) => {
     const data = editor.getData();
-    setEditorData(data);
     onChange(data);
   };
 
@@ -226,12 +224,6 @@ export default function CKEditorComponent({ onChange }: any) {
               onChange={handleEditorChange}
             />
           )}
-        </div>
-      </div>
-      <div className="mt-4 w-full">
-        <h3 className="text-lg font-bold">Editor Output:</h3>
-        <div className="rounded-md border bg-gray-100 p-4">
-          {editorData || "No content yet..."}
         </div>
       </div>
     </div>
