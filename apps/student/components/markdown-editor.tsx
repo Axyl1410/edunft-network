@@ -40,7 +40,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const LICENSE_KEY = process.env.NEXT_PUBLIC_LICENSE_KEY;
 
-export default function CKEditorComponent() {
+export default function CKEditorComponent({ onChange }: any) {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -209,6 +209,7 @@ export default function CKEditorComponent() {
   const handleEditorChange = (_event: any, editor: any) => {
     const data = editor.getData();
     setEditorData(data);
+    onChange(data);
   };
 
   return (

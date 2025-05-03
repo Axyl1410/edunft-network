@@ -58,7 +58,7 @@ export const WalletConnectButton = ({}) => {
   const wallets = [
     inAppWallet({
       auth: {
-        options: ["google", "email"],
+        options: ["google", "email", "facebook", "apple", "github"],
       },
     }),
     createWallet("io.metamask"),
@@ -115,7 +115,7 @@ export const WalletConnectButton = ({}) => {
         <Button
           variant={"outline"}
           onClick={handleDetail}
-          className="felx cursor-pointer items-center"
+          className="flex cursor-pointer items-center"
         >
           <Blobbie address={account.address} className="size-6 rounded-full" />
           {formatAddress(account.address)}
