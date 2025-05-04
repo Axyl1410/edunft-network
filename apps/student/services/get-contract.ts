@@ -1,4 +1,4 @@
-import { POLYGON_ZKEVM_CHAIN, thirdwebClient } from "@/lib/thirdweb-client";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { getContract } from "thirdweb";
 
 const getThirdwebContract = (address: string) => {
@@ -6,7 +6,7 @@ const getThirdwebContract = (address: string) => {
     getContract({
       client: thirdwebClient,
       address: address,
-      chain: POLYGON_ZKEVM_CHAIN,
+      chain: FORMA_SKETCHPAD,
     }) ?? null
   );
 };

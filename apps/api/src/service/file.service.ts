@@ -29,6 +29,10 @@ export class FileService {
       const newFile = new this.fileModel(fileData);
       const saveFile = await newFile.save();
 
+      if (!saveFile) {
+        return new Fail(new DatabaseFailure('Failed to save file.'));
+      }
+
       return new Success(saveFile);
     } catch {
       return new Fail(new DatabaseFailure('Failed to create new file.'));
