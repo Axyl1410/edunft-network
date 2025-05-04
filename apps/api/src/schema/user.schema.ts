@@ -3,28 +3,28 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ required: true, unique: true, index: true })
+  @Prop({ required: true, unique: true, index: true, type: String })
   WalletAddress: string;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: String })
   Username?: string;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: String })
   Bio?: string;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: String })
   ProfilePicture?: string;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: String })
   Banner?: string;
 
-  @Prop({ default: 100 })
+  @Prop({ default: 100, type: Number })
   reputation?: number;
 
-  @Prop({ default: 0 })
+  @Prop({ default: 0, type: Number })
   violations?: number;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: Date })
   bannedUntil?: Date;
 }
 

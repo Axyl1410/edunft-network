@@ -15,7 +15,7 @@ import {
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 
-export const WalletConnectButton = ({}) => {
+export const WalletConnectButton = () => {
   const { connect } = useConnectModal();
   const { theme } = useTheme();
   const account = useActiveAccount();
