@@ -38,10 +38,6 @@ export class UserController {
 
   @Post('login')
   async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
-    if (!WalletAddress) {
-      throw new NotFoundException('Wallet address is required.');
-    }
-
     const result = await this.userService.loginUser({
       WalletAddress: WalletAddress,
     });
@@ -53,10 +49,6 @@ export class UserController {
   async getUserByWalletAddress(
     @Param('WalletAddress') WalletAddress: string,
   ): Promise<User> {
-    if (!WalletAddress) {
-      throw new NotFoundException('Wallet address is required.');
-    }
-
     const result = await this.userService.getUserByWalletAddress(WalletAddress);
     return this.handleResult(result);
   }

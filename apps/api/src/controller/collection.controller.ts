@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -8,7 +9,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
-import { Collection } from 'src/schema/collection.schema';
+import {
+  Collection,
+  HoldingItem,
+  OwnerItem,
+} from 'src/schema/collection.schema';
 import { CollectionService } from 'src/service/collection.service';
 
 @Controller('collections')
@@ -36,19 +41,60 @@ export class CollectionController {
     }
   }
 
-  @Post(':walletAddress/owner')
-  async addOwner(
+  @Post(':walletAddress/holders')
+  async addHolder(
     @Param('walletAddress') walletAddress: string,
-    @Body('addressContract') addressContract: string,
+    @Body() holder: HoldingItem,
   ): Promise<Collection> {
-    const result = await this.collectionService.addOwner(
+    const result = await this.collectionService.addHolder(
       walletAddress,
-      addressContract,
+      holder,
     );
     return this.handleResult(result);
   }
 
-  @Get('owners') async getAllOwners(): Promise<string[]> {
+  @Delete(':walletAddress/holders')
+  async removeHolder(
+    @Param('walletAddress') walletAddress: string,
+    @Body()
+    body: {
+      Address: string;
+      TokenId: string;
+    },
+  ): Promise<Collection> {
+    const { Address, TokenId } = body;
+
+    const result = await this.collectionService.removeHolder(
+      walletAddress,
+      Address,
+      TokenId,
+    );
+    return this.handleResult(result);
+  }
+
+  @Post(':walletAddress/owners')
+  async addOwner(
+    @Param('walletAddress') walletAddress: string,
+    @Body() owner: OwnerItem,
+  ): Promise<Collection> {
+    const result = await this.collectionService.addOwner(walletAddress, owner);
+    return this.handleResult(result);
+  }
+
+  @Delete(':walletAddress/owners')
+  async removeOwner(
+    @Param('walletAddress') walletAddress: string,
+    @Body('contract') contract: string,
+  ): Promise<Collection> {
+    const result = await this.collectionService.removeOwner(
+      walletAddress,
+      contract,
+    );
+    return this.handleResult(result);
+  }
+
+  @Get('owners')
+  async getAllOwners(): Promise<OwnerItem[]> {
     const result = await this.collectionService.getAllOwners();
     return this.handleResult(result);
   }

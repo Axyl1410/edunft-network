@@ -1,29 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DatabaseFailure } from 'src/core/failure';
+import { DatabaseFailure, ValidationFailure } from 'src/core/failure';
 import { Fail, Result, Success } from 'src/core/types';
-import { Collection, CollectionDocument } from 'src/schema/collection.schema';
-import { User } from 'src/schema/user.schema';
+import {
+  Collection,
+  CollectionDocument,
+  HoldingItem,
+  OwnerItem,
+} from 'src/schema/collection.schema';
+import { UserService } from './user.service';
 
 @Injectable()
 export class CollectionService {
   constructor(
     @InjectModel(Collection.name)
     private readonly collectionModel: Model<CollectionDocument>,
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly userService: UserService,
   ) {}
 
-  async addOwner(
+  async addHolder(
     walletAddress: string,
-    addressContract: string,
-  ): Promise<Result<Collection, DatabaseFailure>> {
+    holder: HoldingItem,
+  ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
+    if (!holder || !holder.Address || !holder.TokenId || !walletAddress) {
+      return new Fail(
+        new ValidationFailure('Holder data is invalid or incomplete.'),
+      );
+    }
+
     try {
-      const user = await this.userModel
-        .findOne({ WalletAddress: walletAddress })
-        .select('_id')
-        .lean()
-        .exec();
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
 
       if (!user) {
         return new Fail(
@@ -36,15 +44,95 @@ export class CollectionService {
       const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
           { User: user._id },
-          {
-            $addToSet: { Owner: addressContract },
-            $setOnInsert: { User: user._id },
-          },
-          {
-            new: true,
-            upsert: true,
-            runValidators: true,
-          },
+          { $addToSet: { Holders: holder } },
+          { new: true, upsert: true, runValidators: true },
+        )
+        .exec();
+
+      if (!updatedCollection) {
+        return new Fail(
+          new DatabaseFailure('Failed to update or create collection.'),
+        );
+      }
+
+      return new Success(updatedCollection);
+    } catch {
+      return new Fail(
+        new DatabaseFailure('Failed to add holder due to a database error.'),
+      );
+    }
+  }
+
+  async removeHolder(
+    walletAddress: string,
+    holderAddress: string,
+    tokenId: string,
+  ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
+    if (!holderAddress || !tokenId || !walletAddress) {
+      return new Fail(
+        new ValidationFailure('Holder data is invalid or incomplete.'),
+      );
+    }
+
+    try {
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
+
+      if (!user) {
+        return new Fail(
+          new DatabaseFailure(
+            `User with wallet address ${walletAddress} not found.`,
+          ),
+        );
+      }
+
+      const updatedCollection = await this.collectionModel
+        .findOneAndUpdate(
+          { User: user._id },
+          { $pull: { Holders: { Address: holderAddress, TokenId: tokenId } } },
+          { new: true },
+        )
+        .exec();
+
+      if (!updatedCollection) {
+        return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      return new Success(updatedCollection);
+    } catch {
+      return new Fail(
+        new DatabaseFailure('Failed to remove holder due to a database error.'),
+      );
+    }
+  }
+
+  async addOwner(
+    walletAddress: string,
+    owner: OwnerItem,
+  ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
+    if (!owner || !owner.Address || !owner.name || !walletAddress) {
+      return new Fail(
+        new ValidationFailure('Owner data is invalid or incomplete.'),
+      );
+    }
+
+    try {
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
+
+      if (!user) {
+        return new Fail(
+          new DatabaseFailure(
+            `User with wallet address ${walletAddress} not found.`,
+          ),
+        );
+      }
+
+      const updatedCollection = await this.collectionModel
+        .findOneAndUpdate(
+          { User: user._id },
+          { $addToSet: { Owner: owner } },
+          { new: true, upsert: true, runValidators: true },
         )
         .exec();
 
@@ -62,10 +150,52 @@ export class CollectionService {
     }
   }
 
-  async getAllOwners(): Promise<Result<string[], DatabaseFailure>> {
+  async removeOwner(
+    walletAddress: string,
+    contract: string,
+  ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
+    if (!contract || !walletAddress) {
+      return new Fail(
+        new ValidationFailure('Owner data is invalid or incomplete.'),
+      );
+    }
+
+    try {
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
+
+      if (!user) {
+        return new Fail(
+          new DatabaseFailure(
+            `User with wallet address ${walletAddress} not found.`,
+          ),
+        );
+      }
+
+      const updatedCollection = await this.collectionModel
+        .findOneAndUpdate(
+          { User: user._id },
+          { $pull: { Owner: { contract } } },
+          { new: true },
+        )
+        .exec();
+
+      if (!updatedCollection) {
+        return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      return new Success(updatedCollection);
+    } catch {
+      return new Fail(
+        new DatabaseFailure('Failed to remove owner due to a database error.'),
+      );
+    }
+  }
+
+  async getAllOwners(): Promise<Result<OwnerItem[], DatabaseFailure>> {
     try {
       const allCollections = await this.collectionModel.find().lean().exec();
-      const allOwnersSet = new Set<string>();
+      const allOwnersSet = new Set<OwnerItem>();
 
       for (const collection of allCollections) {
         if (collection.Owner && Array.isArray(collection.Owner)) {

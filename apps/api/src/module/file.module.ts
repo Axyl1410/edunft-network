@@ -4,6 +4,7 @@ import { FileController } from 'src/controller/file.controller';
 import { File, FileSchema } from 'src/schema/file.schema';
 import { User, UserSchema } from 'src/schema/user.schema';
 import { FileService } from 'src/service/file.service';
+import { UserService } from 'src/service/user.service';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { FileService } from 'src/service/file.service';
       { name: User.name, schema: UserSchema },
     ]),
   ],
-  providers: [FileService],
+  providers: [FileService, UserService],
   controllers: [FileController],
 })
 export class FileModule {}
