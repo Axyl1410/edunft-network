@@ -6,6 +6,7 @@ import { AppService } from '../service/app.service';
 import { CollectionModule } from './collection.module';
 import { FileModule } from './file.module';
 import { UserModule } from './user.module';
+import { VoteModule } from './vote.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserModule } from './user.module';
     FileModule,
     CollectionModule,
     UserModule,
+    VoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

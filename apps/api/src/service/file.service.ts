@@ -143,4 +143,20 @@ export class FileService {
       return new Fail(new DatabaseFailure('Failed to transfer file.'));
     }
   }
+
+  async getFileIdbyHash(hash: string): Promise<{ _id: string }> {
+    if (!hash) {
+      throw new Error(`File with hash ${hash} not found.`);
+    }
+
+    try {
+      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+      if (!file) {
+        throw new Error(`File with hash ${hash} not found.`);
+      }
+      return { _id: file._id.toString() };
+    } catch {
+      throw new Error('Database failure while retrieving file.');
+    }
+  }
 }
