@@ -52,7 +52,8 @@ export class UserService {
         return new Success(foundUser);
       }
       return new Fail(new NotFoundFailure('User', user.WalletAddress));
-    } catch {
+    } catch (error) {
+      console.error('Error logging in user:', error);
       return new Fail(new DatabaseFailure('Failed to login user.'));
     }
   }
@@ -77,7 +78,8 @@ export class UserService {
       }
 
       return new Success(user);
-    } catch {
+    } catch (error) {
+      console.error('Error fetching user by wallet address:', error);
       return new Fail(
         new DatabaseFailure('Failed to fetch user by wallet address.'),
       );
@@ -101,7 +103,8 @@ export class UserService {
       }
 
       return { _id: user._id.toString() };
-    } catch {
+    } catch (error) {
+      console.error('Error fetching user ID by wallet address:', error);
       throw new Error(`Failed to fetch user ID by wallet address: `);
     }
   }

@@ -1,19 +1,20 @@
 import {
   Body,
   Controller,
-  Get,
+  Delete,
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
-import { Vote } from 'src/schema/vote.schema';
-import { VoteService } from 'src/service/vote.service';
+import { Report } from 'src/schema/report.schema';
+import { ReportService } from 'src/service/report.service';
 
-@Controller('vote')
-export class VoteController {
-  constructor(private readonly voteService: VoteService) {}
+@Controller('report')
+export class ReportController {
+  constructor(private readonly reportService: ReportService) {}
 
   private handleResult<T>(result: {
     isSuccess: () => boolean;
@@ -36,31 +37,38 @@ export class VoteController {
     }
   }
 
-  @Post('addVote')
-  async addVote(
+  @Post('create')
+  async createReport(
     @Body('walletAddress') walletAddress: string,
-    @Body('voteType') voteType: 'upvote' | 'downvote',
     @Body('hash') hash: string,
-  ): Promise<void> {
-    const result = await this.voteService.handleVote(
+    @Body('reason') reason: string,
+    @Body('description') description: string,
+  ): Promise<Report> {
+    const result = await this.reportService.createReport(
       walletAddress,
-      voteType,
       hash,
+      reason,
+      description,
     );
-    this.handleResult(result);
-  }
 
-  @Get('hash/:hash')
-  async getVoteByHash(@Param('hash') hash: string): Promise<Vote[]> {
-    const result = await this.voteService.getVoteByHash(hash);
     return this.handleResult(result);
   }
 
-  @Get('user/:walletAddress')
-  async getVoteByWalletAddress(
-    @Param('walletAddress') walletAddress: string,
-  ): Promise<Vote[]> {
-    const result = await this.voteService.getVoteByWalletAddress(walletAddress);
+  @Delete(':id')
+  async deleteReport(@Param('id') reportId: string): Promise<void> {
+    const result = await this.reportService.deleteReport(reportId);
+    this.handleResult(result);
+  }
+
+  @Patch(':id/status')
+  async updateReportStatus(
+    @Param('id') reportId: string,
+    @Body('status') status: 'pending' | 'confirmed' | 'rejected',
+  ): Promise<Report> {
+    const result = await this.reportService.updateReportStatus(
+      reportId,
+      status,
+    );
     return this.handleResult(result);
   }
 }

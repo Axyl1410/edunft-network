@@ -1,5 +1,5 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Report {
@@ -18,3 +18,7 @@ export class Report {
   @Prop({ type: String, enum: ['pending', 'confirmed', 'rejected'] })
   Status: string;
 }
+
+export type ReportDocument = Report & Document;
+
+export const ReportSchema = SchemaFactory.createForClass(Report);

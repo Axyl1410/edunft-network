@@ -88,8 +88,66 @@ export class VoteService {
         }
         return new Success(newVote);
       }
-    } catch {
+    } catch (error) {
+      console.error('Error handling vote:', error);
       return new Fail(new DatabaseFailure('Failed to handle vote.'));
+    }
+  }
+
+  async getVoteByHash(
+    hash: string,
+  ): Promise<Result<Vote[], DatabaseFailure | ValidationFailure>> {
+    if (!hash) {
+      return new Fail(new ValidationFailure('File', hash));
+    }
+
+    try {
+      const fileid = await this.fileService.getFileIdbyHash(hash);
+      if (!fileid) {
+        return new Fail(new NotFoundFailure('File', hash));
+      }
+
+      const vote = await this.voteModel
+        .find({ File: fileid._id })
+        .lean()
+        .exec();
+      if (!vote) {
+        return new Fail(new NotFoundFailure('Vote', hash));
+      }
+
+      return new Success(vote);
+    } catch (error) {
+      console.error('Error retrieving vote by hash:', error);
+      return new Fail(new DatabaseFailure('Failed to retrieve vote.'));
+    }
+  }
+
+  async getVoteByWalletAddress(
+    walletAddress: string,
+  ): Promise<Result<Vote[], DatabaseFailure | ValidationFailure>> {
+    if (!walletAddress) {
+      return new Fail(new ValidationFailure('Wallet Address', walletAddress));
+    }
+
+    try {
+      const userid =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
+      if (!userid) {
+        return new Fail(new NotFoundFailure('User', walletAddress));
+      }
+
+      const vote = await this.voteModel
+        .find({ User: userid._id })
+        .lean()
+        .exec();
+      if (!vote) {
+        return new Fail(new NotFoundFailure('Vote', walletAddress));
+      }
+
+      return new Success(vote);
+    } catch (error) {
+      console.error('Error retrieving vote by wallet address:', error);
+      return new Fail(new DatabaseFailure('Failed to retrieve vote.'));
     }
   }
 }

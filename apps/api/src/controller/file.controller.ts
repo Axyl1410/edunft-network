@@ -64,9 +64,7 @@ export class FileController {
   }
 
   @Put('transfer')
-  async transferFile(@Body() body: { hash: string; newWalletAddress: string }) {
-    const { hash, newWalletAddress } = body;
-
+  async transferFile(@Body() hash: string, @Body() newWalletAddress: string) {
     const result = await this.fileService.transferFile(hash, newWalletAddress);
     return this.handleResult(result);
   }

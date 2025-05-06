@@ -54,7 +54,8 @@ export class FileService {
       }
 
       return new Success(file);
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving file:', error);
       return new Fail(new DatabaseFailure('Failed to retrieve file.'));
     }
   }
@@ -79,14 +80,15 @@ export class FileService {
       const files = await this.fileModel.find({ User: user._id }).lean().exec();
 
       return new Success(files);
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving files:', error);
       return new Fail(new DatabaseFailure('Failed to retrieve files.'));
     }
   }
 
   async removeFile(
     hash: string,
-  ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
+  ): Promise<Result<void, DatabaseFailure | ValidationFailure>> {
     if (!hash) {
       return new Fail(new ValidationFailure('File', hash));
     }
@@ -98,8 +100,9 @@ export class FileService {
         return new Fail(new NotFoundFailure('File not found'));
       }
 
-      return new Success(file);
-    } catch {
+      return new Success(undefined);
+    } catch (error) {
+      console.error('Error removing file:', error);
       return new Fail(new DatabaseFailure('Failed to remove file.'));
     }
   }
@@ -139,7 +142,8 @@ export class FileService {
       }
 
       return new Success(updatedFile);
-    } catch {
+    } catch (error) {
+      console.error('Error transferring file:', error);
       return new Fail(new DatabaseFailure('Failed to transfer file.'));
     }
   }
@@ -155,7 +159,8 @@ export class FileService {
         throw new Error(`File with hash ${hash} not found.`);
       }
       return { _id: file._id.toString() };
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving file by hash:', error);
       throw new Error('Database failure while retrieving file.');
     }
   }

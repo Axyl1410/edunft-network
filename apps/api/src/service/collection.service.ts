@@ -56,7 +56,8 @@ export class CollectionService {
       }
 
       return new Success(updatedCollection);
-    } catch {
+    } catch (error) {
+      console.error('Error adding holder:', error);
       return new Fail(
         new DatabaseFailure('Failed to add holder due to a database error.'),
       );
@@ -99,7 +100,8 @@ export class CollectionService {
       }
 
       return new Success(updatedCollection);
-    } catch {
+    } catch (error) {
+      console.error('Error removing holder:', error);
       return new Fail(
         new DatabaseFailure('Failed to remove holder due to a database error.'),
       );
@@ -143,7 +145,8 @@ export class CollectionService {
       }
 
       return new Success(updatedCollection);
-    } catch {
+    } catch (error) {
+      console.error('Error adding owner:', error);
       return new Fail(
         new DatabaseFailure('Failed to add owner due to a database error.'),
       );
@@ -185,7 +188,8 @@ export class CollectionService {
       }
 
       return new Success(updatedCollection);
-    } catch {
+    } catch (error) {
+      console.error('Error removing owner:', error);
       return new Fail(
         new DatabaseFailure('Failed to remove owner due to a database error.'),
       );
@@ -204,7 +208,8 @@ export class CollectionService {
       }
 
       return new Success(Array.from(allOwnersSet));
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving all owners:', error);
       return new Fail(new DatabaseFailure('Failed to get owners.'));
     }
   }
