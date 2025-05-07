@@ -46,8 +46,9 @@ export default function RootLayout({
               <nav className="border-border bg-sidebar/50 sticky top-0 z-10 flex h-[50px] items-center justify-between border px-4 backdrop-blur-sm">
                 <NavAccount />
               </nav>
-              {children}
-            </SidebarInset>
+              <div className="h-[calc(100vh-50px)]">
+                {children}</div>
+              </SidebarInset>
           </SidebarProvider>
         </Providers>
       </body>

@@ -8,7 +8,7 @@ export default function NavHeader() {
           <GalleryVerticalEnd size={18} />
         </div>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold">Axyl Team</span>
+          <span className="truncate font-semibold">EDU NFT</span>
           <span className="truncate text-xs">Student version</span>
         </div>
       </div>

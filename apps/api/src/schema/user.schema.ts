@@ -26,6 +26,13 @@ export class User {
 
   @Prop({ default: null, type: Date })
   bannedUntil?: Date;
+
+  @Prop({
+    type: String,
+    enum: ['student', 'admin', 'teacher'],
+    default: 'student',
+  })
+  role?: string;
 }
 
 export type UserDocument = User & Document;

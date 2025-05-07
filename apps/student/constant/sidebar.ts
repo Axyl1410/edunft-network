@@ -67,8 +67,8 @@ export const SidebarData = {
       icon: BookText,
     },
     {
-      name: "Models",
-      url: "#",
+      name: "Chatbot",
+      url: "/chatbot",
       icon: Bot,
     },
     {

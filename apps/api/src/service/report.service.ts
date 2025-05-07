@@ -205,4 +205,14 @@ export class ReportService {
       );
     }
   }
+
+  async getAllReports(): Promise<Result<Report[], DatabaseFailure>> {
+    try {
+      const allReports = await this.reportModel.find().lean().exec();
+      return new Success(allReports);
+    } catch (error) {
+      console.error('Error fetching all reports:', error);
+      return new Fail(new DatabaseFailure('Failed to fetch all reports.'));
+    }
+  }
 }

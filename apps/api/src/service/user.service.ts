@@ -108,4 +108,28 @@ export class UserService {
       throw new Error(`Failed to fetch user ID by wallet address: `);
     }
   }
+
+  async updateUser(
+    walletAddress: string,
+    update: Partial<User>,
+  ): Promise<Result<User, NotFoundFailure | DatabaseFailure | ValidationFailure>> {
+    if (!walletAddress) {
+      return new Fail(new ValidationFailure('User', walletAddress));
+    }
+    try {
+      const user = await this.userModel.findOneAndUpdate(
+        { WalletAddress: walletAddress },
+        update,
+        { new: true }
+      ).lean().exec();
+
+      if (!user) {
+        return new Fail(new NotFoundFailure('User', walletAddress));
+      }
+      return new Success(user);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return new Fail(new DatabaseFailure('Failed to update user.'));
+    }
+  }
 }

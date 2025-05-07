@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { User } from 'src/schema/user.schema';
@@ -56,6 +57,15 @@ export class UserController {
   @Post('create')
   async createUser(@Body() user: User): Promise<User> {
     const result = await this.userService.createUser(user);
+    return this.handleResult(result);
+  }
+
+  @Put(':WalletAddress')
+  async updateUser(
+    @Param('WalletAddress') WalletAddress: string,
+    @Body() update: Partial<User>
+  ): Promise<User> {
+    const result = await this.userService.updateUser(WalletAddress, update);
     return this.handleResult(result);
   }
 }

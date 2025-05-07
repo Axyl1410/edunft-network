@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -37,6 +38,12 @@ export class ReportController {
     }
   }
 
+  @Get()
+  async getAllReports(): Promise<Report[]> {
+    const result = await this.reportService.getAllReports();
+    return this.handleResult(result);
+  }
+
   @Post('create')
   async createReport(
     @Body('walletAddress') walletAddress: string,
@@ -69,6 +76,21 @@ export class ReportController {
       reportId,
       status,
     );
+    return this.handleResult(result);
+  }
+
+  @Get('hash/:hash')
+  async getReportsByHash(@Param('hash') hash: string): Promise<Report[]> {
+    const result = await this.reportService.getReportByHash(hash);
+    return this.handleResult(result);
+  }
+
+  @Get('user/:walletAddress')
+  async getReportByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<Report[]> {
+    const result =
+      await this.reportService.getReportByWalletAddress(walletAddress);
     return this.handleResult(result);
   }
 }
