@@ -386,9 +386,10 @@ export default function Page() {
         return updatedFiles;
       });
       if (sourceFile.type === "file" && fileBlobs[sourceFile.name]) {
+        const blobContent = fileBlobs[sourceFile.name] as Blob; // Add type assertion
         setFileBlobs((prev) => ({
           ...prev,
-          [newFile.name]: fileBlobs[sourceFile.name],
+          [newFile.name]: blobContent,
         }));
       }
     } else if (clipboard.action === "cut") {
@@ -402,11 +403,18 @@ export default function Page() {
         localStorage.setItem("files", JSON.stringify(updatedFiles));
         return updatedFiles;
       });
+
       if (sourceFile.name !== newName && fileBlobs[sourceFile.name]) {
         setFileBlobs((prev) => {
-          const newBlobs = { ...prev, [newName]: prev[sourceFile.name] };
-          delete newBlobs[sourceFile.name];
-          return newBlobs;
+          const blobToMove = prev[sourceFile.name];
+          if (blobToMove) {
+            // Ensure blob exists in the current state 'prev'
+            const updatedBlobs = { ...prev };
+            delete updatedBlobs[sourceFile.name]; // Remove old entry
+            updatedBlobs[newName] = blobToMove; // Add new entry
+            return updatedBlobs;
+          }
+          return prev; // If blob is not in prev, return prev state to avoid error
         });
       }
       setClipboard(null);

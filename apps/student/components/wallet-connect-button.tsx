@@ -21,7 +21,7 @@ import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // Added useCallback
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -317,41 +317,59 @@ export const WalletConnectButton = () => {
     if (!wallet) {
       return;
     }
-    const unsubscribe = wallet.subscribe("accountChanged", (newAccount) => {
-      console.log("Account changed via subscribe:", newAccount);
-    });
+    const unsubscribeAccount = wallet.subscribe(
+      "accountChanged",
+      (newAccount) => {
+        console.log("Account changed via subscribe:", newAccount);
+      },
+    );
     const unsubscribeChain = wallet.subscribe("chainChanged", (newChain) => {
       console.log("Chain changed via subscribe:", newChain);
     });
 
     return () => {
-      unsubscribe();
+      unsubscribeAccount();
       unsubscribeChain();
     };
   }, [wallet]);
 
   useEffect(() => {
-    if (account?.address) {
-      axios
-        .post("http://localhost:8080/user/login", {
-          WalletAddress: account.address,
-        })
-        .then(() => {
-          setAccountCreated(true);
-        })
-        .catch((error) => {
-          if (error.response?.status === 404) {
-            setShowCreateUserDialog(true);
-            setAccountCreated(false);
-          } else {
-            console.error(error);
-            toast.error("Failed to connect to EduNFT", {
-              description: error.message,
-            });
-          }
-        });
+    if (!account?.address) {
+      // No active account, ensure dialog is closed and account status is reset
+      setShowCreateUserDialog(false);
+      setAccountCreated(false);
+      return;
     }
-  }, [account]);
+
+    if (accountCreated) {
+      // Account is already marked as created for this session/address, do nothing.
+      return;
+    }
+
+    // At this point, an account address exists, and we haven't confirmed account creation yet.
+    // Attempt to log in / check for user existence.
+    axios
+      .post("http://localhost:8080/user/login", {
+        WalletAddress: account.address,
+      })
+      .then(() => {
+        setAccountCreated(true);
+        setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
+      })
+      .catch((error) => {
+        if (error.response?.status === 404) {
+          // User not found, prompt for account creation
+          setShowCreateUserDialog(true);
+          setAccountCreated(false); // Ensure this is false as we are prompting creation
+        } else {
+          console.error("Login/check error:", error);
+          toast.error("Failed to connect to EduNFT", {
+            description:
+              error instanceof Error ? error.message : "Unknown error occurred",
+          });
+        }
+      });
+  }, [account?.address, accountCreated]); // Dependencies trigger effect on address change or account creation status change
 
   const wallets = [
     inAppWallet({
@@ -399,6 +417,11 @@ export const WalletConnectButton = () => {
     }
   }
 
+  const handleCreateAccountSuccess = useCallback(() => {
+    setAccountCreated(true);
+    setShowCreateUserDialog(false);
+  }, []); // Dependencies are stable setters from useState
+
   return (
     <>
       {!account?.address ? (
@@ -423,9 +446,7 @@ export const WalletConnectButton = () => {
       <Dialog
         open={showCreateUserDialog}
         onOpenChange={(open) => {
-          if (!open && !accountCreated) {
-            return;
-          }
+          // Allow dialog to be closed by user interaction
           setShowCreateUserDialog(open);
         }}
       >
@@ -439,10 +460,7 @@ export const WalletConnectButton = () => {
           {account?.address && (
             <CreateAccountForm
               walletAddress={account.address}
-              onSuccess={() => {
-                setAccountCreated(true);
-                setShowCreateUserDialog(false);
-              }}
+              onSuccess={handleCreateAccountSuccess}
             />
           )}
         </DialogContent>
