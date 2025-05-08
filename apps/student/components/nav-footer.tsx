@@ -1,33 +1,39 @@
 import { formatAddress } from "@/lib/utils";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import {
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
-import { generateColorFromAddress } from "@workspace/ui/lib/utils";
+import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
+import Link from "next/link";
 import {
-  ChevronsUpDown,
-  Sparkles,
-  BadgeCheck,
-  CreditCard,
-  Bell,
-  LogOut,
-} from "lucide-react";
-import { useAccount } from "wagmi";
+  Blobbie,
+  useActiveAccount,
+  useActiveWallet,
+  useDisconnect,
+} from "thirdweb/react";
 
 export default function NavFooter() {
-  const account = useAccount();
+  const account = useActiveAccount();
   const { isMobile } = useSidebar();
+  const { disconnect } = useDisconnect();
+  const wallet = useActiveWallet();
+
+  const handleDisconnect = () => {
+    if (wallet) {
+      disconnect(wallet);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -36,18 +42,19 @@ export default function NavFooter() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+              disabled={!account?.address}
             >
-              <div
-                className="bg-primary text-sidebar-primary-foreground flex aspect-square h-8 w-8 items-center justify-center rounded-full dark:bg-neutral-800"
-                style={{
-                  background: generateColorFromAddress(account.address ?? ""),
-                }}
-              />
+              <div className="aspect-square">
+                <Blobbie
+                  address={account?.address ?? ""}
+                  className="h-8 w-8 rounded-full"
+                />
+              </div>
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate text-sm font-semibold">
-                  {formatAddress(account.address ?? "")}
+                  {formatAddress(account?.address ?? "")}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -61,44 +68,32 @@ export default function NavFooter() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <div
-                  className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full dark:bg-neutral-800"
-                  style={{
-                    background: generateColorFromAddress(account.address ?? ""),
-                  }}
+                <Blobbie
+                  address={account?.address ?? ""}
+                  className="size-8 rounded-full"
                 />
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-sm font-semibold">
-                    {formatAddress(account.address ?? "")}
+                    {formatAddress(account?.address ?? "")}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <Link href={"/profile"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <BadgeCheck />
+                  Account
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleDisconnect}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

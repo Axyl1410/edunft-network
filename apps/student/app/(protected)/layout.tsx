@@ -8,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { useAccount } from "wagmi";
+import { useActiveAccount } from "thirdweb/react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const account = useAccount();
+  const account = useActiveAccount();
 
-  if (account.isDisconnected) {
+  if (!account?.address) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Card className="w-full max-w-md">
@@ -24,7 +24,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <WalletConnectButton className="mt-4" />
+            <WalletConnectButton />
           </CardContent>
         </Card>
       </div>

@@ -1,7 +1,9 @@
 import {
   BookText,
   Bot,
+  Calendar,
   FileText,
+  HelpCircle,
   Map,
   PenLine,
   Settings,
@@ -15,44 +17,14 @@ export const SidebarData = {
       url: "/",
       icon: Map,
       isActive: true,
-      items: [
-        // {
-        //   title: "History",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Starred",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Settings",
-        //   url: "#",
-        // },
-      ],
+      items: [],
     },
 
     {
       title: "Files",
       url: "/file",
       icon: FileText,
-      items: [
-        // {
-        //   title: "Introduction",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Get Started",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Tutorials",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Changelog",
-        //   url: "#",
-        // },
-      ],
+      items: [],
     },
     {
       title: "Studio",
@@ -60,27 +32,31 @@ export const SidebarData = {
       icon: PenLine,
       items: [
         {
-          title: "General",
+          title: "Mint",
           url: "#",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
+          title: "Collection",
           url: "#",
         },
       ],
     },
     {
       title: "Profile",
-      url: "#",
+      url: "/profile",
       icon: UserCircle2,
+      items: [],
+    },
+    {
+      title: "Question",
+      url: "/question",
+      icon: HelpCircle,
+      items: [],
+    },
+    {
+      title: "Events",
+      url: "/events",
+      icon: Calendar,
       items: [],
     },
   ],
@@ -91,8 +67,8 @@ export const SidebarData = {
       icon: BookText,
     },
     {
-      name: "Models",
-      url: "#",
+      name: "Chatbot",
+      url: "/chatbot",
       icon: Bot,
     },
     {

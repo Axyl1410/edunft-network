@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import NavAccount from "@/components/nav-acoount";
 import { Providers } from "@/components/providers";
-import "@rainbow-me/rainbowkit/styles.css";
 import {
   SidebarInset,
   SidebarProvider,
@@ -44,11 +43,12 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <nav className="border-border bg-sidebar/50 sticky top-2.5 z-10 ml-1 mr-3 flex h-14 items-center justify-between rounded-lg border px-4 shadow backdrop-blur-sm">
+              <nav className="border-border bg-sidebar/50 sticky top-0 z-10 flex h-[50px] items-center justify-between border px-4 backdrop-blur-sm">
                 <NavAccount />
               </nav>
-              {children}
-            </SidebarInset>
+              <div className="h-[calc(100vh-50px)]">
+                {children}</div>
+              </SidebarInset>
           </SidebarProvider>
         </Providers>
       </body>

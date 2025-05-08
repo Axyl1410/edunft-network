@@ -6,8 +6,9 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
-import { NotFoundFailure, DatabaseFailure } from 'src/core/failure';
+import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { User } from 'src/schema/user.schema';
 import { UserService } from 'src/service/user.service';
 
@@ -38,10 +39,6 @@ export class UserController {
 
   @Post('login')
   async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
-    if (!WalletAddress) {
-      throw new NotFoundException('Wallet address is required.');
-    }
-
     const result = await this.userService.loginUser({
       WalletAddress: WalletAddress,
     });
@@ -53,11 +50,22 @@ export class UserController {
   async getUserByWalletAddress(
     @Param('WalletAddress') WalletAddress: string,
   ): Promise<User> {
-    if (!WalletAddress) {
-      throw new NotFoundException('Wallet address is required.');
-    }
-
     const result = await this.userService.getUserByWalletAddress(WalletAddress);
+    return this.handleResult(result);
+  }
+
+  @Post('create')
+  async createUser(@Body() user: User): Promise<User> {
+    const result = await this.userService.createUser(user);
+    return this.handleResult(result);
+  }
+
+  @Put(':WalletAddress')
+  async updateUser(
+    @Param('WalletAddress') WalletAddress: string,
+    @Body() update: Partial<User>
+  ): Promise<User> {
+    const result = await this.userService.updateUser(WalletAddress, update);
     return this.handleResult(result);
   }
 }

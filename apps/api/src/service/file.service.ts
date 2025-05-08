@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DatabaseFailure } from 'src/core/failure';
+import {
+  DatabaseFailure,
+  NotFoundFailure,
+  ValidationFailure,
+} from 'src/core/failure';
 import { Fail, Result, Success } from 'src/core/types';
-import { CreateFileDto } from 'src/dto/file.dto';
 import { File } from 'src/schema/file.schema';
-import { User } from 'src/schema/user.schema';
+import { UserService } from './user.service';
 
 @Injectable()
 export class FileService {
   constructor(
     @InjectModel(File.name)
     private readonly fileModel: Model<File>,
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly userService: UserService,
   ) {}
 
   async addFile(
-    fileData: CreateFileDto,
-  ): Promise<Result<File, DatabaseFailure>> {
+    fileData: File,
+  ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
+    if (!fileData) {
+      return new Fail(new ValidationFailure('File', fileData));
+    }
+
     try {
       const newFile = new this.fileModel(fileData);
       const saveFile = await newFile.save();
+
+      if (!saveFile) {
+        return new Fail(new DatabaseFailure('Failed to save file.'));
+      }
 
       return new Success(saveFile);
     } catch {
@@ -28,54 +39,70 @@ export class FileService {
     }
   }
 
-  async getFileByHash(hash: string): Promise<Result<File, DatabaseFailure>> {
+  async getFileByHash(
+    hash: string,
+  ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
+    if (!hash) {
+      return new Fail(new ValidationFailure('File', hash));
+    }
+
     try {
-      const file = await this.fileModel.findOne({ Hash: hash }).exec();
+      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
 
       if (!file) {
-        return new Fail(new DatabaseFailure('File not found'));
+        return new Fail(new NotFoundFailure('File not found'));
       }
 
       return new Success(file);
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving file:', error);
       return new Fail(new DatabaseFailure('Failed to retrieve file.'));
     }
   }
 
   async getFilesByWalletAddress(
     walletAddress: string,
-  ): Promise<Result<File[], DatabaseFailure>> {
+  ): Promise<
+    Result<File[], DatabaseFailure | NotFoundFailure | ValidationFailure>
+  > {
+    if (!walletAddress) {
+      return new Fail(new ValidationFailure('Wallet Address', walletAddress));
+    }
+
     try {
-      const user = await this.userModel
-        .findOne({
-          WalletAddress: walletAddress,
-        })
-        .select('User')
-        .exec();
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
 
       if (!user) {
-        return new Fail(new DatabaseFailure('User not found'));
+        return new Fail(new NotFoundFailure('User not found'));
       }
 
-      const files = await this.fileModel
-        .find({ User: user._id.toString() })
-        .exec();
+      const files = await this.fileModel.find({ User: user._id }).lean().exec();
 
       return new Success(files);
-    } catch {
+    } catch (error) {
+      console.error('Error retrieving files:', error);
       return new Fail(new DatabaseFailure('Failed to retrieve files.'));
     }
   }
 
-  async removeFile(hash: string): Promise<Result<File, DatabaseFailure>> {
+  async removeFile(
+    hash: string,
+  ): Promise<Result<void, DatabaseFailure | ValidationFailure>> {
+    if (!hash) {
+      return new Fail(new ValidationFailure('File', hash));
+    }
+
     try {
       const file = await this.fileModel.findOneAndDelete({ Hash: hash }).exec();
 
       if (!file) {
-        return new Fail(new DatabaseFailure('File not found'));
+        return new Fail(new NotFoundFailure('File not found'));
       }
-      return new Success(file);
-    } catch {
+
+      return new Success(undefined);
+    } catch (error) {
+      console.error('Error removing file:', error);
       return new Fail(new DatabaseFailure('Failed to remove file.'));
     }
   }
@@ -83,31 +110,58 @@ export class FileService {
   async transferFile(
     hash: string,
     newWalletAddress: string,
-  ): Promise<Result<File, DatabaseFailure>> {
+  ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
+    if (!hash || !newWalletAddress) {
+      return new Fail(new ValidationFailure('Hash or Wallet Address', hash));
+    }
+
     try {
-      const file = await this.fileModel.findOne({ Hash: hash }).exec();
-
-      if (!file) {
-        return new Fail(new DatabaseFailure('File not found'));
-      }
-
-      const user = await this.userModel
-        .findOne({
-          WalletAddress: newWalletAddress,
-        })
-        .select('User')
-        .exec();
+      const user =
+        await this.userService.getUserIdByWalletAddress(newWalletAddress);
 
       if (!user) {
-        return new Fail(new DatabaseFailure('User not found'));
+        return new Fail(new NotFoundFailure('User not found'));
       }
 
-      file.User = user._id;
-      const updatedFile = await file.save();
+      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+
+      if (!file) {
+        return new Fail(new NotFoundFailure('File not found'));
+      }
+
+      const updatedFile = await this.fileModel.findOneAndUpdate(
+        { Hash: hash },
+        { User: user._id },
+        { new: true },
+      );
+
+      if (!updatedFile) {
+        return new Fail(
+          new DatabaseFailure('Failed to update file after transfer.'),
+        );
+      }
 
       return new Success(updatedFile);
-    } catch {
+    } catch (error) {
+      console.error('Error transferring file:', error);
       return new Fail(new DatabaseFailure('Failed to transfer file.'));
+    }
+  }
+
+  async getFileIdbyHash(hash: string): Promise<{ _id: string }> {
+    if (!hash) {
+      throw new Error(`File with hash ${hash} not found.`);
+    }
+
+    try {
+      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+      if (!file) {
+        throw new Error(`File with hash ${hash} not found.`);
+      }
+      return { _id: file._id.toString() };
+    } catch (error) {
+      console.error('Error retrieving file by hash:', error);
+      throw new Error('Database failure while retrieving file.');
     }
   }
 }

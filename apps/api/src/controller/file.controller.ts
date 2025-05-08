@@ -1,16 +1,17 @@
 import {
-  Controller,
-  Post,
   Body,
-  InternalServerErrorException,
-  Get,
-  Param,
-  NotFoundException,
+  Controller,
   Delete,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
-import { FileService } from '../service/file.service';
+import { File } from 'src/schema/file.schema';
 import { DatabaseFailure, NotFoundFailure } from '../core/failure';
-import { CreateFileDto } from 'src/dto/file.dto';
+import { FileService } from '../service/file.service';
 
 @Controller('file')
 export class FileController {
@@ -38,25 +39,19 @@ export class FileController {
   }
 
   @Post()
-  async addFile(@Body() createFileDto: CreateFileDto) {
-    const result = await this.fileService.addFile(createFileDto);
+  async addFile(@Body() File: File) {
+    const result = await this.fileService.addFile(File);
     return this.handleResult(result);
   }
 
   @Get('hash/:hash')
   async getFileByHash(@Param('hash') hash: string) {
-    if (!hash) {
-      throw new NotFoundException('Hash is required.');
-    }
     const result = await this.fileService.getFileByHash(hash);
     return this.handleResult(result);
   }
 
   @Get('user/:walletAddress')
   async getFilesByWalletAddress(@Param('walletAddress') walletAddress: string) {
-    if (!walletAddress) {
-      throw new NotFoundException('Wallet address is required.');
-    }
     const result =
       await this.fileService.getFilesByWalletAddress(walletAddress);
     return this.handleResult(result);
@@ -68,12 +63,8 @@ export class FileController {
     return this.handleResult(result);
   }
 
-  @Post('transfer')
-  async transferFile(@Body() body: { hash: string; newWalletAddress: string }) {
-    const { hash, newWalletAddress } = body;
-    if (!hash || !newWalletAddress) {
-      throw new NotFoundException('Hash and new wallet address are required.');
-    }
+  @Put('transfer')
+  async transferFile(@Body() hash: string, @Body() newWalletAddress: string) {
     const result = await this.fileService.transferFile(hash, newWalletAddress);
     return this.handleResult(result);
   }

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Collection, CollectionSchema } from 'src/schema/collection.schema';
+import { User, UserSchema } from 'src/schema/user.schema';
+import { UserService } from 'src/service/user.service';
 import { CollectionController } from '../controller/collection.controller';
 import { CollectionService } from '../service/collection.service';
 
@@ -8,9 +10,10 @@ import { CollectionService } from '../service/collection.service';
   imports: [
     MongooseModule.forFeature([
       { name: Collection.name, schema: CollectionSchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [CollectionController],
-  providers: [CollectionService],
+  providers: [CollectionService, UserService],
 })
 export class CollectionModule {}

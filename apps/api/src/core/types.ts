@@ -28,7 +28,3 @@ export class Fail<E extends Failure> {
     return true;
   }
 }
-
-// You can add other shared types here, e.g.:
-// export type WalletAddress = string;
-// export type CID = string;
