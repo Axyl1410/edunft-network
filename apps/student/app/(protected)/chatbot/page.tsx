@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@workspace/ui/components/button";
+import Loading from "@workspace/ui/components/loading";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { cn } from "@workspace/ui/lib/utils";
 import { Bot, Loader2, User } from "lucide-react";
@@ -146,7 +147,8 @@ export default function ChatbotPage() {
             ))}
             {isLoading && (
               <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
-                <Loader2 className="h-4 w-4 animate-spin" /> Đang trả lời...
+                <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                <Loading text="Đang trả lời..." />
               </div>
             )}
             <div ref={messagesEndRef} />

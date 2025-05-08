@@ -1,7 +1,7 @@
 "use client";
 
 import { thirdwebClient } from "@/lib/thirdweb-client";
-import { ModeToggle } from "@workspace/ui/components/mode-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Search } from "lucide-react";
 import { ConnectButton } from "thirdweb/react";

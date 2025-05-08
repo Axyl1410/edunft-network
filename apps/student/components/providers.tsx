@@ -6,7 +6,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
+    <ThemeProvider>
       <ThirdwebProvider>
         <Toaster closeButton position="bottom-right" />
         {children}
