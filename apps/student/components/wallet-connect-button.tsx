@@ -1,5 +1,10 @@
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { formatAddress } from "@/lib/utils";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -10,8 +15,10 @@ import {
   DialogTitle,
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
+import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -69,10 +76,6 @@ const CreateAccountForm = ({
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: any) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
@@ -91,7 +94,7 @@ const CreateAccountForm = ({
     setIsLoading(true);
     try {
       await axios.post("http://localhost:8080/user/create", {
-        WalletAddress: walletAddress,
+        walletAddress: walletAddress,
         ...formData,
       });
       toast.success("Account created successfully!");
@@ -118,24 +121,24 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label htmlFor="username" className="text-sm font-medium">
-                Username
-              </label>
+              <Label htmlFor="username">Username (required)</Label>
               <Input
                 id="username"
                 value={formData.Username}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Username: e.target.value }))
+                }
                 placeholder="Enter your username"
               />
             </div>
             <div className="grid gap-2">
-              <label htmlFor="bio" className="text-sm font-medium">
-                Bio
-              </label>
+              <Label htmlFor="bio">Bio</Label>
               <Textarea
                 id="bio"
                 value={formData.Bio}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Bio: e.target.value }))
+                }
                 placeholder="Tell us about yourself"
               />
             </div>
@@ -156,7 +159,12 @@ const CreateAccountForm = ({
               <Input
                 id="profilePicture"
                 value={formData.ProfilePicture}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    ProfilePicture: e.target.value,
+                  }))
+                }
                 placeholder="Enter your profile picture URL"
               />
             </div>
@@ -167,7 +175,9 @@ const CreateAccountForm = ({
               <Input
                 id="banner"
                 value={formData.Banner}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Banner: e.target.value }))
+                }
                 placeholder="Enter your banner URL"
               />
             </div>
@@ -248,6 +258,15 @@ const CreateAccountForm = ({
           </div>
         ))}
       </div>
+
+      <Alert>
+        <Terminal className="h-4 w-4" />
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          All information is optinal, but the more you provide, the better your
+          experience will be. You can always update your profile later.
+        </AlertDescription>
+      </Alert>
 
       <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
 

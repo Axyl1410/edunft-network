@@ -54,11 +54,11 @@ export class ReportService {
       }
 
       const newReport = new this.reportModel({
-        User: user._id,
-        File: file._id,
-        Reason: reason,
-        Description: description,
-        Status: 'pending',
+        user: user._id,
+        file: file._id,
+        reason: reason,
+        description: description,
+        status: 'pending',
       });
 
       const savedReport = await newReport.save();
@@ -117,7 +117,7 @@ export class ReportService {
     }
 
     try {
-      report.Status = status;
+      report.status = status;
       const updatedReport = await report.save();
 
       if (!updatedReport) {
@@ -149,7 +149,7 @@ export class ReportService {
       }
 
       const report = await this.reportModel
-        .find({ File: file._id })
+        .find({ file: file._id })
         .lean()
         .exec();
 
@@ -185,7 +185,7 @@ export class ReportService {
       }
 
       const report = await this.reportModel
-        .find({ User: user._id })
+        .find({ user: user._id })
         .lean()
         .exec();
 

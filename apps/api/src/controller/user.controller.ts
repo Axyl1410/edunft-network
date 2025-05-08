@@ -40,7 +40,7 @@ export class UserController {
   @Post('login')
   async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
     const result = await this.userService.loginUser({
-      WalletAddress: WalletAddress,
+      walletAddress: WalletAddress,
     });
 
     return this.handleResult(result);
@@ -63,7 +63,7 @@ export class UserController {
   @Put(':WalletAddress')
   async updateUser(
     @Param('WalletAddress') WalletAddress: string,
-    @Body() update: Partial<User>
+    @Body() update: Partial<User>,
   ): Promise<User> {
     const result = await this.userService.updateUser(WalletAddress, update);
     return this.handleResult(result);

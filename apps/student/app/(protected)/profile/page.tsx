@@ -13,10 +13,10 @@ import { useActiveAccount } from "thirdweb/react";
 export default function ProfilePage() {
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({
-    Username: "",
-    Bio: "",
-    ProfilePicture: "",
-    Banner: "",
+    username: "",
+    bio: "",
+    profilePicture: "",
+    banner: "",
     role: "student",
   });
   const account = useActiveAccount();
@@ -28,10 +28,10 @@ export default function ProfilePage() {
         .get("http://localhost:8080/user/" + account?.address)
         .then((response) => {
           setForm({
-            Username: response.data.Username || "",
-            Bio: response.data.Bio || "",
-            ProfilePicture: response.data.ProfilePicture || "",
-            Banner: response.data.Banner || "",
+            username: response.data.username || "",
+            bio: response.data.bio || "",
+            profilePicture: response.data.profilePicture || "",
+            banner: response.data.banner || "",
             role: response.data.role || "student",
           });
         })
@@ -60,10 +60,10 @@ export default function ProfilePage() {
         "http://localhost:8080/user/" + account.address,
       );
       setForm({
-        Username: response.data.Username || "",
-        Bio: response.data.Bio || "",
-        ProfilePicture: response.data.ProfilePicture || "",
-        Banner: response.data.Banner || "",
+        username: response.data.username || "",
+        bio: response.data.bio || "",
+        profilePicture: response.data.profilePicture || "",
+        banner: response.data.banner || "",
         role: response.data.role || "student",
       });
     } catch (error: any) {
@@ -89,24 +89,24 @@ export default function ProfilePage() {
         {/* Banner + Avatar */}
         <div className="relative">
           <div className="h-40 w-full overflow-hidden rounded-t-2xl bg-gradient-to-r from-blue-200 to-indigo-200">
-            {form.Banner && (
+            {form.banner && (
               <img
-                src={form.Banner}
+                src={form.banner}
                 alt="Banner"
                 className="h-40 w-full object-cover"
               />
             )}
           </div>
           <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
-            {form.ProfilePicture ? (
+            {form.profilePicture ? (
               <img
-                src={form.ProfilePicture}
+                src={form.profilePicture}
                 alt="Avatar"
                 className="h-24 w-24 rounded-full border-4 border-white bg-white object-cover shadow-lg"
               />
             ) : (
               <div className="bg-muted text-muted-foreground flex h-24 w-24 items-center justify-center rounded-full border-4 border-white text-4xl font-bold shadow-lg">
-                {form.Username?.[0] || "?"}
+                {form.username?.[0] || "?"}
               </div>
             )}
           </div>
@@ -114,7 +114,7 @@ export default function ProfilePage() {
         <Card className="mt-16 rounded-t-none px-6 pb-6 pt-8 shadow-lg">
           <CardContent className="flex flex-col items-center">
             <div className="flex flex-col items-center gap-1">
-              <div className="text-2xl font-bold">{form.Username}</div>
+              <div className="text-2xl font-bold">{form.username}</div>
               <div className="text-muted-foreground break-all text-xs">
                 {formatAddress(account.address)}
               </div>
@@ -127,8 +127,8 @@ export default function ProfilePage() {
                 <div>
                   <Label htmlFor="Username">Tên hiển thị</Label>
                   <Input
-                    name="Username"
-                    value={form.Username}
+                    name="username"
+                    value={form.username}
                     onChange={handleChange}
                     className="mt-1"
                   />
@@ -136,8 +136,8 @@ export default function ProfilePage() {
                 <div>
                   <Label htmlFor="Bio">Giới thiệu</Label>
                   <Input
-                    name="Bio"
-                    value={form.Bio}
+                    name="bio"
+                    value={form.bio}
                     onChange={handleChange}
                     className="mt-1"
                   />
@@ -145,17 +145,17 @@ export default function ProfilePage() {
                 <div>
                   <Label htmlFor="ProfilePicture">Ảnh đại diện (URL)</Label>
                   <Input
-                    name="ProfilePicture"
-                    value={form.ProfilePicture}
+                    name="profilePicture"
+                    value={form.profilePicture}
                     onChange={handleChange}
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="Banner">Ảnh bìa (URL)</Label>
+                  <Label htmlFor="banner">Ảnh bìa (URL)</Label>
                   <Input
-                    name="Banner"
-                    value={form.Banner}
+                    name="banner"
+                    value={form.banner}
                     onChange={handleChange}
                     className="mt-1"
                   />
@@ -175,7 +175,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="text-muted-foreground mt-6 w-full max-w-md whitespace-pre-line text-center text-base">
-                {form.Bio || (
+                {form.bio || (
                   <span className="text-sm italic text-gray-400">
                     Chưa có giới thiệu.
                   </span>

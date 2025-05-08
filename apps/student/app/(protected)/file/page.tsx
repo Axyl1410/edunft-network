@@ -1,27 +1,19 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { Button } from "@workspace/ui/components/button";
 import {
-  Plus,
-  Upload,
-  Folder,
-  FileIcon,
-  MoreVertical,
-  Eye,
-  Download,
-  Move,
-  Trash2,
-  Copy,
-  Scissors,
-  ClipboardPaste,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { Button } from "@workspace/ui/components/button";
 import {
   Table,
   TableBody,
@@ -31,13 +23,22 @@ import {
   TableRow,
 } from "@workspace/ui/components/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@workspace/ui/components/dialog";
-import { Grid, List } from "lucide-react";
+  ClipboardPaste,
+  Copy,
+  Download,
+  Eye,
+  FileIcon,
+  Folder,
+  Grid,
+  List,
+  MoreVertical,
+  Move,
+  Plus,
+  Scissors,
+  Trash2,
+  Upload,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface FileData {
   id: string;
@@ -433,7 +434,10 @@ export default function Page() {
   };
 
   return (
-    <div className="flex min-h-svh flex-col p-6"  onContextMenu={handleContextMenu}>
+    <div
+      className="flex min-h-svh flex-col p-6"
+      onContextMenu={handleContextMenu}
+    >
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">FILES</h1>
@@ -457,7 +461,7 @@ export default function Page() {
             ))}
           </div>
         </div>
-        <div className="flex gap-2" >
+        <div className="flex gap-2">
           <Button
             variant={viewMode === "list" ? "default" : "ghost"}
             size="icon"
@@ -507,7 +511,7 @@ export default function Page() {
           />
         </div>
       </div>
-      <div className="mb-4 border-b border-gray-200" >
+      <div className="mb-4 border-b border-gray-200">
         <div className="flex gap-4">
           <button
             className={`px-4 py-2 font-medium ${
@@ -531,7 +535,7 @@ export default function Page() {
           </button>
         </div>
       </div>
-      <div >
+      <div>
         {viewMode === "list" ? (
           <div className="rounded-lg border">
             <Table>

@@ -3,15 +3,15 @@ import { Document, Types } from 'mongoose';
 
 export class HoldingItem {
   @Prop({ type: String, required: true })
-  Address: string;
+  address: string;
 
   @Prop({ type: String, required: true })
-  TokenId: string;
+  tokenId: string;
 }
 
 export class OwnerItem {
   @Prop({ type: String, required: true })
-  Address: string;
+  address: string;
 
   @Prop({ type: String, required: true })
   name: string;
@@ -20,13 +20,13 @@ export class OwnerItem {
 @Schema({ timestamps: true })
 export class Collection {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  User: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ default: [], type: [OwnerItem] })
-  Owner: OwnerItem[];
+  owner: OwnerItem[];
 
   @Prop({ default: [], type: [HoldingItem] })
-  Holders: HoldingItem[];
+  holders: HoldingItem[];
 }
 
 export type CollectionDocument = Collection & Document;

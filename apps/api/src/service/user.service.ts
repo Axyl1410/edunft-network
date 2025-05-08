@@ -16,8 +16,8 @@ export class UserService {
   async createUser(
     user: User,
   ): Promise<Result<User, DatabaseFailure | ValidationFailure>> {
-    if (!user.WalletAddress) {
-      return new Fail(new ValidationFailure('User', user.WalletAddress));
+    if (!user.walletAddress) {
+      return new Fail(new ValidationFailure('User', user.walletAddress));
     }
 
     try {
@@ -36,14 +36,14 @@ export class UserService {
   ): Promise<
     Result<User, NotFoundFailure | DatabaseFailure | ValidationFailure>
   > {
-    if (!user.WalletAddress) {
-      return new Fail(new ValidationFailure('User', user.WalletAddress));
+    if (!user.walletAddress) {
+      return new Fail(new ValidationFailure('User', user.walletAddress));
     }
 
     try {
       const foundUser = await this.userModel
         .findOne({
-          WalletAddress: user.WalletAddress,
+          walletAddress: user.walletAddress,
         })
         .lean()
         .exec();
@@ -51,7 +51,7 @@ export class UserService {
       if (foundUser) {
         return new Success(foundUser);
       }
-      return new Fail(new NotFoundFailure('User', user.WalletAddress));
+      return new Fail(new NotFoundFailure('User', user.walletAddress));
     } catch (error) {
       console.error('Error logging in user:', error);
       return new Fail(new DatabaseFailure('Failed to login user.'));
@@ -69,7 +69,7 @@ export class UserService {
 
     try {
       const user = await this.userModel
-        .findOne({ WalletAddress: walletAddress })
+        .findOne({ walletAddress: walletAddress })
         .lean()
         .exec();
 
@@ -92,7 +92,7 @@ export class UserService {
     try {
       const user = await this.userModel
         .findOne({
-          WalletAddress: walletAddress,
+          walletAddress: walletAddress,
         })
         .select('_id')
         .lean()
@@ -112,16 +112,19 @@ export class UserService {
   async updateUser(
     walletAddress: string,
     update: Partial<User>,
-  ): Promise<Result<User, NotFoundFailure | DatabaseFailure | ValidationFailure>> {
+  ): Promise<
+    Result<User, NotFoundFailure | DatabaseFailure | ValidationFailure>
+  > {
     if (!walletAddress) {
       return new Fail(new ValidationFailure('User', walletAddress));
     }
     try {
-      const user = await this.userModel.findOneAndUpdate(
-        { WalletAddress: walletAddress },
-        update,
-        { new: true }
-      ).lean().exec();
+      const user = await this.userModel
+        .findOneAndUpdate({ walletAddress: walletAddress }, update, {
+          new: true,
+        })
+        .lean()
+        .exec();
 
       if (!user) {
         return new Fail(new NotFoundFailure('User', walletAddress));

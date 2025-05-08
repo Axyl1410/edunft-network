@@ -4,10 +4,10 @@ import { Document, Types } from 'mongoose';
 @Schema({ timestamps: true })
 export class Vote {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  User: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'File' })
-  File: Types.ObjectId;
+  file: Types.ObjectId;
 
   @Prop({ required: true, type: String, enum: ['upvote', 'downvote'] })
   voteType: string;
