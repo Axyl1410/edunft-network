@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-      suppressHydrationWarning
+        suppressHydrationWarning
         className={cn(
           "font-sans antialiased",
           fontSans.variable,
@@ -44,12 +44,11 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <nav className="border-border bg-sidebar/50 sticky top-0 z-10 flex h-[50px] items-center justify-between border px-4 backdrop-blur-sm">
+              <nav className="border-border bg-sidebar sticky top-0 z-10 flex h-[50px] items-center justify-between border border-l-0 px-4 backdrop-blur-sm">
                 <NavAccount />
               </nav>
-              <div className="h-[calc(100vh-50px)]">
-                {children}</div>
-              </SidebarInset>
+              <div className="h-[calc(100vh-50px)]">{children}</div>
+            </SidebarInset>
           </SidebarProvider>
         </Providers>
       </body>

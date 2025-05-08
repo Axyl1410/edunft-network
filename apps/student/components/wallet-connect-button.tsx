@@ -1,5 +1,6 @@
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { formatAddress } from "@/lib/utils";
+import { useBearStore } from "@/store";
 import {
   Alert,
   AlertDescription,
@@ -16,12 +17,13 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useEffect, useState, useCallback } from "react"; // Added useCallback
+import { useCallback, useEffect, useState } from "react"; // Added useCallback
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -29,6 +31,7 @@ import {
   useActiveWallet,
   useActiveWalletChain,
   useConnectModal,
+  useDisconnect,
   useWalletDetailsModal,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
@@ -62,9 +65,11 @@ const steps = [
 const CreateAccountForm = ({
   onSuccess,
   walletAddress,
+  setCreateAccountError,
 }: {
   onSuccess: () => void;
   walletAddress: string;
+  setCreateAccountError: (err: string) => void;
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<CreateUserFormData>({
@@ -101,10 +106,10 @@ const CreateAccountForm = ({
       onSuccess();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create account", {
-        description:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      // Show error dialog instead of toast
+      setCreateAccountError(
+        error instanceof Error ? error.message : "Unknown error occurred",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -312,6 +317,12 @@ export const WalletConnectButton = () => {
   const activeChain = useActiveWalletChain();
   const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
+  const setUser = useBearStore((state) => state.setUser);
+  const user = useBearStore((state) => state.user);
+  const { disconnect } = useDisconnect();
+  const [createAccountError, setCreateAccountError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!wallet) {
@@ -355,21 +366,38 @@ export const WalletConnectButton = () => {
       .then(() => {
         setAccountCreated(true);
         setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
+        // Fetch user info and set in zustand
+        axios
+          .get(`http://localhost:8080/user/${account.address}`)
+          .then((response) => {
+            setUser({
+              walletAddress: account.address,
+              username: response.data.username || "",
+              bio: response.data.bio || "",
+              profilePicture: response.data.profilePicture || "",
+              banner: response.data.banner || "",
+              reputation: response.data.reputation || 100,
+              violations: response.data.violations || 0,
+              bannedUntil: response.data.bannedUntil || null,
+              role: response.data.role || "student",
+            });
+          });
       })
       .catch((error) => {
         if (error.response?.status === 404) {
-          // User not found, prompt for account creation
+          // User not found, prompt for account creation (no error toast)
           setShowCreateUserDialog(true);
           setAccountCreated(false); // Ensure this is false as we are prompting creation
         } else {
+          // Only show toast for real errors
           console.error("Login/check error:", error);
-          toast.error("Failed to connect to EduNFT", {
+          toast.error("Đã xảy ra lỗi khi kết nối tới EduNFT", {
             description:
               error instanceof Error ? error.message : "Unknown error occurred",
           });
         }
       });
-  }, [account?.address, accountCreated]); // Dependencies trigger effect on address change or account creation status change
+  }, [account?.address, accountCreated, setUser]); // Add setUser to dependencies
 
   const wallets = [
     inAppWallet({
@@ -420,7 +448,32 @@ export const WalletConnectButton = () => {
   const handleCreateAccountSuccess = useCallback(() => {
     setAccountCreated(true);
     setShowCreateUserDialog(false);
-  }, []); // Dependencies are stable setters from useState
+    // Fetch user info and set in zustand
+    if (account?.address) {
+      axios
+        .get(`http://localhost:8080/user/${account.address}`)
+        .then((response) => {
+          setUser({
+            walletAddress: account.address,
+            username: response.data.username || "",
+            bio: response.data.bio || "",
+            profilePicture: response.data.profilePicture || "",
+            banner: response.data.banner || "",
+            reputation: response.data.reputation || 100,
+            violations: response.data.violations || 0,
+            bannedUntil: response.data.bannedUntil || null,
+            role: response.data.role || "student",
+          });
+        });
+    }
+  }, [account?.address, setUser]); // Dependencies are stable setters from useState
+
+  const handleCreateAccountErrorLogout = () => {
+    if (wallet) disconnect(wallet);
+    setCreateAccountError(null);
+    setShowCreateUserDialog(false);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -438,7 +491,21 @@ export const WalletConnectButton = () => {
           onClick={handleDetail}
           className="flex cursor-pointer items-center"
         >
-          <Blobbie address={account.address} className="size-6 rounded-full" />
+          {user?.profilePicture ? (
+            <SkeletonImage
+              src={user.profilePicture}
+              alt="Avatar"
+              width={24}
+              height={24}
+              rounded="rounded-full"
+              className="mr-1 size-6 rounded-full"
+            />
+          ) : (
+            <Blobbie
+              address={account.address}
+              className="mr-1 size-6 rounded-full"
+            />
+          )}
           {formatAddress(account.address)}
         </Button>
       )}
@@ -446,11 +513,12 @@ export const WalletConnectButton = () => {
       <Dialog
         open={showCreateUserDialog}
         onOpenChange={(open) => {
-          // Allow dialog to be closed by user interaction
+          // Prevent closing by X or overlay when dialog is for account creation
+          if (!open && showCreateUserDialog) return;
           setShowCreateUserDialog(open);
         }}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="no-x-close max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Your Account</DialogTitle>
             <DialogDescription>
@@ -461,8 +529,40 @@ export const WalletConnectButton = () => {
             <CreateAccountForm
               walletAddress={account.address}
               onSuccess={handleCreateAccountSuccess}
+              setCreateAccountError={setCreateAccountError}
             />
           )}
+          <DialogFooter className="flex flex-row-reverse justify-between gap-2">
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (wallet) disconnect(wallet);
+                setShowCreateUserDialog(false);
+              }}
+            >
+              Cancel and Logout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Error Dialog for account creation */}
+      <Dialog
+        open={!!createAccountError}
+        onOpenChange={() => setCreateAccountError(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Đã xảy ra lỗi khi tạo tài khoản</DialogTitle>
+            <DialogDescription>{createAccountError}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={handleCreateAccountErrorLogout}
+            >
+              Đăng xuất và thử lại
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
