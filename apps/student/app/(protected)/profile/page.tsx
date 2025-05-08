@@ -1,8 +1,7 @@
 "use client";
 
-import usePersistStore from "@/hooks/use-persist-store";
 import { formatAddress } from "@/lib/utils";
-import { useBearStore } from "@/store";
+import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import { Card } from "@workspace/ui/components/card";
 import {
@@ -23,8 +22,8 @@ import { toast } from "sonner";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
 
 export default function ProfilePage() {
-  const user = usePersistStore(useBearStore, (state) => state.user);
-  const setUser = useBearStore((state) => state.setUser);
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({
     username: "",

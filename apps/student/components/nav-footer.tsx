@@ -1,6 +1,5 @@
-import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { formatAddress } from "@/lib/utils";
-import { useBearStore } from "@/store";
+import { useUserStore } from "@/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import {
@@ -30,9 +30,8 @@ export default function NavFooter() {
   const { isMobile } = useSidebar();
   const { disconnect } = useDisconnect();
   const wallet = useActiveWallet();
-  const setUser = useBearStore((state) => state.setUser);
-  const clearUser = useBearStore((state) => state.clearUser);
-  const user = useBearStore((state) => state.user);
+  const clearUser = useUserStore((state) => state.clearUser);
+  const user = useUserStore((state) => state.user);
 
   const handleDisconnect = () => {
     if (wallet) {

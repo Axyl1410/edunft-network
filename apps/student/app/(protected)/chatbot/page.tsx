@@ -1,6 +1,6 @@
 "use client";
 
-import { useBearStore } from "@/store";
+import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/components/loading";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
@@ -20,7 +20,7 @@ export default function ChatbotPage() {
   const [error, setError] = useState<string | null>(null);
   const account = useActiveAccount();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const user = useBearStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

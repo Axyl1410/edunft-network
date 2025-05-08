@@ -1,6 +1,6 @@
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { formatAddress } from "@/lib/utils";
-import { useBearStore } from "@/store";
+import { useUserStore } from "@/store";
 import {
   Alert,
   AlertDescription,
@@ -317,8 +317,8 @@ export const WalletConnectButton = () => {
   const activeChain = useActiveWalletChain();
   const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
-  const setUser = useBearStore((state) => state.setUser);
-  const user = useBearStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+  const user = useUserStore((state) => state.user);
   const { disconnect } = useDisconnect();
   const [createAccountError, setCreateAccountError] = useState<string | null>(
     null,
@@ -428,6 +428,7 @@ export const WalletConnectButton = () => {
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
       theme: theme === "light" ? "light" : "dark",
+      hideSwitchWallet: true,
     });
   }
 
