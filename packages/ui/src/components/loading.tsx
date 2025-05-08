@@ -1,5 +1,5 @@
-import { cn } from "../lib/utils.js";
-import { TextShimmer } from "./text-shimmer.js";
+import { TextShimmer } from "@workspace/ui/components/text-shimmer";
+import { cn } from "@workspace/ui/lib/utils";
 
 interface LoadingProps {
   className?: string;
