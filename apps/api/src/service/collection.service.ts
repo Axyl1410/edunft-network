@@ -9,6 +9,7 @@ import {
   HoldingItem,
   OwnerItem,
 } from 'src/schema/collection.schema';
+import { CollectionGateway } from '../gateway/collection.gateway';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class CollectionService {
     @InjectModel(Collection.name)
     private readonly collectionModel: Model<CollectionDocument>,
     private readonly userService: UserService,
+    private readonly collectionGateway: CollectionGateway,
   ) {}
 
   async addHolder(
@@ -53,6 +55,13 @@ export class CollectionService {
         return new Fail(
           new DatabaseFailure('Failed to update or create collection.'),
         );
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'addHolder',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -97,6 +106,13 @@ export class CollectionService {
 
       if (!updatedCollection) {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'removeHolder',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -144,6 +160,13 @@ export class CollectionService {
         );
       }
 
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'addOwner',
+          data: updatedCollection,
+        });
+      }
+
       return new Success(updatedCollection);
     } catch (error) {
       console.error('Error adding owner:', error);
@@ -185,6 +208,13 @@ export class CollectionService {
 
       if (!updatedCollection) {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'removeOwner',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);

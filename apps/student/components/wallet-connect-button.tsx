@@ -498,7 +498,7 @@ export const WalletConnectButton = () => {
         <Button
           variant={"outline"}
           onClick={handleDetail}
-          className="flex cursor-pointer items-center"
+          className="flex cursor-pointer items-center dark:bg-transparent"
         >
           {user?.profilePicture ? (
             <SkeletonImage

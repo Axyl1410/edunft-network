@@ -21,7 +21,6 @@ export const SidebarData = {
     },
     {
       title: "Discover",
-      url: "/",
       icon: Map,
       items: [
         {
@@ -43,7 +42,6 @@ export const SidebarData = {
     },
     {
       title: "Studio",
-      url: "#",
       icon: PenLine,
       items: [
         {
@@ -88,7 +86,7 @@ export const SidebarData = {
     },
     {
       name: "Settings",
-      url: "#",
+      url: "/settings",
       icon: Settings,
     },
   ],
