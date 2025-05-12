@@ -33,11 +33,11 @@ export const SidebarData = {
       items: [
         {
           title: "Mint",
-          url: "#",
+          url: "/mint",
         },
         {
           title: "Collection",
-          url: "#",
+          url: "/collection",
         },
       ],
     },
