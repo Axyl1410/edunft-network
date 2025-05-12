@@ -36,7 +36,7 @@ export default function ChatbotPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-secret-key": process.env.NEXT_PUBLIC_TW_SECRET_KEY!,
+          "x-secret-key": process.env.NEXT_PUBLIC_TW_KEY!,
         },
         body: JSON.stringify({
           message: msg,

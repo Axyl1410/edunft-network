@@ -415,6 +415,9 @@ importers:
       '@radix-ui/react-popover':
         specifier: ^1.1.7
         version: 1.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-select':
+        specifier: ^2.2.4
+        version: 2.2.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-separator':
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2232,6 +2235,9 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
+  '@radix-ui/number@1.1.1':
+    resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
+
   '@radix-ui/primitive@1.1.2':
     resolution: {integrity: sha512-XnbHrrprsNqZKQhStrSwgRUQzoCI1glLzdw79xiZPoofhGICeZRSQ3dIxAKH1gb3OHfNf4d6f+vAv3kil2eggA==}
 
@@ -2250,6 +2256,19 @@ packages:
 
   '@radix-ui/react-arrow@1.1.3':
     resolution: {integrity: sha512-2dvVU4jva0qkNZH6HHWuSz5FN5GeU5tymvCgutF8WaXz9WnD1NgUhy73cqzkjkN4Zkn8lfTPv5JIfrC221W+Nw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-arrow@1.1.6':
+    resolution: {integrity: sha512-2JMfHJf/eVnwq+2dewT3C0acmCWD3XiVA1Da+jTDqo342UlU13WvXtqHhG+yJw5JeQmu4ue2eMy6gcEArLBlcw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -2326,6 +2345,19 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-collection@1.1.6':
+    resolution: {integrity: sha512-PbhRFK4lIEw9ADonj48tiYWzkllz81TM7KVYyyMMw2cwHO7D5h4XKEblL8NlaRisTK3QTe6tBEhDccFUryxHBQ==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-compose-refs@1.1.1':
     resolution: {integrity: sha512-Y9VzoRDSJtgFMUCoiZBDVo084VQ5hfpXxVE+NgkdNsjiDBByiImMZKKhxMwCbdHvhlENG6a833CbFkOQvTricw==}
     peerDependencies:
@@ -2388,6 +2420,19 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-dismissable-layer@1.1.9':
+    resolution: {integrity: sha512-way197PiTvNp+WBP7svMJasHl+vibhWGQDb6Mgf5mhEWJkgb85z7Lfl9TUdkqpWsf8GRNmoopx9ZxCyDzmgRMQ==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-dropdown-menu@2.1.7':
     resolution: {integrity: sha512-7/1LiuNZuCQE3IzdicGoHdQOHkS2Q08+7p8w6TXZ6ZjgAULaCI85ZY15yPl4o4FVgoKLRT43/rsfNVN8osClQQ==}
     peerDependencies:
@@ -2412,6 +2457,19 @@ packages:
 
   '@radix-ui/react-focus-scope@1.1.3':
     resolution: {integrity: sha512-4XaDlq0bPt7oJwR+0k0clCiCO/7lO7NKZTAaJBYxDNQT/vj4ig0/UvctrRscZaFREpRvUTkpKR96ov1e6jptQg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-focus-scope@1.1.6':
+    resolution: {integrity: sha512-r9zpYNUQY+2jWHWZGyddQLL9YHkM/XvSFHVcWs7bdVuxMAnCwTAuy6Pf47Z4nw7dYcUou1vg/VgjjrrH03VeBw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -2489,8 +2547,34 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-popper@1.2.6':
+    resolution: {integrity: sha512-7iqXaOWIjDBfIG7aq8CUEeCSsQMLFdn7VEE8TaFz704DtEzpPHR7w/uuzRflvKgltqSAImgcmxQ7fFX3X7wasg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-portal@1.1.5':
     resolution: {integrity: sha512-ps/67ZqsFm+Mb6lSPJpfhRLrVL2i2fntgCmGMqqth4eaGUf+knAuuRtWVJrNjUhExgmdRqftSgzpf0DF0n6yXA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-portal@1.1.8':
+    resolution: {integrity: sha512-hQsTUIn7p7fxCPvao/q6wpbxmCwgLrlz+nOrJgC+RwfZqWY/WN+UMqkXzrtKbPrF82P43eCTl3ekeKuyAQbFeg==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -2541,8 +2625,34 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-primitive@2.1.2':
+    resolution: {integrity: sha512-uHa+l/lKfxuDD2zjN/0peM/RhhSmRjr5YWdk/37EnSv1nJ88uvG85DPexSm8HdFQROd2VdERJ6ynXbkCFi+APw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-roving-focus@1.1.3':
     resolution: {integrity: sha512-ufbpLUjZiOg4iYgb2hQrWXEPYX6jOLBbR27bDyAff5GYMRrCzcze8lukjuXVUQvJ6HZe8+oL+hhswDcjmcgVyg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-select@2.2.4':
+    resolution: {integrity: sha512-/OOm58Gil4Ev5zT8LyVzqfBcij4dTHYdeyuF5lMHZ2bIp0Lk9oETocYiJ5QC0dHekEQnK6L/FNJCceeb4AkZ6Q==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -2578,6 +2688,15 @@ packages:
 
   '@radix-ui/react-slot@1.2.0':
     resolution: {integrity: sha512-ujc+V6r0HNDviYqIK3rW4ffgYiZ8g5DEHrGJVk4x7kTlLXRDILnKX9vAUYeIsLOoDpDJ0ujpqMkjH4w2ofuo6w==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@radix-ui/react-slot@1.2.2':
+    resolution: {integrity: sha512-y7TBO4xN4Y94FvcWIOIh18fM4R1A8S4q1jhoz4PNzOoHsFcN8pogcFmZrTYAm4F9VRUrWP/Mw7xSKybIeRI+CQ==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
@@ -2707,6 +2826,19 @@ packages:
 
   '@radix-ui/react-visually-hidden@1.1.3':
     resolution: {integrity: sha512-oXSF3ZQRd5fvomd9hmUCb2EHSZbPp3ZSHAHJJU/DlF9XoFkJBBW8RHU/E8WEH+RbSfJd/QFA0sl8ClJXknBwHQ==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-visually-hidden@1.2.2':
+    resolution: {integrity: sha512-ORCmRUbNiZIv6uV5mhFrhsIKw4UX/N3syZtyqvry61tbGm4JlgQuSn0hk5TwCARsCjkcnuRkSdCE3xfb+ADHew==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -8972,12 +9104,6 @@ snapshots:
       '@ckeditor/ckeditor5-upload': 44.3.0
       ckeditor5: 44.3.0
 
-  '@ckeditor/ckeditor5-adapter-ckfinder@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-upload': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-
   '@ckeditor/ckeditor5-adapter-ckfinder@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9055,15 +9181,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
-  '@ckeditor/ckeditor5-basic-styles@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-icons': 45.0.0
-      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-
   '@ckeditor/ckeditor5-basic-styles@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9085,16 +9202,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 44.3.0
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
-
-  '@ckeditor/ckeditor5-block-quote@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-icons': 45.0.0
-      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-block-quote@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9236,12 +9343,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
-  '@ckeditor/ckeditor5-cloud-services@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-
   '@ckeditor/ckeditor5-cloud-services@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9262,6 +9363,17 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
+  '@ckeditor/ckeditor5-code-block@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+
   '@ckeditor/ckeditor5-code-block@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9277,27 +9389,23 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-collaboration-core@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@ckeditor/ckeditor5-collaboration-core@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-icons': 45.0.0
       '@ckeditor/ckeditor5-theme-lark': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-track-changes': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-track-changes': 45.0.0
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@types/luxon': 3.4.2
       ckeditor5: 45.0.0
       luxon: 3.5.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   '@ckeditor/ckeditor5-comments@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-collaboration-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-collaboration-core': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9318,7 +9426,7 @@ snapshots:
   '@ckeditor/ckeditor5-comments@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-collaboration-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-collaboration-core': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9417,15 +9525,6 @@ snapshots:
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
 
-  '@ckeditor/ckeditor5-editor-balloon@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-      es-toolkit: 1.32.0
-
   '@ckeditor/ckeditor5-editor-balloon@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9447,15 +9546,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
-
-  '@ckeditor/ckeditor5-editor-classic@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-      es-toolkit: 1.32.0
 
   '@ckeditor/ckeditor5-editor-classic@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9479,15 +9569,6 @@ snapshots:
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
 
-  '@ckeditor/ckeditor5-editor-decoupled@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-      es-toolkit: 1.32.0
-
   '@ckeditor/ckeditor5-editor-decoupled@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9509,15 +9590,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
-
-  '@ckeditor/ckeditor5-editor-inline@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-      es-toolkit: 1.32.0
 
   '@ckeditor/ckeditor5-editor-inline@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9564,6 +9636,18 @@ snapshots:
       ckeditor5: 44.3.0
       fuzzysort: 3.1.0
       lodash-es: 4.17.21
+
+  '@ckeditor/ckeditor5-emoji@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-mention': 45.0.0
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+      es-toolkit: 1.32.0
+      fuzzysort: 3.1.0
 
   '@ckeditor/ckeditor5-emoji@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9622,17 +9706,6 @@ snapshots:
       '@ckeditor/ckeditor5-undo': 44.3.0
       ckeditor5: 44.3.0
 
-  '@ckeditor/ckeditor5-essentials@45.0.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-select-all': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-undo': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0
-
   '@ckeditor/ckeditor5-essentials@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9686,6 +9759,15 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
+  '@ckeditor/ckeditor5-font@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+
   '@ckeditor/ckeditor5-font@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9704,8 +9786,8 @@ snapshots:
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-document-outline': 45.0.0
-      '@ckeditor/ckeditor5-editor-classic': 45.0.0
-      '@ckeditor/ckeditor5-editor-decoupled': 45.0.0
+      '@ckeditor/ckeditor5-editor-classic': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-editor-decoupled': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-icons': 45.0.0
       '@ckeditor/ckeditor5-pagination': 45.0.0
       '@ckeditor/ckeditor5-real-time-collaboration': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9747,6 +9829,14 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 44.3.0
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
+
+  '@ckeditor/ckeditor5-highlight@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-highlight@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9840,9 +9930,9 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-heading': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-image': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-list': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-table': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-image': 45.0.0
+      '@ckeditor/ckeditor5-list': 45.0.0
+      '@ckeditor/ckeditor5-table': 45.0.0
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-widget': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       ckeditor5: 45.0.0
@@ -9881,6 +9971,21 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 44.3.0
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
+
+  '@ckeditor/ckeditor5-image@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-undo': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-upload': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-widget': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+      es-toolkit: 1.32.0
 
   '@ckeditor/ckeditor5-image@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9937,6 +10042,13 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
+  '@ckeditor/ckeditor5-language@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+
   '@ckeditor/ckeditor5-language@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9961,6 +10073,20 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 44.3.0
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
+
+  '@ckeditor/ckeditor5-link@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-image': 45.0.0
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-widget': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+      es-toolkit: 1.32.0
 
   '@ckeditor/ckeditor5-link@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9990,6 +10116,18 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 44.3.0
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
+
+  '@ckeditor/ckeditor5-list@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-list@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10098,6 +10236,15 @@ snapshots:
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
 
+  '@ckeditor/ckeditor5-mention@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+      es-toolkit: 1.32.0
+
   '@ckeditor/ckeditor5-mention@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10115,8 +10262,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-icons': 45.0.0
-      '@ckeditor/ckeditor5-image': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-mention': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-image': 45.0.0
+      '@ckeditor/ckeditor5-mention': 45.0.0
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-widget': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10130,6 +10277,14 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 44.3.0
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
+
+  '@ckeditor/ckeditor5-minimap@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-minimap@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10243,7 +10398,7 @@ snapshots:
   '@ckeditor/ckeditor5-real-time-collaboration@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor-cloud-services-collaboration': 52.7.0(@ckeditor/ckeditor5-utils@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(ckeditor5@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-cloud-services': 45.0.0
+      '@ckeditor/ckeditor5-cloud-services': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-editor-multi-root': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10251,7 +10406,7 @@ snapshots:
       '@ckeditor/ckeditor5-operations-compressor': 45.0.0
       '@ckeditor/ckeditor5-revision-history': 45.0.0
       '@ckeditor/ckeditor5-theme-lark': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-track-changes': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-track-changes': 45.0.0
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       ckeditor5: 45.0.0
@@ -10324,7 +10479,7 @@ snapshots:
       '@ckeditor/ckeditor5-autosave': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-editor-classic': 45.0.0
+      '@ckeditor/ckeditor5-editor-classic': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-icons': 45.0.0
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10461,12 +10616,12 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-html-support': 45.0.0
-      '@ckeditor/ckeditor5-list': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-table': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-list': 45.0.0
+      '@ckeditor/ckeditor5-table': 45.0.0
       '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ckeditor5: 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
       es-toolkit: 1.32.0
 
   '@ckeditor/ckeditor5-style@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
@@ -10496,6 +10651,18 @@ snapshots:
       ckeditor5: 44.3.0
       lodash-es: 4.17.21
 
+  '@ckeditor/ckeditor5-table@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-widget': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+      es-toolkit: 1.32.0
+
   '@ckeditor/ckeditor5-table@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10524,28 +10691,28 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-track-changes@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@ckeditor/ckeditor5-track-changes@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-code-block': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-code-block': 45.0.0
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-editor-multi-root': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-find-and-replace': 45.0.0
-      '@ckeditor/ckeditor5-font': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-font': 45.0.0
       '@ckeditor/ckeditor5-heading': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-highlight': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-highlight': 45.0.0
       '@ckeditor/ckeditor5-icons': 45.0.0
-      '@ckeditor/ckeditor5-image': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-link': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-list': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-image': 45.0.0
+      '@ckeditor/ckeditor5-link': 45.0.0
+      '@ckeditor/ckeditor5-list': 45.0.0
       '@ckeditor/ckeditor5-media-embed': 45.0.0
       '@ckeditor/ckeditor5-merge-fields': 45.0.0
       '@ckeditor/ckeditor5-restricted-editing': 45.0.0
       '@ckeditor/ckeditor5-style': 45.0.0
-      '@ckeditor/ckeditor5-table': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-table': 45.0.0
       '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10553,10 +10720,6 @@ snapshots:
       ckeditor5: 45.0.0
       ckeditor5-collaboration: 45.0.0
       es-toolkit: 1.32.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   '@ckeditor/ckeditor5-typing@44.3.0':
     dependencies:
@@ -12121,6 +12284,8 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
+  '@radix-ui/number@1.1.1': {}
+
   '@radix-ui/primitive@1.1.2': {}
 
   '@radix-ui/react-accordion@1.2.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
@@ -12152,6 +12317,15 @@ snapshots:
   '@radix-ui/react-arrow@1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-arrow@1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
@@ -12221,6 +12395,18 @@ snapshots:
       '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-slot': 1.2.0(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-collection@1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot': 1.2.2(@types/react@19.0.10)(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
@@ -12333,6 +12519,19 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-dismissable-layer@1.1.9(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.2
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-escape-keydown': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-dropdown-menu@2.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/primitive': 1.1.2
@@ -12375,6 +12574,17 @@ snapshots:
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-focus-scope@1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -12494,6 +12704,24 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-popper@1.2.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-arrow': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-rect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-size': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/rect': 1.1.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-portal@1.1.5(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -12507,6 +12735,16 @@ snapshots:
   '@radix-ui/react-portal@1.1.5(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-portal@1.1.8(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -12561,6 +12799,15 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-primitive@2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-slot': 1.2.2(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-roving-focus@1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/primitive': 1.1.2
@@ -12574,6 +12821,35 @@ snapshots:
       '@radix-ui/react-use-controllable-state': 1.1.1(@types/react@19.0.10)(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-select@2.2.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/number': 1.1.1
+      '@radix-ui/primitive': 1.1.2
+      '@radix-ui/react-collection': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-direction': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-dismissable-layer': 1.1.9(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-focus-guards': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-focus-scope': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-id': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-popper': 1.2.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-portal': 1.1.8(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot': 1.2.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-controllable-state': 1.2.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-previous': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-visually-hidden': 1.2.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      aria-hidden: 1.2.4
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-remove-scroll: 2.6.3(@types/react@19.0.10)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
@@ -12602,6 +12878,13 @@ snapshots:
       '@types/react': 19.0.10
 
   '@radix-ui/react-slot@1.2.0(@types/react@19.0.10)(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.10
+
+  '@radix-ui/react-slot@1.2.2(@types/react@19.0.10)(react@19.0.0)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
       react: 19.0.0
@@ -12787,6 +13070,15 @@ snapshots:
   '@radix-ui/react-visually-hidden@1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.0.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-visually-hidden@1.2.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
@@ -14586,7 +14878,7 @@ snapshots:
 
   ckeditor5-collaboration@45.0.0:
     dependencies:
-      '@ckeditor/ckeditor5-collaboration-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-collaboration-core': 45.0.0
 
   ckeditor5@44.3.0:
     dependencies:
@@ -14652,47 +14944,47 @@ snapshots:
 
   ckeditor5@45.0.0:
     dependencies:
-      '@ckeditor/ckeditor5-adapter-ckfinder': 45.0.0
+      '@ckeditor/ckeditor5-adapter-ckfinder': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-alignment': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-autoformat': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-autosave': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-basic-styles': 45.0.0
-      '@ckeditor/ckeditor5-block-quote': 45.0.0
+      '@ckeditor/ckeditor5-basic-styles': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-block-quote': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-bookmark': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-ckbox': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-ckfinder': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-cloud-services': 45.0.0
-      '@ckeditor/ckeditor5-code-block': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-cloud-services': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-code-block': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-easy-image': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-editor-balloon': 45.0.0
-      '@ckeditor/ckeditor5-editor-classic': 45.0.0
-      '@ckeditor/ckeditor5-editor-decoupled': 45.0.0
-      '@ckeditor/ckeditor5-editor-inline': 45.0.0
+      '@ckeditor/ckeditor5-editor-balloon': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-editor-classic': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-editor-decoupled': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-editor-inline': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-editor-multi-root': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-emoji': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-emoji': 45.0.0
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-essentials': 45.0.0
+      '@ckeditor/ckeditor5-essentials': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-find-and-replace': 45.0.0
-      '@ckeditor/ckeditor5-font': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-font': 45.0.0
       '@ckeditor/ckeditor5-fullscreen': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-heading': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-highlight': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-highlight': 45.0.0
       '@ckeditor/ckeditor5-horizontal-line': 45.0.0
       '@ckeditor/ckeditor5-html-embed': 45.0.0
       '@ckeditor/ckeditor5-html-support': 45.0.0
       '@ckeditor/ckeditor5-icons': 45.0.0
-      '@ckeditor/ckeditor5-image': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-image': 45.0.0
       '@ckeditor/ckeditor5-indent': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-language': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-link': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-list': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-language': 45.0.0
+      '@ckeditor/ckeditor5-link': 45.0.0
+      '@ckeditor/ckeditor5-list': 45.0.0
       '@ckeditor/ckeditor5-markdown-gfm': 45.0.0
       '@ckeditor/ckeditor5-media-embed': 45.0.0
-      '@ckeditor/ckeditor5-mention': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-minimap': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-mention': 45.0.0
+      '@ckeditor/ckeditor5-minimap': 45.0.0
       '@ckeditor/ckeditor5-page-break': 45.0.0
       '@ckeditor/ckeditor5-paragraph': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-paste-from-office': 45.0.0
@@ -14702,8 +14994,8 @@ snapshots:
       '@ckeditor/ckeditor5-show-blocks': 45.0.0
       '@ckeditor/ckeditor5-source-editing': 45.0.0
       '@ckeditor/ckeditor5-special-characters': 45.0.0
-      '@ckeditor/ckeditor5-style': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-table': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-style': 45.0.0
+      '@ckeditor/ckeditor5-table': 45.0.0
       '@ckeditor/ckeditor5-theme-lark': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)

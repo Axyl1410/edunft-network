@@ -1,5 +1,6 @@
 "use client";
 
+import { baseUrl } from "@/lib/client";
 import { formatAddress } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
@@ -53,7 +54,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!user && account?.address) {
       axios
-        .get("http://localhost:8080/user/" + account.address)
+        .get(baseUrl + "/user/" + account.address)
         .then((response) => {
           setUser({
             walletAddress: account.address,
@@ -96,13 +97,11 @@ export default function ProfilePage() {
     if (!account?.address) return;
     setLoading(true);
     try {
-      await axios.put("http://localhost:8080/user/" + account.address, {
+      await axios.put(baseUrl + "/user/" + account.address, {
         ...form,
       });
       setEdit(false);
-      const response = await axios.get(
-        "http://localhost:8080/user/" + account.address,
-      );
+      const response = await axios.get(baseUrl + "/user/" + account.address);
       setUser({
         walletAddress: account.address,
         username: response.data.username || "",

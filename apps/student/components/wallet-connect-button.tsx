@@ -1,3 +1,4 @@
+import { baseUrl } from "@/lib/client";
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { formatAddress } from "@/lib/utils";
 import { useUserStore } from "@/store";
@@ -98,7 +99,7 @@ const CreateAccountForm = ({
 
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:8080/user/create", {
+      await axios.post(baseUrl + "/user/create", {
         walletAddress: walletAddress,
         ...formData,
       });
@@ -360,28 +361,26 @@ export const WalletConnectButton = () => {
     // At this point, an account address exists, and we haven't confirmed account creation yet.
     // Attempt to log in / check for user existence.
     axios
-      .post("http://localhost:8080/user/login", {
+      .post(baseUrl + "/user/login", {
         WalletAddress: account.address,
       })
       .then(() => {
         setAccountCreated(true);
         setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
         // Fetch user info and set in zustand
-        axios
-          .get(`http://localhost:8080/user/${account.address}`)
-          .then((response) => {
-            setUser({
-              walletAddress: account.address,
-              username: response.data.username || "",
-              bio: response.data.bio || "",
-              profilePicture: response.data.profilePicture || "",
-              banner: response.data.banner || "",
-              reputation: response.data.reputation || 100,
-              violations: response.data.violations || 0,
-              bannedUntil: response.data.bannedUntil || null,
-              role: response.data.role || "student",
-            });
+        axios.get(baseUrl + `/user/${account.address}`).then((response) => {
+          setUser({
+            walletAddress: account.address,
+            username: response.data.username || "",
+            bio: response.data.bio || "",
+            profilePicture: response.data.profilePicture || "",
+            banner: response.data.banner || "",
+            reputation: response.data.reputation || 100,
+            violations: response.data.violations || 0,
+            bannedUntil: response.data.bannedUntil || null,
+            role: response.data.role || "student",
           });
+        });
       })
       .catch((error) => {
         if (error.response?.status === 404) {
@@ -451,21 +450,19 @@ export const WalletConnectButton = () => {
     setShowCreateUserDialog(false);
     // Fetch user info and set in zustand
     if (account?.address) {
-      axios
-        .get(`http://localhost:8080/user/${account.address}`)
-        .then((response) => {
-          setUser({
-            walletAddress: account.address,
-            username: response.data.username || "",
-            bio: response.data.bio || "",
-            profilePicture: response.data.profilePicture || "",
-            banner: response.data.banner || "",
-            reputation: response.data.reputation || 100,
-            violations: response.data.violations || 0,
-            bannedUntil: response.data.bannedUntil || null,
-            role: response.data.role || "student",
-          });
+      axios.get(baseUrl + `/user/${account.address}`).then((response) => {
+        setUser({
+          walletAddress: account.address,
+          username: response.data.username || "",
+          bio: response.data.bio || "",
+          profilePicture: response.data.profilePicture || "",
+          banner: response.data.banner || "",
+          reputation: response.data.reputation || 100,
+          violations: response.data.violations || 0,
+          bannedUntil: response.data.bannedUntil || null,
+          role: response.data.role || "student",
         });
+      });
     }
   }, [account?.address, setUser]); // Dependencies are stable setters from useState
 

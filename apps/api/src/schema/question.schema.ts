@@ -1,8 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Question {
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+  user: Types.ObjectId;
+
   @Prop({ required: true, type: String })
   title: string;
 
