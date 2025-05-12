@@ -1,6 +1,5 @@
 "use client";
 
-import { ModeToggle } from "@/components/mode-toggle";
 import { thirdwebClient } from "@/lib/thirdweb-client";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Search } from "lucide-react";
@@ -30,7 +29,7 @@ export default function NavAccount() {
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <ModeToggle />
+        {/* <ModeToggle /> */}
         <WalletConnectButton />
         <div className="sr-only">
           <ConnectButton client={thirdwebClient} />

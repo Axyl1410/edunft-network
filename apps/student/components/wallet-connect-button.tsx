@@ -67,10 +67,12 @@ const CreateAccountForm = ({
   onSuccess,
   walletAddress,
   setCreateAccountError,
+  onStepChange,
 }: {
   onSuccess: () => void;
   walletAddress: string;
   setCreateAccountError: (err: string) => void;
+  onStepChange: (step: number) => void;
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<CreateUserFormData>({
@@ -159,9 +161,9 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label htmlFor="profilePicture" className="text-sm font-medium">
+              <Label htmlFor="profilePicture" className="text-sm font-medium">
                 Profile Picture URL
-              </label>
+              </Label>
               <Input
                 id="profilePicture"
                 value={formData.ProfilePicture}
@@ -175,9 +177,9 @@ const CreateAccountForm = ({
               />
             </div>
             <div className="grid gap-2">
-              <label htmlFor="banner" className="text-sm font-medium">
+              <Label htmlFor="banner" className="text-sm font-medium">
                 Banner URL
-              </label>
+              </Label>
               <Input
                 id="banner"
                 value={formData.Banner}
@@ -198,7 +200,7 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Select Role</label>
+              <Label className="text-sm font-medium">Select Role</Label>
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   type="button"
@@ -234,6 +236,10 @@ const CreateAccountForm = ({
         return null;
     }
   };
+
+  useEffect(() => {
+    if (onStepChange) onStepChange(currentStep);
+  }, [currentStep, onStepChange]);
 
   return (
     <div className="space-y-6">
@@ -324,6 +330,7 @@ export const WalletConnectButton = () => {
   const [createAccountError, setCreateAccountError] = useState<string | null>(
     null,
   );
+  const [createStep, setCreateStep] = useState(0);
 
   useEffect(() => {
     if (!wallet) {
@@ -355,6 +362,10 @@ export const WalletConnectButton = () => {
 
     if (accountCreated) {
       // Account is already marked as created for this session/address, do nothing.
+      return;
+    }
+
+    if (!wallet) {
       return;
     }
 
@@ -396,7 +407,7 @@ export const WalletConnectButton = () => {
           });
         }
       });
-  }, [account?.address, accountCreated, setUser]); // Add setUser to dependencies
+  }, [account?.address, accountCreated, setUser, wallet]); // Thêm wallet vào dependencies
 
   const wallets = [
     inAppWallet({
@@ -528,19 +539,22 @@ export const WalletConnectButton = () => {
               walletAddress={account.address}
               onSuccess={handleCreateAccountSuccess}
               setCreateAccountError={setCreateAccountError}
+              onStepChange={setCreateStep}
             />
           )}
-          <DialogFooter className="flex flex-row-reverse justify-between gap-2">
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (wallet) disconnect(wallet);
-                setShowCreateUserDialog(false);
-              }}
-            >
-              Cancel and Logout
-            </Button>
-          </DialogFooter>
+          {account?.address && createStep === 0 && (
+            <DialogFooter className="flex flex-row-reverse justify-between gap-2">
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (wallet) disconnect(wallet);
+                  setShowCreateUserDialog(false);
+                }}
+              >
+                Cancel and Logout
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
       {/* Error Dialog for account creation */}

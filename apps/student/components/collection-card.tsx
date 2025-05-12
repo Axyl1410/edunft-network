@@ -1,6 +1,6 @@
 import { thirdwebClient } from "@/lib/thirdweb-client";
 import getThirdwebContract from "@/services/get-contract";
-import Image from "next/image";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
@@ -25,38 +25,35 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   });
 
   return (
-    <div
-      className="flex min-h-[400px] w-full cursor-pointer flex-col justify-stretch overflow-hidden rounded-lg border border-white/10 bg-white/[.04] transition-all hover:scale-105 hover:shadow-lg"
+    <Card
+      className="bg-secondary flex w-full flex-col gap-3 rounded-lg border px-1 py-3 data-[state=open]:w-[230px]"
       {...props}
     >
-      <div className="relative w-full overflow-hidden bg-white/[.04]">
-        {metadata?.image ? (
-          <MediaRenderer
-            src={metadata.image}
-            client={thirdwebClient}
-            className="aspect-square object-cover object-center"
-            style={{ height: "100%", width: "100%" }}
-          />
-        ) : (
-          <div className="grid h-[300px] w-full place-items-center bg-gray-200">
-            <Image src={"/default-image.jpg"} alt="" height={300} width={300} />
-          </div>
-        )}
-      </div>
-      <div className="flex w-full flex-1 items-center justify-between bg-gray-200 px-3 shadow dark:bg-neutral-800">
-        <div className="flex flex-col justify-center py-3">
-          <p className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-lg text-black dark:text-white">
-            {metadata?.name}
-          </p>
-          <p className="text-text text-sm font-semibold dark:text-white/80">
-            Symbol: {metadata?.symbol || "N/A"}
-          </p>
-          {/* <p className={"mt-2 line-clamp-2 truncate text-sm"}>
-            {text}
-          </p> */}
+      <CardContent className="flex flex-col items-center gap-3 p-2">
+        <div className="flex w-full justify-center">
+          {metadata?.image ? (
+            <MediaRenderer
+              src={metadata.image}
+              alt={metadata.name}
+              client={thirdwebClient}
+              className="aspect-square rounded-md object-cover"
+            />
+          ) : (
+            <div className="flex h-[200px] w-[200px] items-center justify-center rounded-md bg-gray-200">
+              <span className="text-gray-400">No Image</span>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+        <div className="flex w-full flex-col px-2">
+          <span className="w-full truncate text-lg font-bold">
+            {metadata?.name}
+          </span>
+          <span className="mb-1 text-sm">
+            {`Symbol: ${metadata?.symbol || "N/A"}`}
+          </span>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

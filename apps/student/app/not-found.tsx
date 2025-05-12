@@ -14,7 +14,7 @@ export default function Page() {
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link href="/">
-            <Button className="bg-indigo-600 font-bold text-white hover:bg-indigo-500">
+            <Button className="cursor-pointer bg-indigo-600 font-bold text-white hover:bg-indigo-500">
               Go back home
             </Button>
           </Link>
@@ -23,7 +23,7 @@ export default function Page() {
             target="_blank"
             rel="noreferrer"
           >
-            <Button variant={"ghost"} className="font-bold">
+            <Button variant={"ghost"} className="cursor-pointer font-bold">
               Contact support <span aria-hidden="true">→</span>
             </Button>
           </a>
