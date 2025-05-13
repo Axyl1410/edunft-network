@@ -21,6 +21,7 @@ export const SidebarData = {
     },
     {
       title: "Discover",
+      url: "#",
       icon: Map,
       items: [
         {
@@ -33,7 +34,6 @@ export const SidebarData = {
         },
       ],
     },
-
     {
       title: "Files",
       url: "/file",
