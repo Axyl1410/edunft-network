@@ -9,12 +9,20 @@ import {
 } from "@workspace/ui/components/radio-group";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useEffect } from "react";
 import { useActiveAccount } from "thirdweb/react";
 
 export default function SettingsPage() {
   const user = useUserStore((state) => state.user);
   const account = useActiveAccount();
   const { theme, setTheme } = useTheme();
+
+  // Save theme to localStorage whenever it changes
+  useEffect(() => {
+    if (theme) {
+      localStorage.setItem("theme", theme);
+    }
+  }, [theme]);
 
   return (
     <div className="flex h-full items-center justify-center px-2 py-4">

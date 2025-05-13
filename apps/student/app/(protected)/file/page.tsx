@@ -1,13 +1,14 @@
 "use client";
 
+import { formatBytes } from "@/lib/utils";
 import {
   deleteFileInDatabase,
-  deletePrivateFile,
-} from "@/services/delete-file";
-import { getUserFiles } from "@/services/get-user-files";
-import { retrievePrivateFile } from "@/services/retrieve-private-file";
-import { saveFile } from "@/services/save-file";
-import { uploadPrivateFile } from "@/services/upload-private-file";
+  deleteFilePinata,
+  getUserFiles,
+  retrieveFile,
+  saveFile,
+  uploadFile,
+} from "@/services/file";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -48,7 +49,7 @@ import {
   Upload,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -56,7 +57,7 @@ interface FileData {
   id: string;
   name: string;
   hash: string;
-  size: string;
+  size: number;
   createdAt: string;
   pinataId: string;
 }
@@ -64,12 +65,11 @@ interface FileData {
 export default function Page() {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [viewMode, setViewMode] = useState<"pagination" | "list">("pagination");
   const [currentPage, setCurrentPage] = useState(1);
-  const [listCount, setListCount] = useState(30);
-  const filesPerPage = 30;
+  const [listCount, setListCount] = useState(15);
+  const filesPerPage = 15;
 
   const account = useActiveAccount();
   const walletAddress = account?.address;
@@ -97,7 +97,7 @@ export default function Page() {
 
   const handlePreview = async (file: FileData) => {
     try {
-      const { url } = await retrievePrivateFile(file.hash);
+      const { url } = await retrieveFile(file.hash, "private");
       window.open(url, "_blank");
     } catch (error) {
       alert("Không thể xem file này");
@@ -106,7 +106,7 @@ export default function Page() {
 
   const handleDownload = async (file: FileData) => {
     try {
-      const { url } = await retrievePrivateFile(file.hash);
+      const { url } = await retrieveFile(file.hash, "private");
       const link = document.createElement("a");
       link.href = url;
       link.download = file.name;
@@ -139,6 +139,7 @@ export default function Page() {
               setCurrentPage(1);
             }}
             title="Pagination view"
+            className="cursor-pointer"
           >
             <PanelLeftIcon className="h-5 w-5" />
           </Button>
@@ -147,9 +148,10 @@ export default function Page() {
             variant={viewMode === "list" ? "outline" : "ghost"}
             onClick={() => {
               setViewMode("list");
-              setListCount(30);
+              setListCount(15);
             }}
             title="List view"
+            className="cursor-pointer"
           >
             <List className="h-5 w-5" />
           </Button>
@@ -167,7 +169,7 @@ export default function Page() {
             }}
           >
             <DialogTrigger asChild>
-              <Button disabled={uploading}>
+              <Button disabled={uploading} className="cursor-pointer">
                 <Upload className="mr-2 h-4 w-4" /> Upload File
               </Button>
             </DialogTrigger>
@@ -237,10 +239,14 @@ export default function Page() {
                         setUploadResult(null);
                         try {
                           // 1. Upload lên Pinata
-                          const pinataRes = await uploadPrivateFile({
+                          const pinataRes = await uploadFile({
                             file: selectedFile,
                             name: selectedFile.name,
+                            type: "private",
                           });
+                          // pinataRes is { ...upload, pinataId } for private
+                          const pinataId = (pinataRes as { pinataId: string })
+                            .pinataId;
                           setUploadProgress(50);
                           // 2. Lưu thông tin file lên API
                           const fileData = {
@@ -250,7 +256,7 @@ export default function Page() {
                             size: selectedFile.size,
                             mimeType: selectedFile.type,
                             network: "private" as "private" | "public",
-                            pinataId: pinataRes.pinataId,
+                            pinataId,
                           };
                           await saveFile(fileData);
                           setUploadProgress(100);
@@ -309,7 +315,7 @@ export default function Page() {
                       {file.name}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2">
-                      {file.size}
+                      {formatBytes(file.size)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2">
                       {new Date(file.createdAt).toLocaleString()}
@@ -320,6 +326,7 @@ export default function Page() {
                         variant="ghost"
                         onClick={() => handlePreview(file)}
                         title="Xem"
+                        className="cursor-pointer"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -328,6 +335,7 @@ export default function Page() {
                         variant="ghost"
                         onClick={() => handleDownload(file)}
                         title="Tải về"
+                        className="cursor-pointer"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -344,7 +352,7 @@ export default function Page() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="text-red-500 hover:bg-red-50"
+                            className="cursor-pointer text-red-500"
                             onClick={() =>
                               setConfirmDelete({ open: true, file })
                             }
@@ -374,7 +382,10 @@ export default function Page() {
                                 setDeletingFileId(file.id);
                                 setConfirmDelete({ open: false, file: null });
                                 try {
-                                  await deletePrivateFile([file.pinataId]);
+                                  await deleteFilePinata(
+                                    [file.pinataId],
+                                    "private",
+                                  );
                                   await deleteFileInDatabase(file.hash);
                                   if (walletAddress) {
                                     const data =
