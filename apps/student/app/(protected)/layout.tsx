@@ -1,6 +1,6 @@
 "use client";
 
-import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import {
   Card,
   CardContent,

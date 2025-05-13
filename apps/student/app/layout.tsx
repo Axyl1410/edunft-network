@@ -1,6 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import NavAccount from "@/components/nav-acoount";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/components/context/providers";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import NavAccount from "@/components/layout/nav-acoount";
 import {
   SidebarInset,
   SidebarProvider,

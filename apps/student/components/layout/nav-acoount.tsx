@@ -4,7 +4,7 @@ import { thirdwebClient } from "@/lib/thirdweb-client";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Search } from "lucide-react";
 import { ConnectButton } from "thirdweb/react";
-import { WalletConnectButton } from "./wallet-connect-button";
+import { WalletConnectButton } from "../wallet/wallet-connect-button";
 
 export default function NavAccount() {
   return (

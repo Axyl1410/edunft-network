@@ -20,7 +20,7 @@ import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-interface SidebarMenuItemProps {
+export interface SidebarMenuItemProps {
   title: string;
   url: string;
   icon?: LucideIcon;

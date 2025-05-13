@@ -40,6 +40,11 @@ import {
   TableRow,
 } from "@workspace/ui/components/table";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
+import {
   Download,
   Eye,
   List,
@@ -49,8 +54,8 @@ import {
   Upload,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 
 interface FileData {
@@ -138,10 +143,16 @@ export default function Page() {
               setViewMode("pagination");
               setCurrentPage(1);
             }}
-            title="Pagination view"
             className="cursor-pointer"
           >
-            <PanelLeftIcon className="h-5 w-5" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <PanelLeftIcon className="h-5 w-5" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Pagination view</TooltipContent>
+            </Tooltip>
           </Button>
           <Button
             size="icon"
@@ -150,10 +161,16 @@ export default function Page() {
               setViewMode("list");
               setListCount(15);
             }}
-            title="List view"
             className="cursor-pointer"
           >
-            <List className="h-5 w-5" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <List className="h-5 w-5" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>List view</TooltipContent>
+            </Tooltip>
           </Button>
           <Dialog
             open={open}
@@ -325,100 +342,48 @@ export default function Page() {
                         size="icon"
                         variant="ghost"
                         onClick={() => handlePreview(file)}
-                        title="Xem"
                         className="cursor-pointer"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <Eye className="h-4 w-4" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>Xem</TooltipContent>
+                        </Tooltip>
                       </Button>
                       <Button
                         size="icon"
                         variant="ghost"
                         onClick={() => handleDownload(file)}
-                        title="Tải về"
                         className="cursor-pointer"
                       >
-                        <Download className="h-4 w-4" />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <Download className="h-4 w-4" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>Tải về</TooltipContent>
+                        </Tooltip>
                       </Button>
-                      <Dialog
-                        open={
-                          confirmDelete.open &&
-                          confirmDelete.file?.id === file.id
-                        }
-                        onOpenChange={(v) =>
-                          setConfirmDelete({ open: v, file: v ? file : null })
-                        }
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer text-red-500"
+                        onClick={() => setConfirmDelete({ open: true, file })}
+                        disabled={deletingFileId === file.id}
                       >
-                        <DialogTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer text-red-500"
-                            onClick={() =>
-                              setConfirmDelete({ open: true, file })
-                            }
-                            disabled={deletingFileId === file.id}
-                            title="Xóa"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-xs p-4">
-                          <DialogHeader>
-                            <DialogTitle className="text-base">
-                              Xác nhận xóa?
-                            </DialogTitle>
-                          </DialogHeader>
-                          <div className="text-muted-foreground mb-2 text-sm">
-                            Bạn chắc chắn muốn xóa{" "}
-                            <span className="font-semibold">{file.name}</span>?
-                          </div>
-                          <DialogFooter>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              className="w-full"
-                              disabled={deletingFileId === file.id}
-                              onClick={async () => {
-                                setDeletingFileId(file.id);
-                                setConfirmDelete({ open: false, file: null });
-                                try {
-                                  await deleteFilePinata(
-                                    [file.pinataId],
-                                    "private",
-                                  );
-                                  await deleteFileInDatabase(file.hash);
-                                  if (walletAddress) {
-                                    const data =
-                                      await getUserFiles(walletAddress);
-                                    setFiles(data);
-                                  }
-                                  toast.success("Đã xóa file!");
-                                } catch (e) {
-                                  toast.error("Xóa file thất bại");
-                                } finally {
-                                  setDeletingFileId(null);
-                                }
-                              }}
-                            >
-                              {deletingFileId === file.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                "Xóa"
-                              )}
-                            </Button>
-                            <DialogClose asChild>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="w-full"
-                                disabled={deletingFileId === file.id}
-                              >
-                                Hủy
-                              </Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <Trash2 className="h-4 w-4" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>Xóa</TooltipContent>
+                        </Tooltip>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -465,6 +430,68 @@ export default function Page() {
               Xem thêm
             </Button>
           )}
+          <Dialog
+            open={confirmDelete.open}
+            onOpenChange={(v) =>
+              setConfirmDelete({ open: v, file: v ? confirmDelete.file : null })
+            }
+          >
+            <DialogContent className="max-w-xs p-4">
+              <DialogHeader>
+                <DialogTitle className="text-base">Xác nhận xóa?</DialogTitle>
+              </DialogHeader>
+              <div className="text-muted-foreground mb-2 text-sm">
+                Bạn chắc chắn muốn xóa{" "}
+                <span className="font-semibold">
+                  {confirmDelete.file?.name}
+                </span>
+                ?
+              </div>
+              <DialogFooter className="flex w-full flex-col gap-2">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={deletingFileId === confirmDelete.file?.id}
+                  onClick={async () => {
+                    if (!confirmDelete.file) return;
+                    setDeletingFileId(confirmDelete.file.id);
+                    setConfirmDelete({ open: false, file: null });
+                    try {
+                      await deleteFilePinata(
+                        [confirmDelete.file.pinataId],
+                        "private",
+                      );
+                      await deleteFileInDatabase(confirmDelete.file.hash);
+                      if (walletAddress) {
+                        const data = await getUserFiles(walletAddress);
+                        setFiles(data);
+                      }
+                      toast.success("Đã xóa file!");
+                    } catch (e) {
+                      toast.error("Xóa file thất bại");
+                    } finally {
+                      setDeletingFileId(null);
+                    }
+                  }}
+                >
+                  {deletingFileId === confirmDelete.file?.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Xóa"
+                  )}
+                </Button>
+                <DialogClose asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={deletingFileId === confirmDelete.file?.id}
+                  >
+                    Hủy
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </>
       )}
     </div>

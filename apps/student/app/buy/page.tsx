@@ -1,7 +1,7 @@
 "use client";
 
-import CollectionCard from "@/components/collection-card";
-import { NFTGridLoading } from "@/components/nft-grid";
+import CollectionCard from "@/components/nft/collection-card";
+import { NFTGridLoading } from "@/components/nft/nft-grid";
 import { baseUrl } from "@/lib/client";
 import { checkCollectionHasNFTs } from "@/services/check-collection-has-nft";
 import { Button } from "@workspace/ui/components/button";
@@ -131,7 +131,7 @@ export default function Buy() {
 
           {collectionsWithNFTs.length > 0 && (
             <>
-              <div className="grid grid-cols-1 place-items-center gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              <div className="grid grid-cols-1 place-items-center gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {collectionsWithNFTs
                   .slice(0, visibleCount)
                   .map((collection) => (
