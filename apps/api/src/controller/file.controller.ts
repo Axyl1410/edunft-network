@@ -45,6 +45,7 @@ export class FileController {
     @Body('size') size: number,
     @Body('mimeType') mimeType: string,
     @Body('network') network: 'public' | 'private',
+    @Body('pinataId') pinataId: string,
   ) {
     const result = await this.fileService.addFile(
       walletAddress,
@@ -53,6 +54,7 @@ export class FileController {
       size,
       mimeType,
       network,
+      pinataId,
     );
     return this.handleResult(result);
   }

@@ -10,7 +10,10 @@ export async function uploadPrivateFile({ file, name }: uploadFileProps) {
     const upload = await pinataClient.upload.private
       .file(file)
       .name(name ?? file.name);
-    return upload;
+    return {
+      ...upload,
+      pinataId: upload.id,
+    };
   } catch (error) {
     console.error("Error uploading file:", error);
     throw error;

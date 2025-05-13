@@ -1,7 +1,16 @@
 import { baseUrl } from "@/lib/client";
 import axios from "axios";
 
-export async function saveFile(fileData: any) {
+export interface SaveFilePayload {
+  walletAddress: string;
+  hash: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  network: "public" | "private";
+}
+
+export async function saveFile(fileData: SaveFilePayload) {
   try {
     const response = await axios.post(baseUrl + "/file", fileData);
     return response.data;

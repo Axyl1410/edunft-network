@@ -20,6 +20,9 @@ export class File {
 
   @Prop({ enum: ['public', 'private'], required: true, type: String })
   network: string;
+
+  @Prop({ required: true, type: String })
+  pinataId: string;
 }
 
 export type FileDocument = File & Document;

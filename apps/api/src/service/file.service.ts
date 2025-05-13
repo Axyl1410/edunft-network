@@ -25,8 +25,17 @@ export class FileService {
     size: number,
     mimeType: string,
     network: 'public' | 'private',
+    pinataId: string,
   ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
-    if (!walletAddress || !hash || !name || !size || !mimeType || !network) {
+    if (
+      !walletAddress ||
+      !hash ||
+      !name ||
+      !size ||
+      !mimeType ||
+      !network ||
+      !pinataId
+    ) {
       return new Fail(new ValidationFailure('File'));
     }
 
@@ -45,6 +54,7 @@ export class FileService {
         size,
         mimeType,
         network,
+        pinataId,
       });
 
       const savedFile = await newFile.save();

@@ -1,10 +1,25 @@
 "use client";
 
+import {
+  deleteFileInDatabase,
+  deletePrivateFile,
+} from "@/services/delete-file";
 import { getUserFiles } from "@/services/get-user-files";
 import { retrievePrivateFile } from "@/services/retrieve-private-file";
 import { saveFile } from "@/services/save-file";
 import { uploadPrivateFile } from "@/services/upload-private-file";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { FileUpload } from "@workspace/ui/components/file-upload";
 import Loading from "@workspace/ui/components/loading";
 import {
   Pagination,
@@ -14,8 +29,27 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@workspace/ui/components/pagination";
-import { Download, Eye, Upload } from "lucide-react";
+import { Progress } from "@workspace/ui/components/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table";
+import {
+  Download,
+  Eye,
+  List,
+  Loader2,
+  PanelLeftIcon,
+  Trash2,
+  Upload,
+} from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
 
 interface FileData {
@@ -24,6 +58,7 @@ interface FileData {
   hash: string;
   size: string;
   createdAt: string;
+  pinataId: string;
 }
 
 export default function Page() {
@@ -39,6 +74,19 @@ export default function Page() {
   const account = useActiveAccount();
   const walletAddress = account?.address;
 
+  const [open, setOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadResult, setUploadResult] = useState<null | "success" | "error">(
+    null,
+  );
+
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    open: boolean;
+    file: FileData | null;
+  }>({ open: false, file: null });
+
   useEffect(() => {
     if (!walletAddress) return;
     setLoading(true);
@@ -46,39 +94,6 @@ export default function Page() {
       .then((data: FileData[]) => setFiles(data))
       .finally(() => setLoading(false));
   }, [walletAddress]);
-
-  //todo fix file upload
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file || !walletAddress) return;
-    setUploading(true);
-    try {
-      // 1. Upload lên Pinata
-      const pinataRes = await uploadPrivateFile({
-        file: file,
-        name: file.name,
-      });
-      // 2. Lưu thông tin file lên API
-      const fileData = {
-        name: file.name,
-        hash: pinataRes.cid,
-        size: `${(file.size / 1024).toFixed(2)} KB`,
-        createdAt: new Date().toISOString(),
-        walletAddress,
-      };
-      await saveFile(fileData);
-      // 3. Reload danh sách file
-      const data = await getUserFiles(walletAddress);
-      setFiles(data);
-    } catch (error) {
-      alert("Upload failed");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  };
 
   const handlePreview = async (file: FileData) => {
     try {
@@ -117,36 +132,152 @@ export default function Page() {
         <h1 className="text-2xl font-semibold">FILES</h1>
         <div className="flex gap-2">
           <Button
+            size="icon"
             variant={viewMode === "pagination" ? "outline" : "ghost"}
             onClick={() => {
               setViewMode("pagination");
               setCurrentPage(1);
             }}
+            title="Pagination view"
           >
-            Pagination
+            <PanelLeftIcon className="h-5 w-5" />
           </Button>
           <Button
+            size="icon"
             variant={viewMode === "list" ? "outline" : "ghost"}
             onClick={() => {
               setViewMode("list");
               setListCount(30);
             }}
+            title="List view"
           >
-            List
+            <List className="h-5 w-5" />
           </Button>
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
+          <Dialog
+            open={open}
+            onOpenChange={(v) => {
+              if (!uploading) {
+                setOpen(v);
+                if (!v) {
+                  setSelectedFile(null);
+                  setUploadResult(null);
+                  setUploadProgress(0);
+                }
+              }
+            }}
           >
-            <Upload className="mr-2 h-4 w-4" /> Upload File
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileUpload}
-            accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
-          />
+            <DialogTrigger asChild>
+              <Button disabled={uploading}>
+                <Upload className="mr-2 h-4 w-4" /> Upload File
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Upload File</DialogTitle>
+                <DialogDescription>
+                  Chọn file để upload lên hệ thống.
+                </DialogDescription>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {uploadResult === "success" ? (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="py-8 text-center font-semibold text-green-600"
+                  >
+                    Upload thành công!
+                  </motion.div>
+                ) : uploadResult === "error" ? (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="py-8 text-center font-semibold text-red-600"
+                  >
+                    Upload thất bại. Vui lòng thử lại.
+                  </motion.div>
+                ) : (
+                  <>
+                    <FileUpload onChange={setSelectedFile} />
+                    {uploading && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="my-4"
+                      >
+                        <Progress value={uploadProgress} />
+                      </motion.div>
+                    )}
+                  </>
+                )}
+              </motion.div>
+              <DialogFooter>
+                {uploadResult ? (
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                      setUploadResult(null);
+                      setSelectedFile(null);
+                      setUploadProgress(0);
+                    }}
+                  >
+                    Đóng
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={async () => {
+                        if (!selectedFile || !walletAddress) return;
+                        setUploading(true);
+                        setUploadProgress(0);
+                        setUploadResult(null);
+                        try {
+                          // 1. Upload lên Pinata
+                          const pinataRes = await uploadPrivateFile({
+                            file: selectedFile,
+                            name: selectedFile.name,
+                          });
+                          setUploadProgress(50);
+                          // 2. Lưu thông tin file lên API
+                          const fileData = {
+                            walletAddress,
+                            hash: pinataRes.cid,
+                            name: selectedFile.name,
+                            size: selectedFile.size,
+                            mimeType: selectedFile.type,
+                            network: "private" as "private" | "public",
+                            pinataId: pinataRes.pinataId,
+                          };
+                          await saveFile(fileData);
+                          setUploadProgress(100);
+                          // 3. Reload danh sách file
+                          const data = await getUserFiles(walletAddress);
+                          setFiles(data);
+                          setUploadResult("success");
+                        } catch (error) {
+                          setUploadResult("error");
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                      disabled={!selectedFile || uploading}
+                    >
+                      Upload
+                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="outline" disabled={uploading}>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                  </>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       {loading ? (
@@ -154,43 +285,134 @@ export default function Page() {
       ) : (
         <>
           <div className="rounded-lg border">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
                     Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
                     Size
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
                     Created At
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
                     Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {displayedFiles.map((file) => (
-                  <tr key={file.id}>
-                    <td className="whitespace-nowrap px-6 py-4">{file.name}</td>
-                    <td className="whitespace-nowrap px-6 py-4">{file.size}</td>
-                    <td className="whitespace-nowrap px-6 py-4">
+                  <TableRow key={file.id}>
+                    <TableCell className="whitespace-nowrap px-3 py-2">
+                      {file.name}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-3 py-2">
+                      {file.size}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-3 py-2">
                       {new Date(file.createdAt).toLocaleString()}
-                    </td>
-                    <td className="flex gap-2 whitespace-nowrap px-6 py-4">
-                      <Button size="sm" onClick={() => handlePreview(file)}>
-                        <Eye className="mr-1 h-4 w-4" /> Preview
+                    </TableCell>
+                    <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handlePreview(file)}
+                        title="Xem"
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" onClick={() => handleDownload(file)}>
-                        <Download className="mr-1 h-4 w-4" /> Download
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDownload(file)}
+                        title="Tải về"
+                      >
+                        <Download className="h-4 w-4" />
                       </Button>
-                    </td>
-                  </tr>
+                      <Dialog
+                        open={
+                          confirmDelete.open &&
+                          confirmDelete.file?.id === file.id
+                        }
+                        onOpenChange={(v) =>
+                          setConfirmDelete({ open: v, file: v ? file : null })
+                        }
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="text-red-500 hover:bg-red-50"
+                            onClick={() =>
+                              setConfirmDelete({ open: true, file })
+                            }
+                            disabled={deletingFileId === file.id}
+                            title="Xóa"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xs p-4">
+                          <DialogHeader>
+                            <DialogTitle className="text-base">
+                              Xác nhận xóa?
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="text-muted-foreground mb-2 text-sm">
+                            Bạn chắc chắn muốn xóa{" "}
+                            <span className="font-semibold">{file.name}</span>?
+                          </div>
+                          <DialogFooter>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="w-full"
+                              disabled={deletingFileId === file.id}
+                              onClick={async () => {
+                                setDeletingFileId(file.id);
+                                setConfirmDelete({ open: false, file: null });
+                                try {
+                                  await deletePrivateFile([file.pinataId]);
+                                  await deleteFileInDatabase(file.hash);
+                                  if (walletAddress) {
+                                    const data =
+                                      await getUserFiles(walletAddress);
+                                    setFiles(data);
+                                  }
+                                  toast.success("Đã xóa file!");
+                                } catch (e) {
+                                  toast.error("Xóa file thất bại");
+                                } finally {
+                                  setDeletingFileId(null);
+                                }
+                              }}
+                            >
+                              {deletingFileId === file.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                "Xóa"
+                              )}
+                            </Button>
+                            <DialogClose asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="w-full"
+                                disabled={deletingFileId === file.id}
+                              >
+                                Hủy
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
           {viewMode === "pagination" && files.length > filesPerPage && (
             <Pagination className="mt-4">
