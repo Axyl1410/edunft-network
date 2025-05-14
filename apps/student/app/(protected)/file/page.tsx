@@ -26,6 +26,8 @@ import {
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
 import { FileUpload } from "@workspace/ui/components/file-upload";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
 import Loading from "@workspace/ui/components/loading";
 import {
   Pagination,
@@ -88,6 +90,7 @@ export default function Page() {
 
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [customFileName, setCustomFileName] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadResult, setUploadResult] = useState<null | "success" | "error">(
     null,
@@ -124,11 +127,11 @@ export default function Page() {
     setPreviewUrl(null);
     try {
       const { url } = await retrieveFile(file.hash, "private");
-      if (!url) throw new Error("Không thể xem file này");
+      if (!url) throw new Error("Cannot preview this file");
       setPreviewUrl(url);
     } catch (error) {
       setPreviewUrl(null);
-      toast.error("Không thể xem file này");
+      toast.error("Cannot preview this file");
     } finally {
       setPreviewLoading(false);
     }
@@ -144,7 +147,7 @@ export default function Page() {
       setDownloadUrl(url);
     } catch (error) {
       setDownloadUrl(null);
-      toast.error("Không thể tải file này");
+      toast.error("Cannot download this file");
     } finally {
       setDownloadLoading(false);
     }
@@ -208,6 +211,7 @@ export default function Page() {
                   setSelectedFile(null);
                   setUploadResult(null);
                   setUploadProgress(0);
+                  setCustomFileName("");
                 }
               }
             }}
@@ -221,7 +225,7 @@ export default function Page() {
               <DialogHeader>
                 <DialogTitle>Upload File</DialogTitle>
                 <DialogDescription>
-                  Chọn file để upload lên hệ thống.
+                  Select a file to upload to the system.
                 </DialogDescription>
               </DialogHeader>
               <motion.div
@@ -236,7 +240,7 @@ export default function Page() {
                     animate={{ scale: 1, opacity: 1 }}
                     className="py-8 text-center font-semibold text-green-600"
                   >
-                    Upload thành công!
+                    Upload successful!
                   </motion.div>
                 ) : uploadResult === "error" ? (
                   <motion.div
@@ -244,12 +248,24 @@ export default function Page() {
                     animate={{ scale: 1, opacity: 1 }}
                     className="py-8 text-center font-semibold text-red-600"
                   >
-                    Upload thất bại. Vui lòng thử lại.
+                    Upload failed. Please try again.
                   </motion.div>
                 ) : (
                   <>
-                    <div className="rounded-xl border border-dashed">
+                    <div className="mb-4 rounded-xl border border-dashed">
                       <FileUpload onChange={setSelectedFile} />
+                    </div>
+                    <div className="mb-4">
+                      <Label htmlFor="customFileName" className="mb-2">
+                        File name (optional)
+                      </Label>
+                      <Input
+                        id="customFileName"
+                        type="text"
+                        value={customFileName}
+                        onChange={(e) => setCustomFileName(e.target.value)}
+                        placeholder={selectedFile?.name || "Enter file name"}
+                      />
                     </div>
                     {uploading && (
                       <motion.div
@@ -271,10 +287,11 @@ export default function Page() {
                       setUploadResult(null);
                       setSelectedFile(null);
                       setUploadProgress(0);
+                      setCustomFileName("");
                     }}
                     className="cursor-pointer"
                   >
-                    Đóng
+                    Close
                   </Button>
                 ) : (
                   <>
@@ -285,21 +302,21 @@ export default function Page() {
                         setUploadProgress(0);
                         setUploadResult(null);
                         try {
-                          // 1. Upload lên Pinata
+                          // 1. Upload to Pinata
                           const pinataRes = await uploadFile({
                             file: selectedFile,
-                            name: selectedFile.name,
+                            name: customFileName.trim() || selectedFile.name,
                             type: "private",
                           });
                           // pinataRes is { ...upload, pinataId } for private
                           const pinataId = (pinataRes as { pinataId: string })
                             .pinataId;
                           setUploadProgress(50);
-                          // 2. Lưu thông tin file lên API
+                          // 2. Save file info to API
                           const fileData = {
                             walletAddress,
                             hash: pinataRes.cid,
-                            name: selectedFile.name,
+                            name: customFileName.trim() || selectedFile.name,
                             size: selectedFile.size,
                             mimeType: selectedFile.type,
                             network: "private" as "private" | "public",
@@ -307,7 +324,7 @@ export default function Page() {
                           };
                           await saveFile(fileData);
                           setUploadProgress(100);
-                          // 3. Reload danh sách file
+                          // 3. Reload file list
                           const data = await getUserFiles(walletAddress);
                           setFiles(data);
                           setUploadResult("success");
@@ -327,6 +344,7 @@ export default function Page() {
                         variant="outline"
                         disabled={uploading}
                         className="cursor-pointer"
+                        onClick={() => setCustomFileName("")}
                       >
                         Cancel
                       </Button>
@@ -386,7 +404,7 @@ export default function Page() {
                             </span>
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Xem</TooltipContent>
+                        <TooltipContent>Preview</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -401,7 +419,7 @@ export default function Page() {
                             </span>
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Tải về</TooltipContent>
+                        <TooltipContent>Download</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -419,7 +437,7 @@ export default function Page() {
                             </span>
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Xóa</TooltipContent>
+                        <TooltipContent>Delete</TooltipContent>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
@@ -464,7 +482,7 @@ export default function Page() {
               className="mt-4 cursor-pointer"
               onClick={() => setListCount((c) => c + filesPerPage)}
             >
-              Xem thêm
+              See more
             </Button>
           )}
           <Dialog
@@ -475,10 +493,10 @@ export default function Page() {
           >
             <DialogContent className="max-w-xs p-4">
               <DialogHeader>
-                <DialogTitle className="text-base">Xác nhận xóa?</DialogTitle>
+                <DialogTitle className="text-base">Confirm delete?</DialogTitle>
               </DialogHeader>
               <div className="text-muted-foreground mb-2 text-sm">
-                Bạn chắc chắn muốn xóa{" "}
+                Are you sure you want to delete{" "}
                 <span className="font-semibold">
                   {confirmDelete.file?.name}
                 </span>
@@ -503,9 +521,9 @@ export default function Page() {
                         const data = await getUserFiles(walletAddress);
                         setFiles(data);
                       }
-                      toast.success("Đã xóa file!");
+                      toast.success("File deleted!");
                     } catch (e) {
-                      toast.error("Xóa file thất bại");
+                      toast.error("Failed to delete file");
                     } finally {
                       setDeletingFileId(null);
                     }
@@ -515,7 +533,7 @@ export default function Page() {
                   {deletingFileId === confirmDelete.file?.id ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    "Xóa"
+                    "Delete"
                   )}
                 </Button>
                 <DialogClose asChild>
@@ -525,7 +543,7 @@ export default function Page() {
                     disabled={deletingFileId === confirmDelete.file?.id}
                     className="cursor-pointer"
                   >
-                    Hủy
+                    Cancel
                   </Button>
                 </DialogClose>
               </DialogFooter>
@@ -536,7 +554,7 @@ export default function Page() {
               <DialogHeader>
                 <DialogTitle>
                   <p className="text-lg font-semibold">
-                    Xem file:{" "}
+                    Preview file:{" "}
                     <span className="text-sm text-gray-500">
                       {previewFile?.name}
                     </span>
@@ -545,7 +563,7 @@ export default function Page() {
               </DialogHeader>
               <div className="flex min-h-[300px] items-center justify-center">
                 {previewLoading ? (
-                  <Loading text="Đang tải file..." />
+                  <Loading text="Loading file..." />
                 ) : previewUrl ? (
                   previewFile?.name.match(/\.(jpg|jpeg|png|gif)$/i) ? (
                     <SkeletonImage
@@ -567,15 +585,15 @@ export default function Page() {
                       className="max-h-[400px] max-w-full"
                     />
                   ) : (
-                    <p>Định dạng file không hỗ trợ xem trước</p>
+                    <p>File format not supported for preview</p>
                   )
                 ) : (
-                  <div className="text-red-500">Không thể xem file này</div>
+                  <div className="text-red-500">Cannot preview this file</div>
                 )}
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer">Đóng</Button>
+                  <Button className="cursor-pointer">Close</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
@@ -584,30 +602,46 @@ export default function Page() {
             open={downloadDialogOpen}
             onOpenChange={setDownloadDialogOpen}
           >
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md rounded-2xl p-6 shadow-xl">
               <DialogHeader>
                 <DialogTitle>
-                  <p className="text-lg font-semibold">
-                    Tải file:{" "}
-                    <span className="text-sm text-gray-500">
-                      {downloadFile?.name}
-                    </span>
-                  </p>
+                  <div className="flex items-center gap-2 text-lg font-semibold">
+                    <Download className="h-5 w-5 text-blue-600" />
+                    Download file
+                  </div>
                 </DialogTitle>
               </DialogHeader>
-              <div className="flex min-h-[100px] flex-col items-center justify-center gap-4">
-                <Alert>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col items-center gap-4 py-4"
+              >
+                <div className="bg-muted/50 w-full rounded-lg p-3 text-center">
+                  <span className="text-base font-medium text-gray-800">
+                    {downloadFile?.name || "No file selected"}
+                  </span>
+                </div>
+                <Alert variant="default" className="w-full">
                   <Terminal className="h-4 w-4" />
                   <AlertTitle>Heads up!</AlertTitle>
                   <AlertDescription>
-                    Download link sẽ hết hạn sau 30 giây
+                    Download link will expire after 30 seconds.
                   </AlertDescription>
                 </Alert>
                 {downloadLoading ? (
-                  <Loading text="Đang khởi tạo link tải..." />
+                  <div className="flex w-full flex-col items-center gap-2">
+                    {/* <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-600" /> */}
+                    <Alert variant="default" className="w-full">
+                      <AlertDescription>
+                        <Loading text="Generating download link..." />
+                      </AlertDescription>
+                    </Alert>
+                  </div>
                 ) : downloadUrl ? (
                   <Button
-                    className="cursor-pointer rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
                     onClick={async () => {
                       if (!downloadUrl) return;
                       try {
@@ -627,27 +661,32 @@ export default function Page() {
                           document.body.removeChild(a);
                         }, 100);
                       } catch (e) {
-                        toast.error("Không thể tải file này");
+                        toast.error("Cannot download this file");
                       }
                     }}
                   >
-                    Bấm vào đây để tải về
+                    <Download className="mr-2 h-4 w-4" /> Click here to download
                   </Button>
                 ) : (
-                  <div className="text-red-500">Không thể tải file này</div>
+                  <Alert variant="destructive" className="w-full">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                      Cannot download this file
+                    </AlertDescription>
+                  </Alert>
                 )}
-              </div>
-              <DialogFooter>
+              </motion.div>
+              <DialogFooter className="flex flex-row justify-end gap-2">
                 <Button
                   variant="outline"
                   onClick={() => downloadFile && handleDownload(downloadFile)}
                   disabled={downloadLoading || !downloadFile}
                   className="cursor-pointer"
                 >
-                  Lấy lại link
+                  Get link again
                 </Button>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer">Đóng</Button>
+                  <Button className="cursor-pointer">Close</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>

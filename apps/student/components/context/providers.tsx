@@ -1,5 +1,3 @@
-"use client";
-
 import { Toaster } from "sonner";
 import { ThirdwebProvider } from "thirdweb/react";
 import { ThemeProvider } from "./theme-provider";

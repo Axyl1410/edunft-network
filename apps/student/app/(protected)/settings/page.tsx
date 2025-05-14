@@ -28,9 +28,9 @@ export default function SettingsPage() {
     <div className="flex h-full items-center justify-center px-2 py-4">
       <Card className="w-full max-w-lg rounded-2xl border border-gray-200 p-0 shadow-xl dark:border-gray-800">
         <div className="bg-background/80 dark:bg-secondary/20 rounded-t-2xl border-b px-8 py-6">
-          <h1 className="mb-1 text-2xl font-bold">Cài đặt</h1>
+          <h1 className="mb-1 text-2xl font-bold">Settings</h1>
           <p className="text-muted-foreground text-sm">
-            Tuỳ chỉnh trải nghiệm và thông tin cá nhân của bạn.
+            Customize your experience and personal information.
           </p>
         </div>
         <div className="space-y-8 px-8 py-6">
@@ -38,10 +38,10 @@ export default function SettingsPage() {
           <section>
             <div className="mb-1 flex items-center gap-2">
               <Sun className="h-4 w-4 text-yellow-400" />
-              <span className="font-medium">Giao diện</span>
+              <span className="font-medium">Theme</span>
             </div>
             <p className="text-muted-foreground mb-3 text-xs">
-              Chọn chế độ sáng hoặc tối cho giao diện.
+              Choose light or dark mode for the interface.
             </p>
             <RadioGroup
               value={theme}
@@ -70,24 +70,24 @@ export default function SettingsPage() {
 
           {/* Account Section */}
           <section>
-            <div className="mb-1 font-medium">Thông tin tài khoản</div>
+            <div className="mb-1 font-medium">Account Information</div>
             <p className="text-muted-foreground mb-3 text-xs">
-              Thông tin cơ bản về tài khoản của bạn.
+              Basic information about your account.
             </p>
             <div className="bg-muted/50 flex flex-col gap-1 rounded-xl border p-4">
               <div className="text-base font-semibold">
-                {user?.username || "Chưa đặt tên"}
+                {user?.username || "No name set"}
               </div>
               <div className="text-muted-foreground text-xs">
                 {formatAddress(account?.address || "")}
               </div>
               <div className="mt-1 text-xs italic text-gray-400">
-                Vai trò:{" "}
+                Role:{" "}
                 {user?.role === "teacher"
-                  ? "Giáo viên"
+                  ? "Teacher"
                   : user?.role === "admin"
-                    ? "Quản trị viên"
-                    : "Học sinh"}
+                    ? "Admin"
+                    : "Student"}
               </div>
             </div>
           </section>

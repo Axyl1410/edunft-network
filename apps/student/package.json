@@ -29,7 +29,7 @@
     "react-markdown": "^10.1.0",
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
-    "thirdweb": "^5.95.2",
+    "thirdweb": "^5.99.1",
     "zustand": "^5.0.4"
   },
   "devDependencies": {

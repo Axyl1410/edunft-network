@@ -114,7 +114,7 @@ export default function ProfilePage() {
         bannedUntil: response.data.bannedUntil || null,
         role: response.data.role || "student",
       });
-      toast.success("Cập nhật hồ sơ thành công!");
+      toast.success("Profile updated successfully!");
     } catch (error: any) {
       toast.error("Failed to update profile", {
         description: error.message,
@@ -223,10 +223,10 @@ export default function ProfilePage() {
                   </div>
                   <div className="bg-accent text-accent-foreground mt-1 inline-block rounded-full px-3 py-1 text-xs font-medium">
                     {user.role === "teacher"
-                      ? "Giáo viên"
+                      ? "Teacher"
                       : user.role === "admin"
-                        ? "Quản trị viên"
-                        : "Học sinh"}
+                        ? "Admin"
+                        : "Student"}
                   </div>
                 </div>
                 <div className="mt-4 flex w-full justify-center md:mt-0 md:w-auto md:justify-end">
@@ -276,7 +276,7 @@ export default function ProfilePage() {
               <div className="text-muted-foreground mx-auto mt-6 w-full max-w-md whitespace-pre-line text-center text-base md:mx-0 md:text-left">
                 {user.bio || (
                   <span className="text-sm italic text-gray-400">
-                    Chưa có giới thiệu.
+                    No bio yet.
                   </span>
                 )}
               </div>
@@ -286,15 +286,15 @@ export default function ProfilePage() {
                   variant="ghost"
                   className="border-primary/30 hover:bg-primary/10 border"
                 >
-                  Chỉnh sửa hồ sơ
+                  Edit Profile
                 </Button>
               </div>
               <Dialog open={editOpen} onOpenChange={setEditOpen}>
                 <DialogContent className="max-w-lg">
                   <DialogHeader>
-                    <DialogTitle>Chỉnh sửa hồ sơ</DialogTitle>
+                    <DialogTitle>Edit Profile</DialogTitle>
                     <DialogDescription>
-                      Cập nhật thông tin cá nhân của bạn.
+                      Update your personal information.
                     </DialogDescription>
                   </DialogHeader>
                   <form
@@ -306,7 +306,7 @@ export default function ProfilePage() {
                     className="mt-2 flex flex-col gap-4"
                   >
                     <div>
-                      <Label htmlFor="Username">Tên hiển thị</Label>
+                      <Label htmlFor="Username">Display Name</Label>
                       <Input
                         name="username"
                         value={form.username}
@@ -315,7 +315,7 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="Bio">Giới thiệu</Label>
+                      <Label htmlFor="Bio">Bio</Label>
                       <Input
                         name="bio"
                         value={form.bio}
@@ -324,7 +324,9 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="ProfilePicture">Ảnh đại diện (URL)</Label>
+                      <Label htmlFor="ProfilePicture">
+                        Profile Picture (URL)
+                      </Label>
                       <Input
                         name="profilePicture"
                         value={form.profilePicture}
@@ -333,7 +335,7 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="banner">Ảnh bìa (URL)</Label>
+                      <Label htmlFor="banner">Banner (URL)</Label>
                       <Input
                         name="banner"
                         value={form.banner}
@@ -342,15 +344,15 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="role">Vai trò</Label>
+                      <Label htmlFor="role">Role</Label>
                       <select
                         name="role"
                         value={form.role}
                         onChange={handleChange}
                         className="mt-1 w-full rounded border px-2 py-1"
                       >
-                        <option value="student">Học sinh</option>
-                        <option value="teacher">Giáo viên</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
                       </select>
                     </div>
                     <DialogFooter className="mt-4 flex gap-2">
@@ -360,10 +362,10 @@ export default function ProfilePage() {
                         onClick={() => setEditOpen(false)}
                         disabled={loading}
                       >
-                        Huỷ
+                        Cancel
                       </Button>
                       <Button type="submit" disabled={loading}>
-                        {loading ? "Đang lưu..." : "Lưu"}
+                        {loading ? "Saving..." : "Save"}
                       </Button>
                     </DialogFooter>
                   </form>

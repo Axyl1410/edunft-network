@@ -24,7 +24,7 @@ import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useState } from "react"; // Added useCallback
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -409,20 +409,23 @@ export const WalletConnectButton = () => {
       });
   }, [account?.address, accountCreated, setUser, wallet]); // Thêm wallet vào dependencies
 
-  const wallets = [
-    inAppWallet({
-      auth: {
-        options: ["google", "email", "facebook", "apple", "github"],
-      },
-    }),
-    createWallet("io.metamask"),
-    createWallet("com.coinbase.wallet"),
-    createWallet("me.rainbow"),
-    createWallet("io.rabby"),
-    createWallet("io.zerion.wallet"),
-  ];
+  const wallets = useMemo(
+    () => [
+      inAppWallet({
+        auth: {
+          options: ["google", "email", "facebook", "apple", "github"],
+        },
+      }),
+      createWallet("io.metamask"),
+      createWallet("com.coinbase.wallet"),
+      createWallet("me.rainbow"),
+      createWallet("io.rabby"),
+      createWallet("io.zerion.wallet"),
+    ],
+    [],
+  );
 
-  async function handleConnect() {
+  const handleConnect = useCallback(async () => {
     await connect({
       client: thirdwebClient,
       chain: FORMA_SKETCHPAD,
@@ -431,18 +434,18 @@ export const WalletConnectButton = () => {
       size: "compact",
       wallets: wallets,
     });
-  }
+  }, [connect, theme, wallets]);
 
-  async function handleDetail() {
+  const handleDetail = useCallback(async () => {
     detailsModal.open({
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
       theme: theme === "light" ? "light" : "dark",
       hideSwitchWallet: true,
     });
-  }
+  }, [detailsModal, theme]);
 
-  async function handleSwitch() {
+  const handleSwitch = useCallback(async () => {
     if (wallet?.switchChain) {
       try {
         await wallet.switchChain(FORMA_SKETCHPAD);
@@ -454,7 +457,7 @@ export const WalletConnectButton = () => {
         "Wallet does not support switching chain or wallet is not connected.",
       );
     }
-  }
+  }, [wallet]);
 
   const handleCreateAccountSuccess = useCallback(() => {
     setAccountCreated(true);
@@ -475,7 +478,7 @@ export const WalletConnectButton = () => {
         });
       });
     }
-  }, [account?.address, setUser]); // Dependencies are stable setters from useState
+  }, [account?.address, setUser]);
 
   const handleCreateAccountErrorLogout = () => {
     if (wallet) disconnect(wallet);
