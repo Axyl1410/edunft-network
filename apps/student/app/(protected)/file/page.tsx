@@ -158,7 +158,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto flex min-h-svh flex-col p-4">
+    <div className="container mx-auto flex flex-col p-4">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">FILES</h1>
         <div className="flex gap-2">

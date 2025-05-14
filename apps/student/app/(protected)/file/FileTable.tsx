@@ -40,7 +40,7 @@ export function FileTable({
   deletingFileId,
 }: FileTableProps) {
   return (
-    <div className="rounded-lg border">
+    <div className="w-full overflow-x-auto rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -62,7 +62,7 @@ export function FileTable({
           {files.length > 0 ? (
             files.map((file) => (
               <TableRow key={file.id}>
-                <TableCell className="whitespace-nowrap px-3 py-2">
+                <TableCell className="max-w-xs truncate whitespace-nowrap px-3 py-2">
                   {file.name}
                 </TableCell>
                 <TableCell className="whitespace-nowrap px-3 py-2">
