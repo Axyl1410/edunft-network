@@ -9,6 +9,11 @@ import {
   saveFile,
   uploadFile,
 } from "@/services/file";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -50,12 +55,13 @@ import {
   List,
   Loader2,
   PanelLeftIcon,
+  Terminal,
   Trash2,
   Upload,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
 
 interface FileData {
@@ -92,6 +98,16 @@ export default function Page() {
     file: FileData | null;
   }>({ open: false, file: null });
 
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<FileData | null>(null);
+
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [downloadFile, setDownloadFile] = useState<FileData | null>(null);
+
   useEffect(() => {
     if (!walletAddress) return;
     setLoading(true);
@@ -101,25 +117,34 @@ export default function Page() {
   }, [walletAddress]);
 
   const handlePreview = async (file: FileData) => {
+    setPreviewDialogOpen(true);
+    setPreviewLoading(true);
+    setPreviewFile(file);
+    setPreviewUrl(null);
     try {
       const { url } = await retrieveFile(file.hash, "private");
-      window.open(url, "_blank");
+      setPreviewUrl(url);
     } catch (error) {
-      alert("Không thể xem file này");
+      setPreviewUrl(null);
+      toast.error("Không thể xem file này");
+    } finally {
+      setPreviewLoading(false);
     }
   };
 
   const handleDownload = async (file: FileData) => {
+    setDownloadDialogOpen(true);
+    setDownloadLoading(true);
+    setDownloadFile(file);
+    setDownloadUrl(null);
     try {
       const { url } = await retrieveFile(file.hash, "private");
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = file.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      setDownloadUrl(url);
     } catch (error) {
-      alert("Không thể tải file này");
+      setDownloadUrl(null);
+      toast.error("Không thể tải file này");
+    } finally {
+      setDownloadLoading(false);
     }
   };
 
@@ -221,7 +246,9 @@ export default function Page() {
                   </motion.div>
                 ) : (
                   <>
-                    <FileUpload onChange={setSelectedFile} />
+                    <div className="rounded-xl border border-dashed">
+                      <FileUpload onChange={setSelectedFile} />
+                    </div>
                     {uploading && (
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -488,6 +515,125 @@ export default function Page() {
                   >
                     Hủy
                   </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>
+                  <p className="text-lg font-semibold">
+                    Xem file:{" "}
+                    <span className="text-sm text-gray-500">
+                      {previewFile?.name}
+                    </span>
+                  </p>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex min-h-[300px] items-center justify-center">
+                {previewLoading ? (
+                  <Loading text="Đang tải file..." />
+                ) : previewUrl ? (
+                  previewFile?.name.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+                    <img
+                      src={previewUrl}
+                      alt={previewFile?.name}
+                      className="max-h-[400px] max-w-full"
+                    />
+                  ) : previewFile?.name.match(/\.(pdf)$/i) ? (
+                    <iframe
+                      src={previewUrl}
+                      title={previewFile?.name}
+                      className="h-[400px] w-full"
+                    />
+                  ) : previewFile?.name.match(/\.(mp4|webm)$/i) ? (
+                    <video
+                      src={previewUrl}
+                      controls
+                      className="max-h-[400px] max-w-full"
+                    />
+                  ) : (
+                    <p>Định dạng file không hỗ trợ xem trước</p>
+                  )
+                ) : (
+                  <div className="text-red-500">Không thể xem file này</div>
+                )}
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button>Đóng</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={downloadDialogOpen}
+            onOpenChange={setDownloadDialogOpen}
+          >
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>
+                  <p className="text-lg font-semibold">
+                    Tải file:{" "}
+                    <span className="text-sm text-gray-500">
+                      {downloadFile?.name}
+                    </span>
+                  </p>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex min-h-[100px] flex-col items-center justify-center gap-4">
+                <Alert>
+                  <Terminal className="h-4 w-4" />
+                  <AlertTitle>Heads up!</AlertTitle>
+                  <AlertDescription>
+                    Download link sẽ hết hạn sau 30 giây
+                  </AlertDescription>
+                </Alert>
+                {downloadLoading ? (
+                  <Loading text="Đang khởi tạo link tải..." />
+                ) : downloadUrl ? (
+                  <Button
+                    className="rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    onClick={async () => {
+                      if (!downloadUrl) return;
+                      try {
+                        const response = await fetch(downloadUrl, {
+                          credentials: "omit",
+                        });
+                        if (!response.ok) throw new Error("Network error");
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = downloadFile?.name || "download";
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        }, 100);
+                      } catch (e) {
+                        toast.error("Không thể tải file này");
+                      }
+                    }}
+                  >
+                    Bấm vào đây để tải về
+                  </Button>
+                ) : (
+                  <div className="text-red-500">Không thể tải file này</div>
+                )}
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => downloadFile && handleDownload(downloadFile)}
+                  disabled={downloadLoading || !downloadFile}
+                >
+                  Lấy lại link
+                </Button>
+                <DialogClose asChild>
+                  <Button>Đóng</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
