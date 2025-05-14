@@ -1,31 +1,26 @@
 "use client";
 
+import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
+import Loading from "@workspace/ui/components/loading";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { cn } from "@workspace/ui/lib/utils";
-import { Bot, Loader2, User } from "lucide-react";
+import { Bot, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { useActiveAccount } from "thirdweb/react";
-
-// const CHAINS = [
-//   { id: "1", name: "Ethereum" },
-//   { id: "137", name: "Polygon" },
-//   { id: "56", name: "BNB Chain" },
-//   { id: "11155111", name: "Sepolia" },
-// ];
+import { Blobbie, useActiveAccount } from "thirdweb/react";
 
 const NEBULA_API_URL = "https://nebula-api.thirdweb.com/chat";
 
 export default function ChatbotPage() {
-  // const [chainId, setChainId] = useState("1");
-  // const [index, setIndex] = useState("default");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const account = useActiveAccount();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -41,15 +36,15 @@ export default function ChatbotPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-secret-key": process.env.NEXT_PUBLIC_TW_SECRET_KEY!,
+          "x-secret-key": process.env.NEXT_PUBLIC_TW_KEY!,
         },
         body: JSON.stringify({
           message: msg,
           stream: false,
-          // context: {
-          //   chainIds: [chainId],
-          //   walletAddress: account?.address || null,
-          // },
+          context: {
+            chainIds: ["984123"],
+            walletAddress: account?.address || null,
+          },
         }),
       });
       if (!res.ok) {
@@ -97,7 +92,7 @@ export default function ChatbotPage() {
             />
           </div> */}
         </header>
-        <main className="flex flex-1 flex-col overflow-hidden">
+        <main className="flex flex-1 flex-col">
           <div
             className={cn(
               "flex-1 space-y-3 rounded-2xl border-slate-200 bg-white/80 px-2 py-4 dark:border-neutral-800 dark:bg-neutral-900/80",
@@ -139,14 +134,29 @@ export default function ChatbotPage() {
                 </span>
                 {msg.role === "user" && (
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
-                    <User className="h-4 w-4 text-gray-500" />
+                    {user?.profilePicture ? (
+                      <SkeletonImage
+                        src={user.profilePicture}
+                        alt="Avatar"
+                        width={28}
+                        height={28}
+                        rounded="rounded-full"
+                        className="h-7 w-7 rounded-full"
+                      />
+                    ) : (
+                      <Blobbie
+                        address={account?.address ?? ""}
+                        className="h-7 w-7 rounded-full"
+                      />
+                    )}
                   </span>
                 )}
               </div>
             ))}
             {isLoading && (
               <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
-                <Loader2 className="h-4 w-4 animate-spin" /> Đang trả lời...
+                <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                <Loading text="Đang trả lời..." />
               </div>
             )}
             <div ref={messagesEndRef} />

@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/sidebar";
 import NavFooter from "./nav-footer";
 import NavHeader from "./nav-header";
-import { NavMain } from "./nav-main";
+import { NavMain, SidebarMenuItemProps } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -20,7 +20,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavHeader />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={SidebarData.navMain} />
+        <NavMain items={SidebarData.navMain as SidebarMenuItemProps[]} />
         <Separator />
         <NavProjects projects={SidebarData.more} />
       </SidebarContent>

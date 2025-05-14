@@ -12,7 +12,7 @@ if (!clientId) {
   throw new Error("No client ID provided");
 }
 
-const marketplace_address = "0x4f3b1c5a2d7e8c6f9e3b8a5d4f2b7c5e4f3b1c5a"; // mock address
+const marketplace_address = "0xa7d2c8d1Fd78cc65aaC5DBCfd91A4B7190acf89A";
 
 export const thirdwebClient = createThirdwebClient(
   secretKey ? { secretKey } : { clientId },

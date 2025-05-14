@@ -1,5 +1,12 @@
+import { baseUrl } from "@/lib/client";
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
 import { formatAddress } from "@/lib/utils";
+import { useUserStore } from "@/store";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -10,11 +17,14 @@ import {
   DialogTitle,
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
+import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -22,6 +32,7 @@ import {
   useActiveWallet,
   useActiveWalletChain,
   useConnectModal,
+  useDisconnect,
   useWalletDetailsModal,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
@@ -55,9 +66,13 @@ const steps = [
 const CreateAccountForm = ({
   onSuccess,
   walletAddress,
+  setCreateAccountError,
+  onStepChange,
 }: {
   onSuccess: () => void;
   walletAddress: string;
+  setCreateAccountError: (err: string) => void;
+  onStepChange: (step: number) => void;
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<CreateUserFormData>({
@@ -68,10 +83,6 @@ const CreateAccountForm = ({
     role: "student",
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: any) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -90,18 +101,18 @@ const CreateAccountForm = ({
 
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:8080/user/create", {
-        WalletAddress: walletAddress,
+      await axios.post(baseUrl + "/user/create", {
+        walletAddress: walletAddress,
         ...formData,
       });
       toast.success("Account created successfully!");
       onSuccess();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create account", {
-        description:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      // Show error dialog instead of toast
+      setCreateAccountError(
+        error instanceof Error ? error.message : "Unknown error occurred",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -118,24 +129,24 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label htmlFor="username" className="text-sm font-medium">
-                Username
-              </label>
+              <Label htmlFor="username">Username (required)</Label>
               <Input
                 id="username"
                 value={formData.Username}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Username: e.target.value }))
+                }
                 placeholder="Enter your username"
               />
             </div>
             <div className="grid gap-2">
-              <label htmlFor="bio" className="text-sm font-medium">
-                Bio
-              </label>
+              <Label htmlFor="bio">Bio</Label>
               <Textarea
                 id="bio"
                 value={formData.Bio}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Bio: e.target.value }))
+                }
                 placeholder="Tell us about yourself"
               />
             </div>
@@ -150,24 +161,31 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label htmlFor="profilePicture" className="text-sm font-medium">
+              <Label htmlFor="profilePicture" className="text-sm font-medium">
                 Profile Picture URL
-              </label>
+              </Label>
               <Input
                 id="profilePicture"
                 value={formData.ProfilePicture}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    ProfilePicture: e.target.value,
+                  }))
+                }
                 placeholder="Enter your profile picture URL"
               />
             </div>
             <div className="grid gap-2">
-              <label htmlFor="banner" className="text-sm font-medium">
+              <Label htmlFor="banner" className="text-sm font-medium">
                 Banner URL
-              </label>
+              </Label>
               <Input
                 id="banner"
                 value={formData.Banner}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, Banner: e.target.value }))
+                }
                 placeholder="Enter your banner URL"
               />
             </div>
@@ -182,7 +200,7 @@ const CreateAccountForm = ({
             className="space-y-4"
           >
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Select Role</label>
+              <Label className="text-sm font-medium">Select Role</Label>
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   type="button"
@@ -219,6 +237,10 @@ const CreateAccountForm = ({
     }
   };
 
+  useEffect(() => {
+    if (onStepChange) onStepChange(currentStep);
+  }, [currentStep, onStepChange]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -248,6 +270,15 @@ const CreateAccountForm = ({
           </div>
         ))}
       </div>
+
+      <Alert>
+        <Terminal className="h-4 w-4" />
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          All information is optinal, but the more you provide, the better your
+          experience will be. You can always update your profile later.
+        </AlertDescription>
+      </Alert>
 
       <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
 
@@ -293,61 +324,108 @@ export const WalletConnectButton = () => {
   const activeChain = useActiveWalletChain();
   const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
+  const user = useUserStore((state) => state.user);
+  const { disconnect } = useDisconnect();
+  const [createAccountError, setCreateAccountError] = useState<string | null>(
+    null,
+  );
+  const [createStep, setCreateStep] = useState(0);
 
   useEffect(() => {
     if (!wallet) {
       return;
     }
-    const unsubscribe = wallet.subscribe("accountChanged", (newAccount) => {
-      console.log("Account changed via subscribe:", newAccount);
-    });
+    const unsubscribeAccount = wallet.subscribe(
+      "accountChanged",
+      (newAccount) => {
+        console.log("Account changed via subscribe:", newAccount);
+      },
+    );
     const unsubscribeChain = wallet.subscribe("chainChanged", (newChain) => {
       console.log("Chain changed via subscribe:", newChain);
     });
 
     return () => {
-      unsubscribe();
+      unsubscribeAccount();
       unsubscribeChain();
     };
   }, [wallet]);
 
   useEffect(() => {
-    if (account?.address) {
-      axios
-        .post("http://localhost:8080/user/login", {
-          WalletAddress: account.address,
-        })
-        .then(() => {
-          setAccountCreated(true);
-        })
-        .catch((error) => {
-          if (error.response?.status === 404) {
-            setShowCreateUserDialog(true);
-            setAccountCreated(false);
-          } else {
-            console.error(error);
-            toast.error("Failed to connect to EduNFT", {
-              description: error.message,
-            });
-          }
-        });
+    if (!account?.address) {
+      // No active account, ensure dialog is closed and account status is reset
+      setShowCreateUserDialog(false);
+      setAccountCreated(false);
+      return;
     }
-  }, [account]);
 
-  const wallets = [
-    inAppWallet({
-      auth: {
-        options: ["google", "email", "facebook", "apple", "github"],
-      },
-    }),
-    createWallet("io.metamask"),
-    createWallet("com.coinbase.wallet"),
-    createWallet("me.rainbow"),
-    createWallet("io.rabby"),
-    createWallet("io.zerion.wallet"),
-  ];
+    if (accountCreated) {
+      // Account is already marked as created for this session/address, do nothing.
+      return;
+    }
 
-  async function handleConnect() {
+    if (!wallet) {
+      return;
+    }
+
+    // At this point, an account address exists, and we haven't confirmed account creation yet.
+    // Attempt to log in / check for user existence.
+    axios
+      .post(baseUrl + "/user/login", {
+        WalletAddress: account.address,
+      })
+      .then(() => {
+        setAccountCreated(true);
+        setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
+        // Fetch user info and set in zustand
+        axios.get(baseUrl + `/user/${account.address}`).then((response) => {
+          setUser({
+            walletAddress: account.address,
+            username: response.data.username || "",
+            bio: response.data.bio || "",
+            profilePicture: response.data.profilePicture || "",
+            banner: response.data.banner || "",
+            reputation: response.data.reputation || 100,
+            violations: response.data.violations || 0,
+            bannedUntil: response.data.bannedUntil || null,
+            role: response.data.role || "student",
+          });
+        });
+      })
+      .catch((error) => {
+        if (error.response?.status === 404) {
+          // User not found, prompt for account creation (no error toast)
+          setShowCreateUserDialog(true);
+          setAccountCreated(false); // Ensure this is false as we are prompting creation
+        } else {
+          // Only show toast for real errors
+          console.error("Login/check error:", error);
+          toast.error("Đã xảy ra lỗi khi kết nối tới EduNFT", {
+            description:
+              error instanceof Error ? error.message : "Unknown error occurred",
+          });
+        }
+      });
+  }, [account?.address, accountCreated, setUser, wallet]); // Thêm wallet vào dependencies
+
+  const wallets = useMemo(
+    () => [
+      inAppWallet({
+        auth: {
+          options: ["google", "email", "facebook", "apple", "github"],
+        },
+      }),
+      createWallet("io.metamask"),
+      createWallet("com.coinbase.wallet"),
+      createWallet("me.rainbow"),
+      createWallet("io.rabby"),
+      createWallet("io.zerion.wallet"),
+    ],
+    [],
+  );
+
+  const handleConnect = useCallback(async () => {
     await connect({
       client: thirdwebClient,
       chain: FORMA_SKETCHPAD,
@@ -356,17 +434,18 @@ export const WalletConnectButton = () => {
       size: "compact",
       wallets: wallets,
     });
-  }
+  }, [connect, theme, wallets]);
 
-  async function handleDetail() {
+  const handleDetail = useCallback(async () => {
     detailsModal.open({
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
       theme: theme === "light" ? "light" : "dark",
+      hideSwitchWallet: true,
     });
-  }
+  }, [detailsModal, theme]);
 
-  async function handleSwitch() {
+  const handleSwitch = useCallback(async () => {
     if (wallet?.switchChain) {
       try {
         await wallet.switchChain(FORMA_SKETCHPAD);
@@ -378,7 +457,35 @@ export const WalletConnectButton = () => {
         "Wallet does not support switching chain or wallet is not connected.",
       );
     }
-  }
+  }, [wallet]);
+
+  const handleCreateAccountSuccess = useCallback(() => {
+    setAccountCreated(true);
+    setShowCreateUserDialog(false);
+    // Fetch user info and set in zustand
+    if (account?.address) {
+      axios.get(baseUrl + `/user/${account.address}`).then((response) => {
+        setUser({
+          walletAddress: account.address,
+          username: response.data.username || "",
+          bio: response.data.bio || "",
+          profilePicture: response.data.profilePicture || "",
+          banner: response.data.banner || "",
+          reputation: response.data.reputation || 100,
+          violations: response.data.violations || 0,
+          bannedUntil: response.data.bannedUntil || null,
+          role: response.data.role || "student",
+        });
+      });
+    }
+  }, [account?.address, setUser]);
+
+  const handleCreateAccountErrorLogout = () => {
+    if (wallet) disconnect(wallet);
+    setCreateAccountError(null);
+    setShowCreateUserDialog(false);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -394,9 +501,23 @@ export const WalletConnectButton = () => {
         <Button
           variant={"outline"}
           onClick={handleDetail}
-          className="flex cursor-pointer items-center"
+          className="flex cursor-pointer items-center dark:bg-transparent"
         >
-          <Blobbie address={account.address} className="size-6 rounded-full" />
+          {user?.profilePicture ? (
+            <SkeletonImage
+              src={user.profilePicture}
+              alt="Avatar"
+              width={24}
+              height={24}
+              rounded="rounded-full"
+              className="mr-1 size-6 rounded-full"
+            />
+          ) : (
+            <Blobbie
+              address={account.address}
+              className="mr-1 size-6 rounded-full"
+            />
+          )}
           {formatAddress(account.address)}
         </Button>
       )}
@@ -404,13 +525,12 @@ export const WalletConnectButton = () => {
       <Dialog
         open={showCreateUserDialog}
         onOpenChange={(open) => {
-          if (!open && !accountCreated) {
-            return;
-          }
+          // Prevent closing by X or overlay when dialog is for account creation
+          if (!open && showCreateUserDialog) return;
           setShowCreateUserDialog(open);
         }}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="no-x-close max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Your Account</DialogTitle>
             <DialogDescription>
@@ -420,12 +540,44 @@ export const WalletConnectButton = () => {
           {account?.address && (
             <CreateAccountForm
               walletAddress={account.address}
-              onSuccess={() => {
-                setAccountCreated(true);
-                setShowCreateUserDialog(false);
-              }}
+              onSuccess={handleCreateAccountSuccess}
+              setCreateAccountError={setCreateAccountError}
+              onStepChange={setCreateStep}
             />
           )}
+          {account?.address && createStep === 0 && (
+            <DialogFooter className="flex flex-row-reverse justify-between gap-2">
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (wallet) disconnect(wallet);
+                  setShowCreateUserDialog(false);
+                }}
+              >
+                Cancel and Logout
+              </Button>
+            </DialogFooter>
+          )}
+        </DialogContent>
+      </Dialog>
+      {/* Error Dialog for account creation */}
+      <Dialog
+        open={!!createAccountError}
+        onOpenChange={() => setCreateAccountError(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Đã xảy ra lỗi khi tạo tài khoản</DialogTitle>
+            <DialogDescription>{createAccountError}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={handleCreateAccountErrorLogout}
+            >
+              Đăng xuất và thử lại
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

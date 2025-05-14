@@ -1,4 +1,5 @@
 import { formatAddress } from "@/lib/utils";
+import { useUserStore } from "@/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import {
@@ -28,10 +30,13 @@ export default function NavFooter() {
   const { isMobile } = useSidebar();
   const { disconnect } = useDisconnect();
   const wallet = useActiveWallet();
+  const clearUser = useUserStore((state) => state.clearUser);
+  const user = useUserStore((state) => state.user);
 
   const handleDisconnect = () => {
     if (wallet) {
       disconnect(wallet);
+      clearUser();
     }
   };
 
@@ -46,10 +51,21 @@ export default function NavFooter() {
               disabled={!account?.address}
             >
               <div className="aspect-square">
-                <Blobbie
-                  address={account?.address ?? ""}
-                  className="h-8 w-8 rounded-full"
-                />
+                {user?.profilePicture ? (
+                  <SkeletonImage
+                    src={user.profilePicture}
+                    alt="Avatar"
+                    width={32}
+                    height={32}
+                    rounded="rounded-full"
+                    className="h-8 w-8 rounded-full"
+                  />
+                ) : (
+                  <Blobbie
+                    address={account?.address ?? ""}
+                    className="h-8 w-8 rounded-full"
+                  />
+                )}
               </div>
 
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -68,10 +84,21 @@ export default function NavFooter() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Blobbie
-                  address={account?.address ?? ""}
-                  className="size-8 rounded-full"
-                />
+                {user?.profilePicture ? (
+                  <SkeletonImage
+                    src={user.profilePicture}
+                    alt="Avatar"
+                    width={32}
+                    height={32}
+                    rounded="rounded-full"
+                    className="h-8 w-8 rounded-full"
+                  />
+                ) : (
+                  <Blobbie
+                    address={account?.address ?? ""}
+                    className="size-8 rounded-full"
+                  />
+                )}
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-sm font-semibold">

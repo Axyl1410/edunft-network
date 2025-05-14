@@ -50,8 +50,8 @@ export class VoteService {
       // Check if the user has already voted
       const existingVote = await this.voteModel
         .findOne({
-          User: userid._id,
-          File: fileid._id,
+          user: userid._id,
+          file: fileid._id,
         })
         .lean()
         .exec();
@@ -78,8 +78,8 @@ export class VoteService {
       } else {
         // If not voted yet, create a new vote
         const newVote = await new this.voteModel({
-          User: userid._id,
-          File: fileid._id,
+          user: userid._id,
+          file: fileid._id,
           voteType: voteType,
         }).save();
 
@@ -108,10 +108,10 @@ export class VoteService {
       }
 
       const vote = await this.voteModel
-        .find({ File: fileid._id })
+        .find({ file: fileid._id })
         .lean()
         .exec();
-      if (!vote) {
+      if (!vote || vote.length === 0) {
         return new Fail(new NotFoundFailure('Vote', hash));
       }
 
@@ -137,7 +137,7 @@ export class VoteService {
       }
 
       const vote = await this.voteModel
-        .find({ User: userid._id })
+        .find({ user: userid._id })
         .lean()
         .exec();
       if (!vote) {

@@ -4,6 +4,7 @@ import {
   Calendar,
   FileText,
   HelpCircle,
+  Home,
   Map,
   PenLine,
   Settings,
@@ -13,13 +14,26 @@ import {
 export const SidebarData = {
   navMain: [
     {
-      title: "Discover",
+      title: "Home",
       url: "/",
-      icon: Map,
-      isActive: true,
+      icon: Home,
       items: [],
     },
-
+    {
+      title: "Discover",
+      url: "#",
+      icon: Map,
+      items: [
+        {
+          title: "Buy",
+          url: "/buy",
+        },
+        {
+          title: "Sell",
+          url: "/sell",
+        },
+      ],
+    },
     {
       title: "Files",
       url: "/file",
@@ -28,16 +42,15 @@ export const SidebarData = {
     },
     {
       title: "Studio",
-      url: "#",
       icon: PenLine,
       items: [
         {
           title: "Mint",
-          url: "#",
+          url: "/mint",
         },
         {
           title: "Collection",
-          url: "#",
+          url: "/collection",
         },
       ],
     },
@@ -73,7 +86,7 @@ export const SidebarData = {
     },
     {
       name: "Settings",
-      url: "#",
+      url: "/settings",
       icon: Settings,
     },
   ],

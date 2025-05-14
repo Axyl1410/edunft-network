@@ -1,6 +1,6 @@
 "use client";
 
-import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   if (!account?.address) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-full items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Please connect your wallet</CardTitle>

@@ -14,7 +14,6 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^44.3.0",
     "@ckeditor/ckeditor5-react": "^9.5.0",
-    "@workspace/math": "workspace:*",
     "@workspace/ui": "workspace:*",
     "axios": "^1.8.4",
     "ckeditor5": "^45.0.0",
@@ -23,12 +22,15 @@
     "motion": "^12.10.0",
     "next": "^15.2.4",
     "next-themes": "^0.4.4",
+    "nextjs-toploader": "^3.8.16",
     "pinata": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^10.1.0",
+    "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
-    "thirdweb": "^5.95.2"
+    "thirdweb": "^5.99.1",
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@types/node": "^20",

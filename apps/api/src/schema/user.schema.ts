@@ -4,19 +4,19 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true, index: true, type: String })
-  WalletAddress: string;
+  walletAddress: string;
 
   @Prop({ default: null, type: String })
-  Username?: string;
+  username?: string;
 
   @Prop({ default: null, type: String })
-  Bio?: string;
+  bio?: string;
 
   @Prop({ default: null, type: String })
-  ProfilePicture?: string;
+  profilePicture?: string;
 
   @Prop({ default: null, type: String })
-  Banner?: string;
+  banner?: string;
 
   @Prop({ default: 100, type: Number })
   reputation?: number;

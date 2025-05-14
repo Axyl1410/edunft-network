@@ -4,22 +4,25 @@ import { Document, Types } from 'mongoose';
 @Schema({ timestamps: true })
 export class File {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  User: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ required: true, unique: true, index: true, type: String })
-  Hash: string;
+  hash: string;
 
   @Prop({ default: null, type: String })
-  Name: string;
+  name: string;
 
   @Prop({ default: null, type: Number })
-  Size: number;
+  size: number;
 
   @Prop({ default: null, type: String })
-  Mime_type: string;
+  mimeType: string;
 
   @Prop({ enum: ['public', 'private'], required: true, type: String })
-  Network: string;
+  network: string;
+
+  @Prop({ required: true, type: String })
+  pinataId: string;
 }
 
 export type FileDocument = File & Document;

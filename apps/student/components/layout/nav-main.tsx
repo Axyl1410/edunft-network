@@ -14,11 +14,13 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@workspace/ui/components/sidebar";
+import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-interface SidebarMenuItemProps {
+export interface SidebarMenuItemProps {
   title: string;
   url: string;
   icon?: LucideIcon;
@@ -30,6 +32,9 @@ interface SidebarMenuItemProps {
 }
 
 export function NavMain({ items }: { items: SidebarMenuItemProps[] }) {
+  const sidebar = useSidebar();
+  const isMobile = useIsMobile();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -47,6 +52,7 @@ export function NavMain({ items }: { items: SidebarMenuItemProps[] }) {
                   <SidebarMenuButton
                     tooltip={item.title}
                     className="cursor-pointer"
+                    onClick={() => isMobile && sidebar.toggleSidebar()}
                   >
                     {item.icon && <item.icon size={16} />}
                     <span>{item.title}</span>
@@ -69,7 +75,12 @@ export function NavMain({ items }: { items: SidebarMenuItemProps[] }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <Link
+                              href={subItem.url}
+                              onClick={() =>
+                                isMobile && sidebar.toggleSidebar()
+                              }
+                            >
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>

@@ -1,6 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import NavAccount from "@/components/nav-acoount";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/components/context/providers";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import NavAccount from "@/components/layout/nav-acoount";
 import {
   SidebarInset,
   SidebarProvider,
@@ -9,6 +9,7 @@ import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -33,22 +34,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={cn(
           "font-sans antialiased",
           fontSans.variable,
           fontMono.variable,
         )}
       >
+        <NextTopLoader showAtBottom shadow="none" showSpinner={false} />
         <Providers>
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <nav className="border-border bg-sidebar/50 sticky top-0 z-10 flex h-[50px] items-center justify-between border px-4 backdrop-blur-sm">
+              <nav className="border-border sticky top-0 z-10 flex h-[50px] items-center justify-between border border-l-0 px-4 backdrop-blur-sm">
                 <NavAccount />
               </nav>
-              <div className="h-[calc(100vh-50px)]">
-                {children}</div>
-              </SidebarInset>
+              <div className="h-[calc(100vh-50px)]">{children}</div>
+            </SidebarInset>
           </SidebarProvider>
         </Providers>
       </body>

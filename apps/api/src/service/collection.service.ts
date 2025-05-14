@@ -9,6 +9,7 @@ import {
   HoldingItem,
   OwnerItem,
 } from 'src/schema/collection.schema';
+import { CollectionGateway } from '../gateway/collection.gateway';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -17,13 +18,14 @@ export class CollectionService {
     @InjectModel(Collection.name)
     private readonly collectionModel: Model<CollectionDocument>,
     private readonly userService: UserService,
+    private readonly collectionGateway: CollectionGateway,
   ) {}
 
   async addHolder(
     walletAddress: string,
     holder: HoldingItem,
   ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
-    if (!holder || !holder.Address || !holder.TokenId || !walletAddress) {
+    if (!holder || !holder.address || !holder.tokenId || !walletAddress) {
       return new Fail(
         new ValidationFailure('Holder data is invalid or incomplete.'),
       );
@@ -43,8 +45,8 @@ export class CollectionService {
 
       const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
-          { User: user._id },
-          { $addToSet: { Holders: holder } },
+          { user: user._id },
+          { $addToSet: { holders: holder } },
           { new: true, upsert: true, runValidators: true },
         )
         .exec();
@@ -53,6 +55,13 @@ export class CollectionService {
         return new Fail(
           new DatabaseFailure('Failed to update or create collection.'),
         );
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'addHolder',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -89,14 +98,21 @@ export class CollectionService {
 
       const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
-          { User: user._id },
-          { $pull: { Holders: { Address: holderAddress, TokenId: tokenId } } },
+          { user: user._id },
+          { $pull: { holders: { address: holderAddress, tokenId: tokenId } } },
           { new: true },
         )
         .exec();
 
       if (!updatedCollection) {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'removeHolder',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -112,7 +128,7 @@ export class CollectionService {
     walletAddress: string,
     owner: OwnerItem,
   ): Promise<Result<Collection, DatabaseFailure | ValidationFailure>> {
-    if (!owner || !owner.Address || !owner.name || !walletAddress) {
+    if (!owner || !owner.address || !owner.name || !walletAddress) {
       return new Fail(
         new ValidationFailure('Owner data is invalid or incomplete.'),
       );
@@ -132,8 +148,8 @@ export class CollectionService {
 
       const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
-          { User: user._id },
-          { $addToSet: { Owner: owner } },
+          { user: user._id },
+          { $addToSet: { owner: owner } },
           { new: true, upsert: true, runValidators: true },
         )
         .exec();
@@ -142,6 +158,13 @@ export class CollectionService {
         return new Fail(
           new DatabaseFailure('Failed to update or create collection.'),
         );
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'addOwner',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -177,14 +200,21 @@ export class CollectionService {
 
       const updatedCollection = await this.collectionModel
         .findOneAndUpdate(
-          { User: user._id },
-          { $pull: { Owner: { contract } } },
+          { user: user._id },
+          { $pull: { owner: { contract } } },
           { new: true },
         )
         .exec();
 
       if (!updatedCollection) {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
+      }
+
+      if (updatedCollection) {
+        this.collectionGateway.emitCollectionUpdate({
+          type: 'removeOwner',
+          data: updatedCollection,
+        });
       }
 
       return new Success(updatedCollection);
@@ -202,8 +232,8 @@ export class CollectionService {
       const allOwnersSet = new Set<OwnerItem>();
 
       for (const collection of allCollections) {
-        if (collection.Owner && Array.isArray(collection.Owner)) {
-          collection.Owner.forEach((owner) => allOwnersSet.add(owner));
+        if (collection.owner && Array.isArray(collection.owner)) {
+          collection.owner.forEach((owner) => allOwnersSet.add(owner));
         }
       }
 

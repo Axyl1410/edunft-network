@@ -19,23 +19,54 @@ export class FileService {
   ) {}
 
   async addFile(
-    fileData: File,
+    walletAddress: string,
+    hash: string,
+    name: string,
+    size: number,
+    mimeType: string,
+    network: 'public' | 'private',
+    pinataId: string,
   ): Promise<Result<File, DatabaseFailure | ValidationFailure>> {
-    if (!fileData) {
-      return new Fail(new ValidationFailure('File', fileData));
+    if (
+      !walletAddress ||
+      !hash ||
+      !name ||
+      !size ||
+      !mimeType ||
+      !network ||
+      !pinataId
+    ) {
+      return new Fail(new ValidationFailure('File'));
     }
 
     try {
-      const newFile = new this.fileModel(fileData);
-      const saveFile = await newFile.save();
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
 
-      if (!saveFile) {
+      if (!user) {
+        return new Fail(new NotFoundFailure('User not found'));
+      }
+
+      const newFile = new this.fileModel({
+        user: user._id,
+        hash,
+        name,
+        size,
+        mimeType,
+        network,
+        pinataId,
+      });
+
+      const savedFile = await newFile.save();
+
+      if (!savedFile) {
         return new Fail(new DatabaseFailure('Failed to save file.'));
       }
 
-      return new Success(saveFile);
-    } catch {
-      return new Fail(new DatabaseFailure('Failed to create new file.'));
+      return new Success(savedFile);
+    } catch (error) {
+      console.error('Error adding file:', error);
+      return new Fail(new DatabaseFailure('Failed to add file.'));
     }
   }
 
@@ -47,7 +78,7 @@ export class FileService {
     }
 
     try {
-      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+      const file = await this.fileModel.findOne({ hash: hash }).lean().exec();
 
       if (!file) {
         return new Fail(new NotFoundFailure('File not found'));
@@ -77,7 +108,7 @@ export class FileService {
         return new Fail(new NotFoundFailure('User not found'));
       }
 
-      const files = await this.fileModel.find({ User: user._id }).lean().exec();
+      const files = await this.fileModel.find({ user: user._id }).lean().exec();
 
       return new Success(files);
     } catch (error) {
@@ -94,7 +125,7 @@ export class FileService {
     }
 
     try {
-      const file = await this.fileModel.findOneAndDelete({ Hash: hash }).exec();
+      const file = await this.fileModel.findOneAndDelete({ hash: hash }).exec();
 
       if (!file) {
         return new Fail(new NotFoundFailure('File not found'));
@@ -123,15 +154,15 @@ export class FileService {
         return new Fail(new NotFoundFailure('User not found'));
       }
 
-      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+      const file = await this.fileModel.findOne({ hash: hash }).lean().exec();
 
       if (!file) {
         return new Fail(new NotFoundFailure('File not found'));
       }
 
       const updatedFile = await this.fileModel.findOneAndUpdate(
-        { Hash: hash },
-        { User: user._id },
+        { hash: hash },
+        { user: user._id },
         { new: true },
       );
 
@@ -154,7 +185,7 @@ export class FileService {
     }
 
     try {
-      const file = await this.fileModel.findOne({ Hash: hash }).lean().exec();
+      const file = await this.fileModel.findOne({ hash: hash }).lean().exec();
       if (!file) {
         throw new Error(`File with hash ${hash} not found.`);
       }

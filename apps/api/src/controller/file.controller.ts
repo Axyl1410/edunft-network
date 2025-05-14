@@ -9,7 +9,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { File } from 'src/schema/file.schema';
 import { DatabaseFailure, NotFoundFailure } from '../core/failure';
 import { FileService } from '../service/file.service';
 
@@ -39,8 +38,24 @@ export class FileController {
   }
 
   @Post()
-  async addFile(@Body() File: File) {
-    const result = await this.fileService.addFile(File);
+  async addFile(
+    @Body('walletAddress') walletAddress: string,
+    @Body('hash') hash: string,
+    @Body('name') name: string,
+    @Body('size') size: number,
+    @Body('mimeType') mimeType: string,
+    @Body('network') network: 'public' | 'private',
+    @Body('pinataId') pinataId: string,
+  ) {
+    const result = await this.fileService.addFile(
+      walletAddress,
+      hash,
+      name,
+      size,
+      mimeType,
+      network,
+      pinataId,
+    );
     return this.handleResult(result);
   }
 

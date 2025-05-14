@@ -1,27 +1,44 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { formatBytes, shortenDate } from "@/lib/utils";
 import {
-  Plus,
-  Upload,
-  Folder,
-  FileIcon,
-  MoreVertical,
-  Eye,
-  Download,
-  Move,
-  Trash2,
-  Copy,
-  Scissors,
-  ClipboardPaste,
-} from "lucide-react";
+  deleteFileInDatabase,
+  deleteFilePinata,
+  getUserFiles,
+  retrieveFile,
+  saveFile,
+  uploadFile,
+} from "@/services/file";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { FileUpload } from "@workspace/ui/components/file-upload";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
+import Loading from "@workspace/ui/components/loading";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@workspace/ui/components/pagination";
+import { Progress } from "@workspace/ui/components/progress";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import {
   Table,
   TableBody,
@@ -31,813 +48,651 @@ import {
   TableRow,
 } from "@workspace/ui/components/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@workspace/ui/components/dialog";
-import { Grid, List } from "lucide-react";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
+import {
+  Download,
+  Eye,
+  List,
+  Loader2,
+  PanelLeftIcon,
+  Terminal,
+  Trash2,
+  Upload,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useActiveAccount } from "thirdweb/react";
 
 interface FileData {
   id: string;
   name: string;
-  size: string;
+  hash: string;
+  size: number;
   createdAt: string;
-  isPublic: boolean;
-  type: "file" | "folder";
-  parentId?: string;
+  pinataId: string;
 }
 
 export default function Page() {
-  const [activeTab, setActiveTab] = useState<"public" | "private">("public");
   const [files, setFiles] = useState<FileData[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileBlobs, setFileBlobs] = useState<{ [key: string]: Blob }>({});
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
-  const [createFolderOpen, setCreateFolderOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState("");
-  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
-  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
-  const [currentFolderId, setCurrentFolderId] = useState<string | undefined>(
-    undefined,
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [viewMode, setViewMode] = useState<"pagination" | "list">("pagination");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [listCount, setListCount] = useState(15);
+  const filesPerPage = 15;
+
+  const account = useActiveAccount();
+  const walletAddress = account?.address;
+
+  const [open, setOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [customFileName, setCustomFileName] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadResult, setUploadResult] = useState<null | "success" | "error">(
+    null,
   );
-  const [contextMenu, setContextMenu] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [clipboard, setClipboard] = useState<{
-    fileId: string;
-    action: "copy" | "cut";
-  } | null>(null);
 
-  // Load files from localStorage on client side
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    open: boolean;
+    file: FileData | null;
+  }>({ open: false, file: null });
+
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<FileData | null>(null);
+
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [downloadFile, setDownloadFile] = useState<FileData | null>(null);
+
   useEffect(() => {
-    const storedFiles = JSON.parse(localStorage.getItem("files") || "[]");
-    if (storedFiles.length === 0) {
-      const sampleFile: FileData = {
-        id: "b1od39md-e7f2-4eb8-a0d0-67c1dd1ff0a",
-        name: "Sample File.pdf",
-        size: "57.57 KB",
-        createdAt: "4/20/2023",
-        isPublic: true,
-        type: "file",
-      };
-      setFiles([sampleFile]);
-      localStorage.setItem("files", JSON.stringify([sampleFile]));
-    } else {
-      setFiles(storedFiles);
-    }
-  }, []);
+    if (!walletAddress) return;
+    setLoading(true);
+    getUserFiles(walletAddress)
+      .then((data: FileData[]) => setFiles(data))
+      .finally(() => setLoading(false));
+  }, [walletAddress]);
 
-  // Close context menu when clicking elsewhere
-  useEffect(() => {
-    const handleClick = () => setContextMenu(null);
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
-  }, []);
-
-  // Handle keyboard shortcuts for copy, cut, and paste
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey) {
-        if (event.key === "c" && selectedFileId) {
-          setClipboard({ fileId: selectedFileId, action: "copy" });
-        } else if (event.key === "x" && selectedFileId) {
-          setClipboard({ fileId: selectedFileId, action: "cut" });
-        } else if (event.key === "v" && clipboard) {
-          handlePaste(currentFolderId);
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedFileId, clipboard, currentFolderId]);
-
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const handlePreview = async (file: FileData) => {
+    setPreviewDialogOpen(true);
+    setPreviewLoading(true);
+    setPreviewFile(file);
+    setPreviewUrl(null);
     try {
-      setFileBlobs((prev) => ({
-        ...prev,
-        [file.name]: file,
-      }));
-
-      const newFile: FileData = {
-        id: crypto.randomUUID(),
-        name: file.name,
-        size: `${(file.size / 1024).toFixed(2)} KB`,
-        createdAt: new Date().toLocaleDateString("en-US"),
-        isPublic: activeTab === "public",
-        type: "file",
-        parentId: currentFolderId,
-      };
-
-      setFiles((prev) => {
-        const updatedFiles = [...prev, newFile];
-        localStorage.setItem("files", JSON.stringify(updatedFiles));
-        return updatedFiles;
-      });
+      const { url } = await retrieveFile(file.hash, "private");
+      if (!url) throw new Error("Cannot preview this file");
+      setPreviewUrl(url);
     } catch (error) {
-      console.error("Upload failed:", error);
-    }
-  };
-
-  const handlePreview = (file: FileData) => {
-    if (file.type === "folder") {
-      setCurrentFolderId(file.id);
-      return;
-    }
-    const blob = fileBlobs[file.name];
-    if (!blob) {
-      console.error("File not found");
-      alert("File not found. Please re-upload the file.");
-      return;
-    }
-
-    const url = URL.createObjectURL(blob);
-    const fileType = getFileType(file.name);
-
-    if (fileType === "image") {
-      window.open(url, "_blank");
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } else if (fileType === "pdf") {
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>${file.name}</title>
-          <style>
-            body { margin: 0; }
-            iframe { width: 100%; height: 100vh; border: none; }
-          </style>
-        </head>
-        <body>
-          <iframe src="${url}"></iframe>
-        </body>
-        </html>
-      `;
-      const htmlBlob = new Blob([htmlContent], { type: "text/html" });
-      const htmlUrl = URL.createObjectURL(htmlBlob);
-      window.open(htmlUrl, "_blank");
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        URL.revokeObjectURL(htmlUrl);
-      }, 1000);
-    } else if (fileType === "txt") {
-      blob.text().then((text) => {
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>${file.name}</title>
-            <style>
-              body { font-family: Arial, sans-serif; padding: 20px; white-space: pre-wrap; }
-            </style>
-          </head>
-          <body>
-            <h1>${file.name}</h1>
-            <div>${text}</div>
-          </body>
-          </html>
-        `;
-        const textBlob = new Blob([htmlContent], { type: "text/html" });
-        const textUrl = URL.createObjectURL(textBlob);
-        window.open(textUrl, "_blank");
-        setTimeout(() => URL.revokeObjectURL(textUrl), 1000);
-      });
-      URL.revokeObjectURL(url);
-    } else if (fileType === "docx" || fileType === "xlsx") {
-      alert(
-        `Preview not supported for ${fileType.toUpperCase()} files. Please download the file to view it.`,
-      );
-      URL.revokeObjectURL(url);
-    } else {
-      alert("Preview not supported for this file type.");
-      URL.revokeObjectURL(url);
+      setPreviewUrl(null);
+      toast.error("Cannot preview this file");
+    } finally {
+      setPreviewLoading(false);
     }
   };
 
   const handleDownload = async (file: FileData) => {
-    if (file.type === "folder") return;
+    setDownloadDialogOpen(true);
+    setDownloadLoading(true);
+    setDownloadFile(file);
+    setDownloadUrl(null);
     try {
-      const blob = fileBlobs[file.name];
-      if (!blob) throw new Error("File not found");
-
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = file.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      const { url } = await retrieveFile(file.hash, "private");
+      setDownloadUrl(url);
     } catch (error) {
-      console.error("Download failed:", error);
-      alert("Download failed. Please try again.");
+      setDownloadUrl(null);
+      toast.error("Cannot download this file");
+    } finally {
+      setDownloadLoading(false);
     }
   };
 
-  const getFileType = (fileName: string) => {
-    const extension = fileName.split(".").pop()?.toLowerCase();
-    if (["jpg", "jpeg", "png", "gif", "webp"].includes(extension || ""))
-      return "image";
-    if (extension === "pdf") return "pdf";
-    if (extension === "docx" || extension === "doc") return "docx";
-    if (extension === "xlsx" || extension === "xls") return "xlsx";
-    if (extension === "txt") return "txt";
-    return "unsupported";
-  };
-
-  const toggleFileStatus = (fileId: string) => {
-    setFiles((prev) => {
-      const newFiles = prev.map((file) =>
-        file.id === fileId ? { ...file, isPublic: !file.isPublic } : file,
-      );
-      localStorage.setItem("files", JSON.stringify(newFiles));
-      return newFiles;
-    });
-  };
-
-  const handleCreateFolder = () => {
-    if (!newFolderName.trim()) return;
-    const newFolder: FileData = {
-      id: crypto.randomUUID(),
-      name: newFolderName.trim(),
-      size: "-",
-      createdAt: new Date().toLocaleDateString("en-US"),
-      isPublic: activeTab === "public",
-      type: "folder",
-      parentId: currentFolderId,
-    };
-    setFiles((prev) => {
-      const updatedFiles = [...prev, newFolder];
-      localStorage.setItem("files", JSON.stringify(updatedFiles));
-      return updatedFiles;
-    });
-    setNewFolderName("");
-    setCreateFolderOpen(false);
-    setContextMenu(null);
-  };
-
-  const handleMoveFile = (fileId: string, targetFolderId?: string) => {
-    setFiles((prev) => {
-      const newFiles = prev.map((file) =>
-        file.id === fileId ? { ...file, parentId: targetFolderId } : file,
-      );
-      localStorage.setItem("files", JSON.stringify(newFiles));
-      return newFiles;
-    });
-  };
-
-  const handleDeleteFile = (fileId: string) => {
-    const hasChildren = files.some((file) => file.parentId === fileId);
-    if (hasChildren) {
-      alert("Cannot delete a folder that contains files or folders.");
-      return;
-    }
-
-    setFiles((prev) => {
-      const newFiles = prev.filter((file) => file.id !== fileId);
-      localStorage.setItem("files", JSON.stringify(newFiles));
-      return newFiles;
-    });
-    setContextMenu(null);
-  };
-
-  const handleContextMenu = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setContextMenu({ x: event.clientX, y: event.clientY });
-  };
-
-  const handleDragStart = (event: React.DragEvent, fileId: string) => {
-    event.dataTransfer.setData("fileId", fileId);
-  };
-
-  const handleDrop = (event: React.DragEvent, targetFolderId?: string) => {
-    event.preventDefault();
-    const fileId = event.dataTransfer.getData("fileId");
-    if (fileId && fileId !== targetFolderId) {
-      handleMoveFile(fileId, targetFolderId);
-    }
-  };
-
-  const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-  };
-
-  const getUniqueName = (name: string, targetFolderId?: string) => {
-    let newName = name;
-    let counter = 0;
-    const baseName = name.includes(".")
-      ? name.split(".").slice(0, -1).join(".")
-      : name;
-    const extension = name.includes(".") ? `.${name.split(".").pop()}` : "";
-
-    while (
-      files.some(
-        (file) =>
-          file.name === newName &&
-          file.parentId === targetFolderId &&
-          file.id !== clipboard?.fileId,
-      )
-    ) {
-      counter++;
-      newName = `${baseName} (Copy ${counter})${extension}`;
-    }
-    return newName;
-  };
-
-  const handleCopy = (fileId: string) => {
-    setClipboard({ fileId, action: "copy" });
-    setSelectedFileId(fileId);
-  };
-
-  const handleCut = (fileId: string) => {
-    setClipboard({ fileId, action: "cut" });
-    setSelectedFileId(fileId);
-  };
-
-  const handlePaste = (targetFolderId?: string) => {
-    if (!clipboard) return;
-
-    const sourceFile = files.find((file) => file.id === clipboard.fileId);
-    if (!sourceFile) {
-      alert("Source file not found.");
-      setClipboard(null);
-      return;
-    }
-
-    if (clipboard.action === "copy") {
-      const newFile: FileData = {
-        ...sourceFile,
-        id: crypto.randomUUID(),
-        name: getUniqueName(sourceFile.name, targetFolderId),
-        parentId: targetFolderId,
-        createdAt: new Date().toLocaleDateString("en-US"),
-      };
-      setFiles((prev) => {
-        const updatedFiles = [...prev, newFile];
-        localStorage.setItem("files", JSON.stringify(updatedFiles));
-        return updatedFiles;
-      });
-      if (sourceFile.type === "file" && fileBlobs[sourceFile.name]) {
-        setFileBlobs((prev) => ({
-          ...prev,
-          [newFile.name]: fileBlobs[sourceFile.name],
-        }));
-      }
-    } else if (clipboard.action === "cut") {
-      const newName = getUniqueName(sourceFile.name, targetFolderId);
-      setFiles((prev) => {
-        const updatedFiles = prev.map((file) =>
-          file.id === clipboard.fileId
-            ? { ...file, parentId: targetFolderId, name: newName }
-            : file,
-        );
-        localStorage.setItem("files", JSON.stringify(updatedFiles));
-        return updatedFiles;
-      });
-      if (sourceFile.name !== newName && fileBlobs[sourceFile.name]) {
-        setFileBlobs((prev) => {
-          const newBlobs = { ...prev, [newName]: prev[sourceFile.name] };
-          delete newBlobs[sourceFile.name];
-          return newBlobs;
-        });
-      }
-      setClipboard(null);
-    }
-    setContextMenu(null);
-  };
-
-  const filteredFiles = files
-    .filter((file) => (activeTab === "public" ? file.isPublic : !file.isPublic))
-    .filter((file) => file.parentId === currentFolderId);
-
-  const getBreadcrumb = () => {
-    const crumbs: { id: string; name: string }[] = [];
-    let currentId = currentFolderId;
-    while (currentId) {
-      const folder = files.find((file) => file.id === currentId);
-      if (folder) {
-        crumbs.unshift({ id: folder.id, name: folder.name });
-        currentId = folder.parentId;
-      } else {
-        break;
-      }
-    }
-    return crumbs;
-  };
+  let displayedFiles: FileData[] = [];
+  if (viewMode === "pagination") {
+    const start = (currentPage - 1) * filesPerPage;
+    displayedFiles = files.slice(start, start + filesPerPage);
+  } else {
+    displayedFiles = files.slice(0, listCount);
+  }
 
   return (
-    <div className="flex min-h-svh flex-col p-6"  onContextMenu={handleContextMenu}>
+    <div className="container mx-auto flex min-h-svh flex-col p-4">
       <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">FILES</h1>
-          <div className="text-sm text-gray-500">
-            <span
-              className="cursor-pointer hover:underline"
-              onClick={() => setCurrentFolderId(undefined)}
-            >
-              Root
-            </span>
-            {getBreadcrumb().map((crumb) => (
-              <span key={crumb.id}>
-                {" / "}
-                <span
-                  className="cursor-pointer hover:underline"
-                  onClick={() => setCurrentFolderId(crumb.id)}
-                >
-                  {crumb.name}
+        <h1 className="text-2xl font-semibold">FILES</h1>
+        <div className="flex gap-2">
+          <Button
+            size="icon"
+            variant={viewMode === "pagination" ? "outline" : "ghost"}
+            onClick={() => {
+              setViewMode("pagination");
+              setCurrentPage(1);
+            }}
+            className="cursor-pointer"
+          >
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <PanelLeftIcon className="h-5 w-5" />
                 </span>
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="flex gap-2" >
-          <Button
-            variant={viewMode === "list" ? "default" : "ghost"}
-            size="icon"
-            onClick={() => setViewMode("list")}
-            aria-label="List view"
-          >
-            <List className="h-5 w-5" />
+              </TooltipTrigger>
+              <TooltipContent>Pagination view</TooltipContent>
+            </Tooltip>
           </Button>
           <Button
-            variant={viewMode === "grid" ? "default" : "ghost"}
             size="icon"
-            onClick={() => setViewMode("grid")}
-            aria-label="Grid view"
+            variant={viewMode === "list" ? "outline" : "ghost"}
+            onClick={() => {
+              setViewMode("list");
+              setListCount(15);
+            }}
+            className="cursor-pointer"
           >
-            <Grid className="h-5 w-5" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <List className="h-5 w-5" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>List view</TooltipContent>
+            </Tooltip>
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add
+          <Dialog
+            open={open}
+            onOpenChange={(v) => {
+              if (!uploading) {
+                setOpen(v);
+                if (!v) {
+                  setSelectedFile(null);
+                  setUploadResult(null);
+                  setUploadProgress(0);
+                  setCustomFileName("");
+                }
+              }
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button disabled={uploading} className="cursor-pointer">
+                <Upload className="mr-2 h-4 w-4" /> Upload File
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className="flex items-center"
-                onClick={() => fileInputRef.current?.click()}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Upload File</DialogTitle>
+                <DialogDescription>
+                  Select a file to upload to the system.
+                </DialogDescription>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
               >
-                <Upload className="mr-2 h-4 w-4" /> File Upload
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="flex items-center"
-                onClick={() => setCreateFolderOpen(true)}
-              >
-                <Folder className="mr-2 h-4 w-4" /> Create Folder
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center">
-                <FileIcon className="mr-2 h-4 w-4" /> Import from IPFS
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileUpload}
-            accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
-          />
+                {uploadResult === "success" ? (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="py-8 text-center font-semibold text-green-600"
+                  >
+                    Upload successful!
+                  </motion.div>
+                ) : uploadResult === "error" ? (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="py-8 text-center font-semibold text-red-600"
+                  >
+                    Upload failed. Please try again.
+                  </motion.div>
+                ) : (
+                  <>
+                    <div className="mb-4 rounded-xl border border-dashed">
+                      <FileUpload onChange={setSelectedFile} />
+                    </div>
+                    <div className="mb-4">
+                      <Label htmlFor="customFileName" className="mb-2">
+                        File name (optional)
+                      </Label>
+                      <Input
+                        id="customFileName"
+                        type="text"
+                        value={customFileName}
+                        onChange={(e) => setCustomFileName(e.target.value)}
+                        placeholder={selectedFile?.name || "Enter file name"}
+                      />
+                    </div>
+                    {uploading && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="my-4"
+                      >
+                        <Progress value={uploadProgress} />
+                      </motion.div>
+                    )}
+                  </>
+                )}
+              </motion.div>
+              <DialogFooter>
+                {uploadResult ? (
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                      setUploadResult(null);
+                      setSelectedFile(null);
+                      setUploadProgress(0);
+                      setCustomFileName("");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    Close
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={async () => {
+                        if (!selectedFile || !walletAddress) return;
+                        setUploading(true);
+                        setUploadProgress(0);
+                        setUploadResult(null);
+                        try {
+                          // 1. Upload to Pinata
+                          const pinataRes = await uploadFile({
+                            file: selectedFile,
+                            name: customFileName.trim() || selectedFile.name,
+                            type: "private",
+                          });
+                          // pinataRes is { ...upload, pinataId } for private
+                          const pinataId = (pinataRes as { pinataId: string })
+                            .pinataId;
+                          setUploadProgress(50);
+                          // 2. Save file info to API
+                          const fileData = {
+                            walletAddress,
+                            hash: pinataRes.cid,
+                            name: customFileName.trim() || selectedFile.name,
+                            size: selectedFile.size,
+                            mimeType: selectedFile.type,
+                            network: "private" as "private" | "public",
+                            pinataId,
+                          };
+                          await saveFile(fileData);
+                          setUploadProgress(100);
+                          // 3. Reload file list
+                          const data = await getUserFiles(walletAddress);
+                          setFiles(data);
+                          setUploadResult("success");
+                        } catch (error) {
+                          setUploadResult("error");
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                      disabled={!selectedFile || uploading}
+                      className="cursor-pointer"
+                    >
+                      Upload
+                    </Button>
+                    <DialogClose asChild>
+                      <Button
+                        variant="outline"
+                        disabled={uploading}
+                        className="cursor-pointer"
+                        onClick={() => setCustomFileName("")}
+                      >
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                  </>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <div className="mb-4 border-b border-gray-200" >
-        <div className="flex gap-4">
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "public"
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-            onClick={() => setActiveTab("public")}
-          >
-            PUBLIC
-          </button>
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "private"
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-            onClick={() => setActiveTab("private")}
-          >
-            PRIVATE
-          </button>
-        </div>
-      </div>
-      <div >
-        {viewMode === "list" ? (
+      {loading ? (
+        <Loading text="Loading..." />
+      ) : (
+        <>
           <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-12">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300"
-                    />
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                    Name
                   </TableHead>
-                  <TableHead>NAME</TableHead>
-                  <TableHead>SIZE</TableHead>
-                  <TableHead>CREATION DATE</TableHead>
-                  <TableHead>FILE ID</TableHead>
-                  <TableHead className="w-12"></TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                    Size
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                    Created At
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredFiles.map((file) => (
-                  <TableRow
-                    key={file.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, file.id)}
-                    onDragOver={
-                      file.type === "folder" ? handleDragOver : undefined
-                    }
-                    onDrop={
-                      file.type === "folder"
-                        ? (e) => handleDrop(e, file.id)
-                        : undefined
-                    }
-                    onClick={() => setSelectedFileId(file.id)}
-                    className={selectedFileId === file.id ? "bg-gray-100" : ""}
-                  >
-                    <TableCell>
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
+                {displayedFiles.map((file) => (
+                  <TableRow key={file.id}>
+                    <TableCell className="whitespace-nowrap px-3 py-2">
+                      {file.name}
                     </TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      {file.type === "folder" ? (
-                        <Folder className="h-4 w-4 text-yellow-500" />
-                      ) : (
-                        <FileIcon className="h-4 w-4 text-gray-400" />
-                      )}
-                      <span
-                        className={
-                          file.type === "folder" ? "cursor-pointer" : ""
-                        }
-                        onClick={() => handlePreview(file)}
-                      >
-                        {file.name}
-                      </span>
+                    <TableCell className="whitespace-nowrap px-3 py-2">
+                      {formatBytes(file.size)}
                     </TableCell>
-                    <TableCell>{file.size}</TableCell>
-                    <TableCell>{file.createdAt}</TableCell>
-                    <TableCell>{file.id}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreVertical className="h-4 w-4" />
+                    <TableCell className="whitespace-nowrap px-3 py-2">
+                      {shortenDate(file.createdAt)}
+                    </TableCell>
+                    <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handlePreview(file)}
+                            className="cursor-pointer"
+                          >
+                            <span>
+                              <Eye className="h-4 w-4" />
+                            </span>
                           </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() => toggleFileStatus(file.id)}
+                        </TooltipTrigger>
+                        <TooltipContent>Preview</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleDownload(file)}
+                            className="cursor-pointer"
                           >
-                            Make {file.isPublic ? "Private" : "Public"}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedFileId(file.id);
-                              setMoveDialogOpen(true);
-                            }}
+                            <span>
+                              <Download className="h-4 w-4" />
+                            </span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Download</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="cursor-pointer text-red-500"
+                            onClick={() =>
+                              setConfirmDelete({ open: true, file })
+                            }
+                            disabled={deletingFileId === file.id}
                           >
-                            <Move className="mr-2 h-4 w-4" /> Move
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteFile(file.id)}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleCopy(file.id)}>
-                            <Copy className="mr-2 h-4 w-4" /> Copy
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleCut(file.id)}>
-                            <Scissors className="mr-2 h-4 w-4" /> Cut
-                          </DropdownMenuItem>
-                          {file.type === "folder" && clipboard && (
-                            <DropdownMenuItem
-                              onClick={() => handlePaste(file.id)}
-                            >
-                              <ClipboardPaste className="mr-2 h-4 w-4" /> Paste
-                            </DropdownMenuItem>
-                          )}
-                          {file.type !== "folder" && (
-                            <>
-                              <DropdownMenuItem
-                                onClick={() => handlePreview(file)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" /> Preview
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleDownload(file)}
-                              >
-                                <Download className="mr-2 h-4 w-4" /> Download
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                            <span>
+                              <Trash2 className="h-4 w-4" />
+                            </span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Delete</TooltipContent>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {filteredFiles.map((file) => (
-              <div
-                key={file.id}
-                className={`flex flex-col gap-2 rounded-lg border bg-white p-4 shadow ${
-                  selectedFileId === file.id ? "border-blue-500" : ""
-                }`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, file.id)}
-                onDragOver={file.type === "folder" ? handleDragOver : undefined}
-                onDrop={
-                  file.type === "folder"
-                    ? (e) => handleDrop(e, file.id)
-                    : undefined
-                }
-                onClick={() => setSelectedFileId(file.id)}
-              >
-                <div className="flex items-center gap-2">
-                  {file.type === "folder" ? (
-                    <Folder className="h-5 w-5 text-yellow-500" />
+          {viewMode === "pagination" && files.length > filesPerPage && (
+            <Pagination className="mt-4">
+              <PaginationContent>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  aria-disabled={currentPage === 1}
+                />
+                {Array.from({
+                  length: Math.ceil(files.length / filesPerPage),
+                }).map((_, idx) => (
+                  <PaginationItem key={idx}>
+                    <PaginationLink
+                      isActive={currentPage === idx + 1}
+                      onClick={() => setCurrentPage(idx + 1)}
+                    >
+                      {idx + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage((p) =>
+                      Math.min(Math.ceil(files.length / filesPerPage), p + 1),
+                    )
+                  }
+                  aria-disabled={
+                    currentPage === Math.ceil(files.length / filesPerPage)
+                  }
+                />
+              </PaginationContent>
+            </Pagination>
+          )}
+          {viewMode === "list" && listCount < files.length && (
+            <Button
+              className="mt-4 cursor-pointer"
+              onClick={() => setListCount((c) => c + filesPerPage)}
+            >
+              See more
+            </Button>
+          )}
+          <Dialog
+            open={confirmDelete.open}
+            onOpenChange={(v) =>
+              setConfirmDelete({ open: v, file: v ? confirmDelete.file : null })
+            }
+          >
+            <DialogContent className="max-w-xs p-4">
+              <DialogHeader>
+                <DialogTitle className="text-base">Confirm delete?</DialogTitle>
+              </DialogHeader>
+              <div className="text-muted-foreground mb-2 text-sm">
+                Are you sure you want to delete{" "}
+                <span className="font-semibold">
+                  {confirmDelete.file?.name}
+                </span>
+                ?
+              </div>
+              <DialogFooter className="flex w-full flex-col gap-2">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={deletingFileId === confirmDelete.file?.id}
+                  onClick={async () => {
+                    if (!confirmDelete.file) return;
+                    setDeletingFileId(confirmDelete.file.id);
+                    setConfirmDelete({ open: false, file: null });
+                    try {
+                      await deleteFilePinata(
+                        [confirmDelete.file.pinataId],
+                        "private",
+                      );
+                      await deleteFileInDatabase(confirmDelete.file.hash);
+                      if (walletAddress) {
+                        const data = await getUserFiles(walletAddress);
+                        setFiles(data);
+                      }
+                      toast.success("File deleted!");
+                    } catch (e) {
+                      toast.error("Failed to delete file");
+                    } finally {
+                      setDeletingFileId(null);
+                    }
+                  }}
+                  className="cursor-pointer"
+                >
+                  {deletingFileId === confirmDelete.file?.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <FileIcon className="h-5 w-5 text-gray-400" />
+                    "Delete"
                   )}
-                  <span
-                    className={file.type === "folder" ? "cursor-pointer" : ""}
-                    onClick={() => handlePreview(file)}
+                </Button>
+                <DialogClose asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={deletingFileId === confirmDelete.file?.id}
+                    className="cursor-pointer"
                   >
-                    {file.name}
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>
+                  <p className="text-lg font-semibold">
+                    Preview file:{" "}
+                    <span className="text-sm text-gray-500">
+                      {previewFile?.name}
+                    </span>
+                  </p>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex min-h-[300px] items-center justify-center">
+                {previewLoading ? (
+                  <Loading text="Loading file..." />
+                ) : previewUrl ? (
+                  previewFile?.name.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+                    <SkeletonImage
+                      src={previewUrl || ""}
+                      alt={previewFile?.name}
+                      className="max-h-[400px] max-w-full"
+                      height={400}
+                    />
+                  ) : previewFile?.name.match(/\.(pdf)$/i) ? (
+                    <iframe
+                      src={previewUrl}
+                      title={previewFile?.name}
+                      className="h-[400px] w-full"
+                    />
+                  ) : previewFile?.name.match(/\.(mp4|webm)$/i) ? (
+                    <video
+                      src={previewUrl}
+                      controls
+                      className="max-h-[400px] max-w-full"
+                    />
+                  ) : (
+                    <p>File format not supported for preview</p>
+                  )
+                ) : (
+                  <div className="text-red-500">Cannot preview this file</div>
+                )}
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button className="cursor-pointer">Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={downloadDialogOpen}
+            onOpenChange={setDownloadDialogOpen}
+          >
+            <DialogContent className="max-w-md rounded-2xl p-6 shadow-xl">
+              <DialogHeader>
+                <DialogTitle>
+                  <div className="flex items-center gap-2 text-lg font-semibold">
+                    <Download className="h-5 w-5 text-blue-600" />
+                    Download file
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col items-center gap-4 py-4"
+              >
+                <div className="bg-muted/50 w-full rounded-lg p-3 text-center">
+                  <span className="text-base font-medium text-gray-800">
+                    {downloadFile?.name || "No file selected"}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500">{file.size}</div>
-                <div className="text-xs text-gray-500">{file.createdAt}</div>
-                <div className="truncate text-xs text-gray-400">{file.id}</div>
-                <div className="mt-2 flex gap-2">
-                  {file.type !== "folder" && (
-                    <>
-                      <Button size="sm" onClick={() => handlePreview(file)}>
-                        <Eye className="mr-1 h-4 w-4" /> Preview
-                      </Button>
-                      <Button size="sm" onClick={() => handleDownload(file)}>
-                        <Download className="mr-1 h-4 w-4" /> Download
-                      </Button>
-                    </>
-                  )}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => toggleFileStatus(file.id)}
-                      >
-                        Make {file.isPublic ? "Private" : "Public"}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedFileId(file.id);
-                          setMoveDialogOpen(true);
-                        }}
-                      >
-                        <Move className="mr-2 h-4 w-4" /> Move
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleDeleteFile(file.id)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleCopy(file.id)}>
-                        <Copy className="mr-2 h-4 w-4" /> Copy
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleCut(file.id)}>
-                        <Scissors className="mr-2 h-4 w-4" /> Cut
-                      </DropdownMenuItem>
-                      {file.type === "folder" && clipboard && (
-                        <DropdownMenuItem onClick={() => handlePaste(file.id)}>
-                          <ClipboardPaste className="mr-2 h-4 w-4" /> Paste
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      {contextMenu && (
-        <div
-          className="fixed z-50 rounded border bg-white shadow-lg"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-        >
-          <div
-            className="flex cursor-pointer items-center px-4 py-2 hover:bg-gray-100"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Upload className="mr-2 h-4 w-4" /> New File
-          </div>
-          <div
-            className="flex cursor-pointer items-center px-4 py-2 hover:bg-gray-100"
-            onClick={() => setCreateFolderOpen(true)}
-          >
-            <Folder className="mr-2 h-4 w-4" /> New Folder
-          </div>
-          {clipboard && (
-            <div
-              className="flex cursor-pointer items-center px-4 py-2 hover:bg-gray-100"
-              onClick={() => handlePaste(currentFolderId)}
-            >
-              <ClipboardPaste className="mr-2 h-4 w-4" /> Paste
-            </div>
-          )}
-        </div>
-      )}
-      <Dialog open={createFolderOpen} onOpenChange={setCreateFolderOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create New Folder</DialogTitle>
-          </DialogHeader>
-          <input
-            type="text"
-            value={newFolderName}
-            onChange={(e) => setNewFolderName(e.target.value)}
-            placeholder="Folder name"
-            className="w-full rounded border p-2"
-          />
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setCreateFolderOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateFolder}>Create</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={moveDialogOpen} onOpenChange={setMoveDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Move to Folder</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[50vh] overflow-y-auto">
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => {
-                if (selectedFileId) handleMoveFile(selectedFileId, undefined);
-                setMoveDialogOpen(false);
-                setSelectedFileId(null);
-              }}
-            >
-              <Folder className="mr-2 h-4 w-4" /> Root
-            </Button>
-            {files
-              .filter(
-                (file) => file.type === "folder" && file.id !== selectedFileId,
-              )
-              .map((folder) => (
+                <Alert variant="default" className="w-full">
+                  <Terminal className="h-4 w-4" />
+                  <AlertTitle>Heads up!</AlertTitle>
+                  <AlertDescription>
+                    Download link will expire after 30 seconds.
+                  </AlertDescription>
+                </Alert>
+                {downloadLoading ? (
+                  <div className="flex w-full flex-col items-center gap-2">
+                    {/* <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-600" /> */}
+                    <Alert variant="default" className="w-full">
+                      <AlertDescription>
+                        <Loading text="Generating download link..." />
+                      </AlertDescription>
+                    </Alert>
+                  </div>
+                ) : downloadUrl ? (
+                  <Button
+                    className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
+                    onClick={async () => {
+                      if (!downloadUrl) return;
+                      try {
+                        const response = await fetch(downloadUrl, {
+                          credentials: "omit",
+                        });
+                        if (!response.ok) throw new Error("Network error");
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = downloadFile?.name || "download";
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        }, 100);
+                      } catch (e) {
+                        toast.error("Cannot download this file");
+                      }
+                    }}
+                  >
+                    <Download className="mr-2 h-4 w-4" /> Click here to download
+                  </Button>
+                ) : (
+                  <Alert variant="destructive" className="w-full">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                      Cannot download this file
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </motion.div>
+              <DialogFooter className="flex flex-row justify-end gap-2">
                 <Button
-                  key={folder.id}
-                  variant="ghost"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    if (selectedFileId)
-                      handleMoveFile(selectedFileId, folder.id);
-                    setMoveDialogOpen(false);
-                    setSelectedFileId(null);
-                  }}
+                  variant="outline"
+                  onClick={() => downloadFile && handleDownload(downloadFile)}
+                  disabled={downloadLoading || !downloadFile}
+                  className="cursor-pointer"
                 >
-                  <Folder className="mr-2 h-4 w-4" /> {folder.name}
+                  Get link again
                 </Button>
-              ))}
-          </div>
-          <DialogFooter>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setMoveDialogOpen(false);
-                setSelectedFileId(null);
-              }}
-            >
-              Cancel
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+                <DialogClose asChild>
+                  <Button className="cursor-pointer">Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </div>
   );
 }
