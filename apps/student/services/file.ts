@@ -35,7 +35,9 @@ export async function retrieveFile(hash: string, type: "public" | "private") {
     } else {
       let data;
       try {
-        data = await pinataClient.gateways.private.get(hash);
+        data = await pinataClient.gateways.private
+          .get(hash)
+          .optimizeImage({ height: 500, width: 500 });
       } catch (error) {
         console.error("Error getting private file from Pinata:", error);
         throw error;

@@ -103,7 +103,11 @@ const CreateAccountForm = ({
     try {
       await axios.post(baseUrl + "/user/create", {
         walletAddress: walletAddress,
-        ...formData,
+        username: formData.Username,
+        bio: formData.Bio,
+        profilePicture: formData.ProfilePicture,
+        banner: formData.Banner,
+        role: formData.role,
       });
       toast.success("Account created successfully!");
       onSuccess();

@@ -11,8 +11,18 @@ export default function Page() {
             <Link className="inline-block" href="/">
               Edunft
             </Link>{" "}
-            / <a href="#">for students</a> / <a href="#">for schools</a> /{" "}
-            <a href="#">for enterprise</a>
+            /{" "}
+            <a href="https://edunft-monorepo-student.vercel.app/">
+              for students
+            </a>{" "}
+            /{" "}
+            <a href="#" className="cursor-not-allowed">
+              for schools
+            </a>{" "}
+            /{" "}
+            <a href="#" className="cursor-not-allowed">
+              for enterprise
+            </a>
           </div>
           <form className="flex flex-col gap-2">
             <p className="text-balance font-medium">

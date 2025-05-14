@@ -40,6 +40,8 @@ export const FORMA_SKETCHPAD: Chain = defineChain({
   testnet: true,
 });
 
+export const FORMASCAN_URL = "https://explorer.sketchpad-1.forma.art";
+
 export const MARKETPLACE = getContract({
   client: thirdwebClient,
   chain: FORMA_SKETCHPAD,

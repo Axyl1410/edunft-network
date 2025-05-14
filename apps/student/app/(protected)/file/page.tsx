@@ -1,6 +1,5 @@
 "use client";
 
-import { formatBytes, shortenDate } from "@/lib/utils";
 import {
   deleteFileInDatabase,
   deleteFilePinata,
@@ -40,32 +39,23 @@ import {
 import { Progress } from "@workspace/ui/components/progress";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import {
   Download,
-  Eye,
   List,
   Loader2,
   PanelLeftIcon,
   Terminal,
-  Trash2,
   Upload,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
+import { FileTable, FileData as FileTableData } from "./FileTable";
 
 interface FileData {
   id: string;
@@ -115,12 +105,17 @@ export default function Page() {
   useEffect(() => {
     if (!walletAddress) return;
     setLoading(true);
+    console.log("Fetching files for wallet:", walletAddress);
     getUserFiles(walletAddress)
-      .then((data: FileData[]) => setFiles(data))
+      .then((data: FileData[]) => {
+        console.log("Fetched files:", data);
+        setFiles(data);
+      })
       .finally(() => setLoading(false));
   }, [walletAddress]);
 
   const handlePreview = async (file: FileData) => {
+    console.log("Preview file:", file);
     setPreviewDialogOpen(true);
     setPreviewLoading(true);
     setPreviewFile(file);
@@ -138,6 +133,7 @@ export default function Page() {
   };
 
   const handleDownload = async (file: FileData) => {
+    console.log("Download file:", file);
     setDownloadDialogOpen(true);
     setDownloadLoading(true);
     setDownloadFile(file);
@@ -360,91 +356,16 @@ export default function Page() {
         <Loading text="Loading..." />
       ) : (
         <>
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Name
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Size
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Created At
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {displayedFiles.map((file) => (
-                  <TableRow key={file.id}>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {file.name}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {formatBytes(file.size)}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {shortenDate(file.createdAt)}
-                    </TableCell>
-                    <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handlePreview(file)}
-                            className="cursor-pointer"
-                          >
-                            <span>
-                              <Eye className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Preview</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handleDownload(file)}
-                            className="cursor-pointer"
-                          >
-                            <span>
-                              <Download className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Download</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer text-red-500"
-                            onClick={() =>
-                              setConfirmDelete({ open: true, file })
-                            }
-                            disabled={deletingFileId === file.id}
-                          >
-                            <span>
-                              <Trash2 className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Delete</TooltipContent>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <FileTable
+            files={displayedFiles as FileTableData[]}
+            onPreview={handlePreview}
+            onDownload={handleDownload}
+            onDelete={(file) => {
+              console.log("Delete file:", file);
+              setConfirmDelete({ open: true, file });
+            }}
+            deletingFileId={deletingFileId}
+          />
           {viewMode === "pagination" && files.length > filesPerPage && (
             <Pagination className="mt-4">
               <PaginationContent>
@@ -641,7 +562,7 @@ export default function Page() {
                   </div>
                 ) : downloadUrl ? (
                   <Button
-                    className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
+                    className="w-full cursor-pointer rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
                     onClick={async () => {
                       if (!downloadUrl) return;
                       try {
