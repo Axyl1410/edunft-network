@@ -298,10 +298,23 @@ export default function Page() {
                         setUploadProgress(0);
                         setUploadResult(null);
                         try {
+                          // take the extension of the file
+                          const ext = selectedFile.name.split(".").pop();
+                          let finalName =
+                            customFileName.trim() || selectedFile.name;
+                          if (
+                            customFileName.trim() &&
+                            ext &&
+                            !finalName
+                              .toLowerCase()
+                              .endsWith("." + ext.toLowerCase())
+                          ) {
+                            finalName = finalName + "." + ext;
+                          }
                           // 1. Upload to Pinata
                           const pinataRes = await uploadFile({
                             file: selectedFile,
-                            name: customFileName.trim() || selectedFile.name,
+                            name: finalName,
                             type: "private",
                           });
                           // pinataRes is { ...upload, pinataId } for private
@@ -312,7 +325,7 @@ export default function Page() {
                           const fileData = {
                             walletAddress,
                             hash: pinataRes.cid,
-                            name: customFileName.trim() || selectedFile.name,
+                            name: finalName,
                             size: selectedFile.size,
                             mimeType: selectedFile.type,
                             network: "private" as "private" | "public",
@@ -361,7 +374,6 @@ export default function Page() {
             onPreview={handlePreview}
             onDownload={handleDownload}
             onDelete={(file) => {
-              console.log("Delete file:", file);
               setConfirmDelete({ open: true, file });
             }}
             deletingFileId={deletingFileId}

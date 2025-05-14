@@ -1,4 +1,4 @@
-import { MARKETPLACE } from "@/lib/thirdweb-client";
+import { MARKETPLACE } from "@/lib/thirdweb";
 import { toast } from "sonner";
 import {
   DirectListing,
