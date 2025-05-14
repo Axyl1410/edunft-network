@@ -1,6 +1,6 @@
 "use client";
 
-import { MARKETPLACE } from "@/lib/thirdweb-client";
+import { MARKETPLACE } from "@/lib/thirdweb";
 import { useEffect, useMemo, useState } from "react";
 import { getAllValidListings } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";

@@ -3,6 +3,11 @@
 import { FileUpload } from "@workspace/ui/components/file-upload";
 import { useEffect, useState } from "react";
 
+interface Collection {
+  address: string;
+  name: string;
+}
+
 export default function MintPage() {
   const [files, setFiles] = useState<File>();
   const handleFileUpload = (file: File | null) => {

@@ -40,7 +40,7 @@ export function FileTable({
   deletingFileId,
 }: FileTableProps) {
   return (
-    <div className="rounded-lg border">
+    <div className="w-full overflow-x-auto rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -59,73 +59,81 @@ export function FileTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {files.map((file) => (
-            <TableRow key={file.id}>
-              <TableCell className="whitespace-nowrap px-3 py-2">
-                {file.name}
-              </TableCell>
-              <TableCell className="whitespace-nowrap px-3 py-2">
-                {formatBytes(file.size)}
-              </TableCell>
-              <TableCell className="whitespace-nowrap px-3 py-2">
-                {shortenDate(file.createdAt)}
-              </TableCell>
-              <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        onPreview(file);
-                      }}
-                    >
-                      <span>
-                        <Eye className="h-4 w-4" />
-                      </span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Preview</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                      onClick={() => {
-                        onDownload(file);
-                      }}
-                    >
-                      <span>
-                        <Download className="h-4 w-4" />
-                      </span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Download</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer text-red-500"
-                      onClick={() => {
-                        onDelete(file);
-                      }}
-                      disabled={deletingFileId === file.id}
-                    >
-                      <span>
-                        <Trash2 className="h-4 w-4" />
-                      </span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Delete</TooltipContent>
-                </Tooltip>
+          {files.length > 0 ? (
+            files.map((file) => (
+              <TableRow key={file.id}>
+                <TableCell className="max-w-xs truncate whitespace-nowrap px-3 py-2">
+                  {file.name}
+                </TableCell>
+                <TableCell className="whitespace-nowrap px-3 py-2">
+                  {formatBytes(file.size)}
+                </TableCell>
+                <TableCell className="whitespace-nowrap px-3 py-2">
+                  {shortenDate(file.createdAt)}
+                </TableCell>
+                <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                        onClick={() => {
+                          onPreview(file);
+                        }}
+                      >
+                        <span>
+                          <Eye className="h-4 w-4" />
+                        </span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Preview</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                        onClick={() => {
+                          onDownload(file);
+                        }}
+                      >
+                        <span>
+                          <Download className="h-4 w-4" />
+                        </span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Download</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer text-red-500"
+                        onClick={() => {
+                          onDelete(file);
+                        }}
+                        disabled={deletingFileId === file.id}
+                      >
+                        <span>
+                          <Trash2 className="h-4 w-4" />
+                        </span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Delete</TooltipContent>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center">
+                No files found
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

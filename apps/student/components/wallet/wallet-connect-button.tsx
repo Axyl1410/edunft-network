@@ -1,5 +1,5 @@
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import {

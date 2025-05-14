@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/lib/thirdweb-client";
+import { thirdwebClient } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
 import { getCollectionTotal } from "@/services/get-event";
 import { Card, CardContent } from "@workspace/ui/components/card";

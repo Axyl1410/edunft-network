@@ -283,8 +283,8 @@ export default function ProfilePage() {
               <div className="mt-8 flex w-full justify-center gap-2 md:w-auto md:justify-start">
                 <Button
                   onClick={() => setEditOpen(true)}
-                  variant="ghost"
-                  className="border-primary/30 hover:bg-primary/10 border"
+                  variant="outline"
+                  className="cursor-pointer"
                 >
                   Edit Profile
                 </Button>

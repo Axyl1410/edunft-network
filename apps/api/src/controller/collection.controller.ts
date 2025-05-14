@@ -98,4 +98,13 @@ export class CollectionController {
     const result = await this.collectionService.getAllOwners();
     return this.handleResult(result);
   }
+
+  @Get(':walletAddress/owners')
+  async getOwnersByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<OwnerItem[]> {
+    const result =
+      await this.collectionService.getOwnersByWalletAddress(walletAddress);
+    return this.handleResult(result);
+  }
 }
