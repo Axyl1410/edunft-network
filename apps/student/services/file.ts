@@ -33,7 +33,13 @@ export async function retrieveFile(hash: string, type: "public" | "private") {
       const url = await pinataClient.gateways.public.convert(hash);
       return { data, url };
     } else {
-      const data = await pinataClient.gateways.private.get(hash);
+      let data;
+      try {
+        data = await pinataClient.gateways.private.get(hash);
+      } catch (error) {
+        console.error("Error getting private file from Pinata:", error);
+        throw error;
+      }
       const url = await pinataClient.gateways.private.createAccessLink({
         cid: hash,
         expires: 30,

@@ -1,6 +1,6 @@
 "use client";
 
-import { formatBytes } from "@/lib/utils";
+import { formatBytes, shortenDate } from "@/lib/utils";
 import {
   deleteFileInDatabase,
   deleteFilePinata,
@@ -36,6 +36,7 @@ import {
   PaginationPrevious,
 } from "@workspace/ui/components/pagination";
 import { Progress } from "@workspace/ui/components/progress";
+import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import {
   Table,
   TableBody,
@@ -123,6 +124,7 @@ export default function Page() {
     setPreviewUrl(null);
     try {
       const { url } = await retrieveFile(file.hash, "private");
+      if (!url) throw new Error("Không thể xem file này");
       setPreviewUrl(url);
     } catch (error) {
       setPreviewUrl(null);
@@ -270,6 +272,7 @@ export default function Page() {
                       setSelectedFile(null);
                       setUploadProgress(0);
                     }}
+                    className="cursor-pointer"
                   >
                     Đóng
                   </Button>
@@ -315,11 +318,16 @@ export default function Page() {
                         }
                       }}
                       disabled={!selectedFile || uploading}
+                      className="cursor-pointer"
                     >
                       Upload
                     </Button>
                     <DialogClose asChild>
-                      <Button variant="outline" disabled={uploading}>
+                      <Button
+                        variant="outline"
+                        disabled={uploading}
+                        className="cursor-pointer"
+                      >
                         Cancel
                       </Button>
                     </DialogClose>
@@ -362,55 +370,57 @@ export default function Page() {
                       {formatBytes(file.size)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2">
-                      {new Date(file.createdAt).toLocaleString()}
+                      {shortenDate(file.createdAt)}
                     </TableCell>
                     <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handlePreview(file)}
-                        className="cursor-pointer"
-                      >
-                        <Tooltip>
-                          <TooltipTrigger asChild>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handlePreview(file)}
+                            className="cursor-pointer"
+                          >
                             <span>
                               <Eye className="h-4 w-4" />
                             </span>
-                          </TooltipTrigger>
-                          <TooltipContent>Xem</TooltipContent>
-                        </Tooltip>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDownload(file)}
-                        className="cursor-pointer"
-                      >
-                        <Tooltip>
-                          <TooltipTrigger asChild>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Xem</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleDownload(file)}
+                            className="cursor-pointer"
+                          >
                             <span>
                               <Download className="h-4 w-4" />
                             </span>
-                          </TooltipTrigger>
-                          <TooltipContent>Tải về</TooltipContent>
-                        </Tooltip>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer text-red-500"
-                        onClick={() => setConfirmDelete({ open: true, file })}
-                        disabled={deletingFileId === file.id}
-                      >
-                        <Tooltip>
-                          <TooltipTrigger asChild>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Tải về</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="cursor-pointer text-red-500"
+                            onClick={() =>
+                              setConfirmDelete({ open: true, file })
+                            }
+                            disabled={deletingFileId === file.id}
+                          >
                             <span>
                               <Trash2 className="h-4 w-4" />
                             </span>
-                          </TooltipTrigger>
-                          <TooltipContent>Xóa</TooltipContent>
-                        </Tooltip>
-                      </Button>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Xóa</TooltipContent>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -451,7 +461,7 @@ export default function Page() {
           )}
           {viewMode === "list" && listCount < files.length && (
             <Button
-              className="mt-4"
+              className="mt-4 cursor-pointer"
               onClick={() => setListCount((c) => c + filesPerPage)}
             >
               Xem thêm
@@ -500,6 +510,7 @@ export default function Page() {
                       setDeletingFileId(null);
                     }
                   }}
+                  className="cursor-pointer"
                 >
                   {deletingFileId === confirmDelete.file?.id ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -512,6 +523,7 @@ export default function Page() {
                     size="sm"
                     variant="outline"
                     disabled={deletingFileId === confirmDelete.file?.id}
+                    className="cursor-pointer"
                   >
                     Hủy
                   </Button>
@@ -536,10 +548,11 @@ export default function Page() {
                   <Loading text="Đang tải file..." />
                 ) : previewUrl ? (
                   previewFile?.name.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-                    <img
-                      src={previewUrl}
+                    <SkeletonImage
+                      src={previewUrl || ""}
                       alt={previewFile?.name}
                       className="max-h-[400px] max-w-full"
+                      height={400}
                     />
                   ) : previewFile?.name.match(/\.(pdf)$/i) ? (
                     <iframe
@@ -562,7 +575,7 @@ export default function Page() {
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button>Đóng</Button>
+                  <Button className="cursor-pointer">Đóng</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
@@ -594,7 +607,7 @@ export default function Page() {
                   <Loading text="Đang khởi tạo link tải..." />
                 ) : downloadUrl ? (
                   <Button
-                    className="rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="cursor-pointer rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
                     onClick={async () => {
                       if (!downloadUrl) return;
                       try {
@@ -629,11 +642,12 @@ export default function Page() {
                   variant="outline"
                   onClick={() => downloadFile && handleDownload(downloadFile)}
                   disabled={downloadLoading || !downloadFile}
+                  className="cursor-pointer"
                 >
                   Lấy lại link
                 </Button>
                 <DialogClose asChild>
-                  <Button>Đóng</Button>
+                  <Button className="cursor-pointer">Đóng</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>

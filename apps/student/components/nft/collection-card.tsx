@@ -29,6 +29,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   });
 
   const [total, setTotal] = useState<number | null>(null);
+  const [imageError, setImageError] = useState(false);
   useEffect(() => {
     let mounted = true;
     if (showTotal) {
@@ -50,13 +51,23 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
     >
       <CardContent className="flex w-full flex-col items-center gap-3 p-2">
         <div className="flex w-full justify-center">
-          {metadata?.image ? (
-            <MediaRenderer
-              src={metadata.image}
-              alt={metadata.name}
-              client={thirdwebClient}
-              className="aspect-square rounded-md object-cover"
-            />
+          {metadata?.image && !imageError ? (
+            <>
+              <MediaRenderer
+                src={metadata.image}
+                alt={metadata.name}
+                client={thirdwebClient}
+                className="aspect-square rounded-md object-cover"
+              />
+              {/* Hidden img to detect error */}
+              <img
+                src={metadata.image}
+                alt="test"
+                style={{ display: "none" }}
+                onError={() => setImageError(true)}
+                onLoad={() => setImageError(false)}
+              />
+            </>
           ) : (
             <div className="flex h-[200px] w-[200px] items-center justify-center rounded-md bg-gray-200">
               <span className="text-gray-400">No Image</span>

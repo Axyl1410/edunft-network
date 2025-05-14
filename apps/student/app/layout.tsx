@@ -9,6 +9,7 @@ import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
           fontMono.variable,
         )}
       >
+        <NextTopLoader showAtBottom shadow="none" showSpinner={false} />
         <Providers>
           <SidebarProvider>
             <AppSidebar />
