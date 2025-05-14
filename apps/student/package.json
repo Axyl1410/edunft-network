@@ -16,6 +16,7 @@
     "@ckeditor/ckeditor5-react": "^9.5.0",
     "@workspace/ui": "workspace:*",
     "axios": "^1.8.4",
+    "canvas-confetti": "^1.9.3",
     "ckeditor5": "^45.0.0",
     "form-data": "^4.0.2",
     "lucide-react": "^0.475.0",
