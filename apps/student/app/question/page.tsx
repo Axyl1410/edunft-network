@@ -41,7 +41,7 @@ export default function QuestionPage() {
       votes: 12,
       author: {
         name: 'Bob Smith',
-        avatar: '/avatars/default.png'
+        avatar: 'https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400'
       },
       answers: 1,
       timeLeft: '120 hours left',
@@ -57,7 +57,7 @@ export default function QuestionPage() {
       votes: 8,
       author: {
         name: 'Alice Johnson',
-        avatar: '/avatars/default.png'
+        avatar: 'https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400'
       },
       answers: 2,
       timeLeft: '168 hours left',
