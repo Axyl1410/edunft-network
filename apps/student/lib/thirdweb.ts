@@ -5,7 +5,7 @@ import {
   type Chain,
 } from "thirdweb";
 
-const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const secretKey = process.env.TW_SECRET_KEY;
 
 if (!clientId) {
@@ -17,6 +17,8 @@ const marketplace_address = "0xa7d2c8d1Fd78cc65aaC5DBCfd91A4B7190acf89A";
 export const thirdwebClient = createThirdwebClient(
   secretKey ? { secretKey } : { clientId },
 );
+
+export const thirdwebClientPublic = createThirdwebClient({ clientId });
 
 export const FORMA_SKETCHPAD: Chain = defineChain({
   id: 984123,

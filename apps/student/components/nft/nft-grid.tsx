@@ -1,7 +1,6 @@
-import { Skeleton } from "@workspace/ui/components/skeleton";
 import type { NFT as NFTType } from "thirdweb";
 import { DirectListing, EnglishAuction } from "thirdweb/extensions/marketplace";
-import NFT from "./nft";
+import NFT, { LoadingNFTComponent } from "./nft";
 
 type Props = {
   nftData: {
@@ -19,14 +18,6 @@ export function NFTGridLoading() {
       {[...Array(12)].map((_, index) => (
         <LoadingNFTComponent key={index} />
       ))}
-    </div>
-  );
-}
-
-export function LoadingNFTComponent() {
-  return (
-    <div className="h-[350px] w-full rounded-lg">
-      <Skeleton className="h-full w-full" />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import getThirdwebContract from "@/services/get-contract";
-import { Skeleton } from "@workspace/ui/components/skeleton";
+import Loading from "@workspace/ui/components/loading";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NFT } from "thirdweb";
@@ -42,14 +43,14 @@ export default function NFTComponent({
   if (!nft) return <LoadingNFTComponent />;
 
   return (
-    <a href={`/token/${address}/${tokenId.toString()}`}>
+    <Link href={`/token/${address}/${tokenId.toString()}`}>
       <NFTProvider tokenId={tokenId} contract={contract}>
         <div className="bg-accent flex flex-col gap-1.5 rounded-lg border px-1 py-3 hover:border-sky-400">
           <NFTMedia className="rounded-md px-2 text-center" />
           <NFTName className="px-2 font-bold" />
           <NFTDescription
             className="px-2 text-sm"
-            loadingComponent={<span>Loading...</span>}
+            loadingComponent={<Loading />}
           />
           <div className="flex items-center justify-between px-2">
             <div>#{tokenId.toString()}</div>
@@ -66,14 +67,23 @@ export default function NFTComponent({
           </div>
         </div>
       </NFTProvider>
-    </a>
+    </Link>
   );
 }
 
 export function LoadingNFTComponent() {
   return (
-    <div className="h-[350px] w-full rounded-lg">
-      <Skeleton className="h-full w-full" />
+    <div className="bg-accent flex w-[230px] animate-pulse flex-col gap-1.5 rounded-lg border px-1 py-3">
+      <div className="mb-2 h-40 w-full rounded-md bg-gray-200 dark:bg-neutral-700" />
+      <div className="mx-2 mb-1 h-5 w-3/4 rounded bg-gray-200 dark:bg-neutral-700" />
+      <div className="mx-2 mb-2 h-4 w-full rounded bg-gray-200 dark:bg-neutral-700" />
+      <div className="mt-2 flex items-center justify-between px-2">
+        <div className="h-4 w-10 rounded bg-gray-200 dark:bg-neutral-700" />
+        <div className="flex flex-col items-center">
+          <div className="mb-1 h-3 w-8 rounded bg-gray-200 dark:bg-neutral-700" />
+          <div className="h-4 w-16 rounded bg-gray-200 dark:bg-neutral-700" />
+        </div>
+      </div>
     </div>
   );
 }
