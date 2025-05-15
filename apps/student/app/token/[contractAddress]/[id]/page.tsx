@@ -3,6 +3,7 @@ import Events from "@/components/nft/events";
 import { MARKETPLACE, thirdwebClientPublic } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
+import Loading from "@workspace/ui/components/loading";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getNFT } from "thirdweb/extensions/erc721";
@@ -110,7 +111,7 @@ export default async function Page({
               History
             </h3>
             <div className="rounded-md border border-gray-100 bg-white/[.03] p-3 dark:border-white/10">
-              <Suspense fallback={<div>Loading history...</div>}>
+              <Suspense fallback={<Loading text="Loading history..." />}>
                 <Events tokenId={nft.id} address={contractAddress} />
               </Suspense>
             </div>

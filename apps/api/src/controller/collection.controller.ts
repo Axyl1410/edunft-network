@@ -56,14 +56,9 @@ export class CollectionController {
   @Delete(':walletAddress/holders')
   async removeHolder(
     @Param('walletAddress') walletAddress: string,
-    @Body()
-    body: {
-      Address: string;
-      TokenId: string;
-    },
+    @Body('Address') Address: string,
+    @Body('TokenId') TokenId: string,
   ): Promise<Collection> {
-    const { Address, TokenId } = body;
-
     const result = await this.collectionService.removeHolder(
       walletAddress,
       Address,

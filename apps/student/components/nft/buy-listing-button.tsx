@@ -3,28 +3,22 @@
 import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
+import { baseUrl } from "@/lib/client";
 import { MARKETPLACE } from "@/lib/thirdweb";
 import getMetadata from "@/services/get-metadata";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-  buyFromListing,
-  buyoutAuction,
-  DirectListing,
-  EnglishAuction,
-} from "thirdweb/extensions/marketplace";
+import { buyFromListing, DirectListing } from "thirdweb/extensions/marketplace";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
 
 type Props = {
-  auctionListing?: EnglishAuction;
   directListing?: DirectListing;
   contractAddress: string;
   tokenId: string;
 };
 
 export default function BuyListingButton({
-  auctionListing,
   directListing,
   contractAddress,
   tokenId,
@@ -43,18 +37,16 @@ export default function BuyListingButton({
       const metadataResult = await getMetadata(contractAddress);
 
       await Promise.all([
-        axios.post("/api/token/add-token", {
-          username: account?.address,
-          address: contractAddress,
-          token: tokenId,
+        axios.post(`${baseUrl}/api/collections/${account?.address}/holders`, {
+          Address: contractAddress,
+          TokenId: tokenId,
           name_collection: metadataResult.name,
         }),
-        axios.post("/api/token/remove-token", {
-          username:
-            account?.address === auctionListing?.creatorAddress ||
-            account?.address === directListing?.creatorAddress,
-          address: contractAddress,
-          token: tokenId,
+        axios.delete(`${baseUrl}/api/collections/${account?.address}/holders`, {
+          data: {
+            Address: contractAddress,
+            TokenId: tokenId,
+          },
         }),
       ])
         .then(() => toast("Collection created successfully"))
@@ -71,9 +63,8 @@ export default function BuyListingButton({
   };
 
   const isDisabled =
-    account?.address === auctionListing?.creatorAddress ||
     account?.address === directListing?.creatorAddress ||
-    (!directListing && !auctionListing) ||
+    !directListing ||
     !account;
 
   return (
@@ -84,12 +75,7 @@ export default function BuyListingButton({
           setIsOpen(true);
           setCurrentStep("sent");
           if (!account) throw new Error("No account");
-          if (auctionListing) {
-            return buyoutAuction({
-              contract: MARKETPLACE,
-              auctionId: auctionListing.id,
-            });
-          } else if (directListing) {
+          if (directListing) {
             return buyFromListing({
               contract: MARKETPLACE,
               listingId: directListing.id,
