@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import "../styles/question.css";
+
 interface UserStatsProps {
   questionsAsked: number;
   answersGiven: number;
@@ -64,26 +65,12 @@ export default function UserStats({
     });
     setShowBadgeModal(true);
     setAnimateOut(false);
-    setTimeout(() => setAnimateOut(true), 2200); // Start hide animation after 2.2s
-    setTimeout(() => setShowBadgeModal(false), 3000); // Remove modal after animation
+    setTimeout(() => setAnimateOut(true), 2200);
+    setTimeout(() => setShowBadgeModal(false), 3000);
   };
 
   return (
     <div className="relative mb-8">
-      {/* Saved Questions Button */}
-      {/* <div className="absolute right-0 -top-2 z-20">
-        <button
-          className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-blue-200 rounded-full shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-300"
-          onClick={() => setShowSavedDetail(true)}
-        >
-          <Bookmark className="text-blue-500" size={20} />
-          <span className="font-semibold text-blue-700">
-            {savedQuestions.length} Saved
-          </span>
-        </button>
-      </div> */}
-
-      {/* Enhanced Saved Questions Modal */}
       {showSavedDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm transition-all duration-300">
           <div className="relative w-full max-w-2xl scale-100 transform rounded-2xl bg-white p-6 opacity-100 shadow-2xl transition-all duration-300">
@@ -134,93 +121,96 @@ export default function UserStats({
         </div>
       )}
 
-      {/* Updated 5-column grid */}
-      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-5">
-        {/* Questions Asked */}
-        <div className="relative flex flex-col items-center rounded-lg border bg-white p-4 shadow transition-shadow hover:shadow-md">
-          <span className="mb-1 flex items-center gap-2 font-semibold">
-            <HelpCircle className="text-blue-500" size={20} /> Questions Asked
-          </span>
-          <span className="text-2xl font-bold">{questionsAsked}</span>
-          <button
-            className="mt-2 text-xs text-blue-500 hover:underline"
-            onClick={() =>
-              alert("Show questions asked history (blockchain)...")
-            }
-          >
-            View History
-          </button>
-        </div>
+      {/* Container bọc các card */}
+      <div className="mt-8 rounded-xl border bg-gradient-to-br from-blue-600 to-cyan-400 p-6 shadow-lg">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+          {/* Card Questions Asked */}
+          <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
+              <HelpCircle className="text-blue-500" size={20} /> Questions Asked
+            </span>
+            <span className="text-2xl font-bold text-gray-900">{questionsAsked}</span>
+            <button
+              className="mt-2 text-xs text-blue-500 hover:underline"
+              onClick={() => alert("Show questions asked history (blockchain)...")}
+            >
+              View History
+            </button>
+          </div>
 
-        {/* Answers Given */}
-        <div className="relative flex flex-col items-center rounded-lg border bg-white p-4 shadow transition-shadow hover:shadow-md">
-          <span className="mb-1 flex items-center gap-2 font-semibold">
-            <MessageCircle className="text-green-500" size={20} /> Answers Given
-          </span>
-          <span className="text-2xl font-bold">{answersGiven}</span>
-          <button
-            className="mt-2 text-xs text-blue-500 hover:underline"
-            onClick={() => alert("Show answers history (blockchain)...")}
-          >
-            View History
-          </button>
-        </div>
+          {/* Card Answers Given */}
+          <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
+              <MessageCircle className="text-green-500" size={20} /> Answers Given
+            </span>
+            <span className="text-2xl font-bold text-gray-900">{answersGiven}</span>
+            <button
+              className="mt-2 text-xs text-blue-500 hover:underline"
+              onClick={() => alert("Show answers history (blockchain)...")}
+            >
+              View History
+            </button>
+          </div>
 
-        {/* Tokens Earned */}
-        <div className="relative flex flex-col items-center rounded-lg border bg-white p-4 shadow transition-shadow hover:shadow-md">
-          <span className="mb-1 flex items-center gap-2 font-semibold">
-            <Coins className="text-orange-500" size={20} /> Tokens Earned
-          </span>
-          <span className="text-2xl font-bold">{tokensEarned}</span>
-          <button
-            className="mt-2 text-xs text-blue-500 hover:underline"
-            onClick={() => alert("Show token earning history (blockchain)...")}
-          >
-            View History
-          </button>
-        </div>
+          {/* Card Tokens Earned */}
+          <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
+              <Coins className="text-orange-500" size={20} /> Tokens Earned
+            </span>
+            <span className="text-2xl font-bold text-gray-900">{tokensEarned}</span>
+            <button
+              className="mt-2 text-xs text-blue-500 hover:underline"
+              onClick={() => alert("Show token earning history (blockchain)...")}
+            >
+              View History
+            </button>
+          </div>
 
-        {/* Saved Questions */}
-        <div className="relative flex flex-col items-center rounded-lg border bg-white p-4 shadow transition-shadow hover:shadow-md">
-          <span className="mb-1 flex items-center gap-2 font-semibold">
-            <Bookmark className="text-blue-500" size={20} /> Saved Questions
-          </span>
-          <span className="text-2xl font-bold">{savedQuestions.length}</span>
-          <button
-            className="mt-2 text-xs text-blue-500 hover:underline"
-            onClick={() => setShowSavedDetail(true)}
-          >
-            View Details
-          </button>
-        </div>
-        {/* Reputation Badge */}
-        <div className="relative flex flex-col items-center rounded-lg border bg-white p-4 shadow transition-shadow hover:shadow-md">
-          <span className="mb-1 flex items-center gap-2 font-semibold">
-            <Medal className="text-purple-500" size={20} /> Reputation
-          </span>
-          <span
-            className={`mt-2 flex transform cursor-pointer items-center gap-2 rounded-full border-2 px-4 py-2 font-semibold transition hover:scale-110 hover:shadow-xl ${badgeStyles[badgeLevel]} `}
-            onClick={handleBadgeClick}
-          >
-            {badgeIcons[badgeLevel]}
-            {badgeLevel}
-          </span>
+          {/* Card Saved Questions */}
+          <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
+              <Bookmark className="text-blue-500" size={20} /> Saved Questions
+            </span>
+            <span className="text-2xl font-bold text-gray-900">{savedQuestions.length}</span>
+            <button
+              className="mt-2 text-xs text-blue-500 hover:underline"
+              onClick={() => setShowSavedDetail(true)}
+            >
+              View Details
+            </button>
+          </div>
+
+          {/* Card Reputation Badge */}
+          <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
+            <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
+              <Medal className="text-purple-500" size={20} /> Reputation
+            </span>
+            <span
+              className={`mt-2 flex transform cursor-pointer items-center gap-2 rounded-full border-2 px-4 py-2 font-semibold transition hover:scale-110 hover:shadow-xl ${badgeStyles[badgeLevel]}`}
+              onClick={handleBadgeClick}
+            >
+              {badgeIcons[badgeLevel]}
+              {badgeLevel}
+            </span>
+          </div>
         </div>
       </div>
-
-      {/* Badge Modal */}
 
       {showBadgeModal && (
         <>
           <div
-            className={`fixed inset-0 z-40 transition-all duration-500 ${animateOut ? "opacity-0 blur-md" : "opacity-100 blur-sm"} pointer-events-none bg-transparent`}
+            className={`fixed inset-0 z-40 transition-all duration-500 ${
+              animateOut ? "opacity-0 blur-md" : "opacity-100 blur-sm"
+            } pointer-events-none bg-transparent`}
           />
           <div
-            className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity transition-transform duration-700 ${animateOut ? "badge-modal-out" : "badge-modal-in"} `}
+            className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity transition-transform duration-700 ${
+              animateOut ? "badge-modal-out" : "badge-modal-in"
+            } `}
             style={{ pointerEvents: "none" }}
           >
             <span
-              className={`flex items-center gap-2 rounded border-2 px-8 py-4 text-2xl font-bold flex flex-col ${badgeStyles[badgeLevel]} `}
+              className={`flex items-center gap-2 rounded border-2 px-8 py-4 text-2xl font-bold flex flex-col ${badgeStyles[badgeLevel]}`}
               style={{
                 borderWidth: 2,
                 boxShadow: "0 8px 32px 0 rgba(31,38,135,0.37)",

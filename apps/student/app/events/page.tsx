@@ -3,8 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 // Update imports at the top
 import { motion, AnimatePresence } from "motion/react";
-// Remove this line
-// import { motion } from "motion/react";
+
 import { MapPin, Clock, Users, Search, RssIcon, Plus, CheckCircle, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { EventCard } from "./components/EventCard";
 import { CompetitionCard } from "./components/CompetitionCard";

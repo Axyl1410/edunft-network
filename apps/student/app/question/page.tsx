@@ -2,8 +2,6 @@
 
 import { Button } from "@workspace/ui/components/button"
 import { Card } from "@workspace/ui/components/card"
-// import { Avatar } from "@workspace/ui/components/avatar"
-// import { Badge } from "@workspace/ui/components/badge"
 import { useState } from "react"
 import Link from "next/link"
 import FormAskQuestion from "./components/FormAskQuestion"
