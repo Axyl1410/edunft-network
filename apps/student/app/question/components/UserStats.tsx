@@ -1,15 +1,14 @@
-import { useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import {
-  HelpCircle,
-  MessageCircle,
-  Coins,
-  Medal,
   Bookmark,
+  Coins,
+  HelpCircle,
+  Medal,
+  MessageCircle,
   X,
-  Activity,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import "../styles/question.css";
 
 interface UserStatsProps {
@@ -129,10 +128,14 @@ export default function UserStats({
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <HelpCircle className="text-blue-500" size={20} /> Questions Asked
             </span>
-            <span className="text-2xl font-bold text-gray-900">{questionsAsked}</span>
+            <span className="text-2xl font-bold text-gray-900">
+              {questionsAsked}
+            </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
-              onClick={() => alert("Show questions asked history (blockchain)...")}
+              onClick={() =>
+                alert("Show questions asked history (blockchain)...")
+              }
             >
               View History
             </button>
@@ -141,9 +144,12 @@ export default function UserStats({
           {/* Card Answers Given */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
-              <MessageCircle className="text-green-500" size={20} /> Answers Given
+              <MessageCircle className="text-green-500" size={20} /> Answers
+              Given
             </span>
-            <span className="text-2xl font-bold text-gray-900">{answersGiven}</span>
+            <span className="text-2xl font-bold text-gray-900">
+              {answersGiven}
+            </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
               onClick={() => alert("Show answers history (blockchain)...")}
@@ -157,10 +163,14 @@ export default function UserStats({
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <Coins className="text-orange-500" size={20} /> Tokens Earned
             </span>
-            <span className="text-2xl font-bold text-gray-900">{tokensEarned}</span>
+            <span className="text-2xl font-bold text-gray-900">
+              {tokensEarned}
+            </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
-              onClick={() => alert("Show token earning history (blockchain)...")}
+              onClick={() =>
+                alert("Show token earning history (blockchain)...")
+              }
             >
               View History
             </button>
@@ -171,7 +181,9 @@ export default function UserStats({
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <Bookmark className="text-blue-500" size={20} /> Saved Questions
             </span>
-            <span className="text-2xl font-bold text-gray-900">{savedQuestions.length}</span>
+            <span className="text-2xl font-bold text-gray-900">
+              {savedQuestions.length}
+            </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
               onClick={() => setShowSavedDetail(true)}
@@ -204,13 +216,13 @@ export default function UserStats({
             } pointer-events-none bg-transparent`}
           />
           <div
-            className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity transition-transform duration-700 ${
+            className={`fixed inset-0 z-50 flex items-center justify-center transition-transform duration-700 ${
               animateOut ? "badge-modal-out" : "badge-modal-in"
             } `}
             style={{ pointerEvents: "none" }}
           >
             <span
-              className={`flex items-center gap-2 rounded border-2 px-8 py-4 text-2xl font-bold flex flex-col ${badgeStyles[badgeLevel]}`}
+              className={`flex flex-col items-center gap-2 rounded border-2 px-8 py-4 text-2xl font-bold ${badgeStyles[badgeLevel]}`}
               style={{
                 borderWidth: 2,
                 boxShadow: "0 8px 32px 0 rgba(31,38,135,0.37)",

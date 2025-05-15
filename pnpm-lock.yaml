@@ -341,6 +341,9 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4(@types/react@19.0.10)(immer@10.0.2)(react@18.2.0)(use-sync-external-store@1.2.0(react@18.2.0))
     devDependencies:
+      '@types/canvas-confetti':
+        specifier: ^1.9.0
+        version: 1.9.0
       '@types/node':
         specifier: ^20
         version: 20.17.19
@@ -3424,6 +3427,9 @@ packages:
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
+
+  '@types/canvas-confetti@1.9.0':
+    resolution: {integrity: sha512-aBGj/dULrimR1XDZLtG9JwxX1b4HPRF6CX9Yfwh3NvstZEm1ZL7RBnel4keCPSqs1ANRu1u2Aoz9R+VmtjYuTg==}
 
   '@types/chai-as-promised@7.1.8':
     resolution: {integrity: sha512-ThlRVIJhr69FLlh6IctTXFkmhtP3NpMZ2QGq69StYLyKZFp/HOp1VdKZj7RvfNWYYcJ1xlbLGLLWj1UvP5u/Gw==}
@@ -14074,6 +14080,8 @@ snapshots:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 22.14.0
+
+  '@types/canvas-confetti@1.9.0': {}
 
   '@types/chai-as-promised@7.1.8':
     dependencies:

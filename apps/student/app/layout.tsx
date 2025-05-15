@@ -49,7 +49,7 @@ export default function RootLayout({
               <nav className="border-border sticky top-2 z-10 ml-2 mr-2 flex h-[50px] items-center justify-between rounded-md border px-4 backdrop-blur-sm md:ml-0">
                 <NavAccount />
               </nav>
-              <div className="mt-4 h-[calc(100vh-50px)]">{children}</div>
+              <div className="mt-4 h-[calc(100vh-50px)] px-2">{children}</div>
             </SidebarInset>
           </SidebarProvider>
         </Providers>
