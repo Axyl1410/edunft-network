@@ -37,12 +37,12 @@ export default function BuyListingButton({
       const metadataResult = await getMetadata(contractAddress);
 
       await Promise.all([
-        axios.post(`${baseUrl}/api/collections/${account?.address}/holders`, {
+        axios.post(`${baseUrl}/collections/${account?.address}/holders`, {
           Address: contractAddress,
           TokenId: tokenId,
           name_collection: metadataResult.name,
         }),
-        axios.delete(`${baseUrl}/api/collections/${account?.address}/holders`, {
+        axios.delete(`${baseUrl}/collections/${account?.address}/holders`, {
           data: {
             Address: contractAddress,
             TokenId: tokenId,

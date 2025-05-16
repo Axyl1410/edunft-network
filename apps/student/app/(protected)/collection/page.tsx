@@ -3,6 +3,7 @@
 import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
+import { baseUrl } from "@/lib/client";
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
 import getMetadata from "@/services/get-metadata";
 import { Button } from "@workspace/ui/components/button";
@@ -12,6 +13,7 @@ import { Label } from "@workspace/ui/components/label";
 import LoadingScreen from "@workspace/ui/components/loading-screen";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
+import axios from "axios";
 import { Eye, EyeOff, Info, Newspaper } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useState } from "react";
@@ -106,17 +108,10 @@ export default function Page() {
 
       const { metadata } = await getMetadata(contractAddress);
 
-      //todo fix later
-      // await axios.post("/api/user", {
-      //   username: account.address,
-      //   address: contractAddress,
-      //   name: (await metadata).name as string,
-      // });
-
-      // await axios.post("/api/collection", {
-      //   address: contractAddress,
-      //   name: (await metadata).name as string,
-      // });
+      await axios.post(`${baseUrl}/collections/${account.address}/owners`, {
+        address: contractAddress,
+        name: (await metadata).name as string,
+      });
 
       setCurrentStep("success");
     } catch (error) {
@@ -165,7 +160,7 @@ export default function Page() {
                 Logo image
               </p>
               <div className="border-border mx-auto rounded-lg border border-dashed bg-white dark:border-neutral-800 dark:bg-black/50">
-                <FileUpload onChange={handleFileUpload} />
+                <FileUpload onChange={handleFileUpload} accept="image/*" />
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-5">

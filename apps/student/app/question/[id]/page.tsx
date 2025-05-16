@@ -42,30 +42,32 @@ interface Answer {
 const MOCK_QUESTION: Question = {
   id: "1",
   title: "Best practices for state management in complex React applications?",
-  content: "I'm working on a large-scale React application with complex state. What are the recommended approaches for state management?",
+  content:
+    "I'm working on a large-scale React application with complex state. What are the recommended approaches for state management?",
   tokens: 100,
   tags: ["react", "state-management", "redux", "context-api"],
   votes: 12,
   author: {
     walletAddress: "0x1234",
     name: "Bob Smith",
-    avatar: "/avatars/default.png"
+    avatar: "/avatars/default.png",
   },
   createdAt: "2024-06-01T10:00:00Z",
   answers: [
     {
       id: "a1",
-      content: "For complex React apps, consider using Redux or Zustand for state management. Context API is good for small to medium apps.",
+      content:
+        "For complex React apps, consider using Redux or Zustand for state management. Context API is good for small to medium apps.",
       author: {
         walletAddress: "0x5678",
         name: "Alice Johnson",
-        avatar: "/avatars/default.png"
+        avatar: "/avatars/default.png",
       },
       votes: 5,
       isAccepted: false,
-      createdAt: "2024-06-01T12:00:00Z"
-    }
-  ]
+      createdAt: "2024-06-01T12:00:00Z",
+    },
+  ],
 };
 
 const QuestionDetailPage = () => {
@@ -182,7 +184,7 @@ const QuestionDetailPage = () => {
           <div className="flex-1">
             <div className="flex items-start justify-between">
               <h1 className="text-2xl font-bold">{question.title}</h1>
-              <div className="focus:ring-ring bg-secondary text-secondary-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-lg text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2">
+              <div className="focus:ring-ring bg-secondary text-secondary-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2">
                 {question.tokens} tokens
               </div>
             </div>
@@ -214,7 +216,6 @@ const QuestionDetailPage = () => {
                     {question.author.name}
                   </span>
                 </div>
-
               </div>
               <span className="text-sm text-gray-600">
                 Asked on {new Date(question.createdAt).toLocaleDateString()}
@@ -260,7 +261,9 @@ const QuestionDetailPage = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     {answer.isAccepted && (
-                      <div className="bg-green-100 text-green-800 rounded-full px-3 py-1 text-sm font-medium">Accepted Answer</div>
+                      <div className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+                        Accepted Answer
+                      </div>
                     )}
                     <span className="text-sm text-gray-600">
                       Answered on{" "}

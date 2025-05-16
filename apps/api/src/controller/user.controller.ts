@@ -54,6 +54,19 @@ export class UserController {
     return this.handleResult(result);
   }
 
+  @Get(':WalletAddress/avatar')
+  async getUserAvatar(
+    @Param('WalletAddress') WalletAddress: string,
+  ): Promise<{ avatar: string | null }> {
+    try {
+      const result = await this.userService.getUserAvatar(WalletAddress);
+      return this.handleResult(result);
+    } catch (error) {
+      console.log(error);
+      return { avatar: null };
+    }
+  }
+
   @Post('create')
   async createUser(@Body() user: User): Promise<User> {
     const result = await this.userService.createUser(user);

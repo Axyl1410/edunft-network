@@ -135,4 +135,34 @@ export class UserService {
       return new Fail(new DatabaseFailure('Failed to update user.'));
     }
   }
+
+  async getUserAvatar(
+    walletAddress: string,
+  ): Promise<
+    Result<
+      { avatar: string | null },
+      NotFoundFailure | DatabaseFailure | ValidationFailure
+    >
+  > {
+    if (!walletAddress) {
+      return new Fail(new ValidationFailure('User', walletAddress));
+    }
+
+    try {
+      const user = await this.userModel
+        .findOne({ walletAddress })
+        .select('profilePicture')
+        .lean()
+        .exec();
+
+      if (!user) {
+        return new Success({ avatar: null });
+      }
+
+      return new Success({ avatar: user.profilePicture || null });
+    } catch (error) {
+      console.error('Error fetching user avatar:', error);
+      return new Fail(new DatabaseFailure('Failed to fetch user avatar.'));
+    }
+  }
 }

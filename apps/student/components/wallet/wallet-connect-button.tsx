@@ -24,7 +24,7 @@ import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -335,6 +335,7 @@ export const WalletConnectButton = () => {
     null,
   );
   const [createStep, setCreateStep] = useState(0);
+  const processedAddressRef = React.useRef<string | null>(null);
 
   useEffect(() => {
     if (!wallet) {
@@ -356,62 +357,54 @@ export const WalletConnectButton = () => {
     };
   }, [wallet]);
 
+  // Handle user login / creation flow
   useEffect(() => {
-    if (!account?.address) {
-      // No active account, ensure dialog is closed and account status is reset
-      setShowCreateUserDialog(false);
-      setAccountCreated(false);
-      return;
-    }
+    const run = async () => {
+      if (!account?.address) {
+        setShowCreateUserDialog(false);
+        setAccountCreated(false);
+        return;
+      }
 
-    if (accountCreated) {
-      // Account is already marked as created for this session/address, do nothing.
-      return;
-    }
+      if (accountCreated) return;
 
-    if (!wallet) {
-      return;
-    }
-
-    // At this point, an account address exists, and we haven't confirmed account creation yet.
-    // Attempt to log in / check for user existence.
-    axios
-      .post(baseUrl + "/user/login", {
-        WalletAddress: account.address,
-      })
-      .then(() => {
-        setAccountCreated(true);
-        setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
-        // Fetch user info and set in zustand
-        axios.get(baseUrl + `/user/${account.address}`).then((response) => {
-          setUser({
-            walletAddress: account.address,
-            username: response.data.username || "",
-            bio: response.data.bio || "",
-            profilePicture: response.data.profilePicture || "",
-            banner: response.data.banner || "",
-            reputation: response.data.reputation || 100,
-            violations: response.data.violations || 0,
-            bannedUntil: response.data.bannedUntil || null,
-            role: response.data.role || "student",
-          });
+      // Attempt login
+      try {
+        await axios.post(baseUrl + "/user/login", {
+          WalletAddress: account.address,
         });
-      })
-      .catch((error) => {
+        setAccountCreated(true);
+        setShowCreateUserDialog(false);
+        // Fetch user profile
+        const response = await axios.get(baseUrl + `/user/${account.address}`);
+        setUser({
+          walletAddress: account.address,
+          username: response.data.username || "",
+          bio: response.data.bio || "",
+          profilePicture: response.data.profilePicture || "",
+          banner: response.data.banner || "",
+          reputation: response.data.reputation || 100,
+          violations: response.data.violations || 0,
+          bannedUntil: response.data.bannedUntil || null,
+          role: response.data.role || "student",
+        });
+      } catch (error: any) {
         if (error.response?.status === 404) {
-          // User not found, prompt for account creation (no error toast)
           setShowCreateUserDialog(true);
-          setAccountCreated(false); // Ensure this is false as we are prompting creation
+          setAccountCreated(false);
         } else {
-          // Only show toast for real errors
           console.error("Login/check error:", error);
           toast.error("Đã xảy ra lỗi khi kết nối tới EduNFT", {
             description:
               error instanceof Error ? error.message : "Unknown error occurred",
           });
         }
-      });
-  }, [account?.address, accountCreated, setUser, wallet]); // Thêm wallet vào dependencies
+      }
+    };
+
+    run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account?.address]);
 
   const wallets = useMemo(
     () => [

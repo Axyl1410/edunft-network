@@ -60,8 +60,8 @@ export function FileTable({
         </TableHeader>
         <TableBody>
           {files.length > 0 ? (
-            files.map((file) => (
-              <TableRow key={file.id}>
+            files.map((file, index) => (
+              <TableRow key={`${file.id}-${index}`}>
                 <TableCell className="max-w-xs truncate whitespace-nowrap px-3 py-2">
                   {file.name}
                 </TableCell>
@@ -128,7 +128,7 @@ export function FileTable({
               </TableRow>
             ))
           ) : (
-            <TableRow>
+            <TableRow key="no-files">
               <TableCell colSpan={4} className="text-center">
                 No files found
               </TableCell>
