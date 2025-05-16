@@ -24,7 +24,7 @@ import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react"; // Added React
 import { toast } from "sonner";
 import {
   Blobbie,
@@ -63,261 +63,274 @@ const steps = [
   },
 ];
 
-const CreateAccountForm = ({
-  onSuccess,
-  walletAddress,
-  setCreateAccountError,
-  onStepChange,
-}: {
+interface CreateAccountFormProps {
   onSuccess: () => void;
   walletAddress: string;
   setCreateAccountError: (err: string) => void;
   onStepChange: (step: number) => void;
-}) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<CreateUserFormData>({
-    Username: "",
-    Bio: "",
-    ProfilePicture: "",
-    Banner: "",
-    role: "student",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+}
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
+// Wrap CreateAccountForm with React.memo
+const CreateAccountForm = React.memo(
+  ({
+    onSuccess,
+    walletAddress,
+    setCreateAccountError,
+    onStepChange,
+  }: CreateAccountFormProps) => {
+    const [currentStep, setCurrentStep] = useState(0);
+    const [formData, setFormData] = useState<CreateUserFormData>({
+      Username: "",
+      Bio: "",
+      ProfilePicture: "",
+      Banner: "",
+      role: "student",
+    });
+    const [isLoading, setIsLoading] = useState(false);
 
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
+    const handleNext = () => {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep((prev) => prev + 1);
+      }
+    };
 
-  const handleSubmit = async () => {
-    if (!walletAddress) return;
+    const handleBack = () => {
+      if (currentStep > 0) {
+        setCurrentStep((prev) => prev - 1);
+      }
+    };
 
-    setIsLoading(true);
-    try {
-      await axios.post(baseUrl + "/user/create", {
-        walletAddress: walletAddress,
-        username: formData.Username,
-        bio: formData.Bio,
-        profilePicture: formData.ProfilePicture,
-        banner: formData.Banner,
-        role: formData.role,
-      });
-      toast.success("Account created successfully!");
-      onSuccess();
-    } catch (error) {
-      console.error(error);
-      // Show error dialog instead of toast
-      setCreateAccountError(
-        error instanceof Error ? error.message : "Unknown error occurred",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const handleSubmit = async () => {
+      if (!walletAddress) return;
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="username">Username (required)</Label>
-              <Input
-                id="username"
-                value={formData.Username}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Username: e.target.value }))
-                }
-                placeholder="Enter your username"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                value={formData.Bio}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Bio: e.target.value }))
-                }
-                placeholder="Tell us about yourself"
-              />
-            </div>
-          </motion.div>
+      setIsLoading(true);
+      try {
+        await axios.post(baseUrl + "/user/create", {
+          walletAddress: walletAddress,
+          username: formData.Username,
+          bio: formData.Bio,
+          profilePicture: formData.ProfilePicture,
+          banner: formData.Banner,
+          role: formData.role,
+        });
+        toast.success("Account created successfully!");
+        onSuccess();
+      } catch (error) {
+        console.error(error);
+        setCreateAccountError(
+          error instanceof Error ? error.message : "Unknown error occurred",
         );
-      case 1:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="profilePicture" className="text-sm font-medium">
-                Profile Picture URL
-              </Label>
-              <Input
-                id="profilePicture"
-                value={formData.ProfilePicture}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    ProfilePicture: e.target.value,
-                  }))
-                }
-                placeholder="Enter your profile picture URL"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="banner" className="text-sm font-medium">
-                Banner URL
-              </Label>
-              <Input
-                id="banner"
-                value={formData.Banner}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Banner: e.target.value }))
-                }
-                placeholder="Enter your banner URL"
-              />
-            </div>
-          </motion.div>
-        );
-      case 2:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label className="text-sm font-medium">Select Role</Label>
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  type="button"
-                  variant={formData.role === "student" ? "default" : "outline"}
-                  onClick={() =>
-                    setFormData((prev) => ({ ...prev, role: "student" }))
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const renderStep = () => {
+      switch (currentStep) {
+        case 0:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label htmlFor="username">Username (required)</Label>
+                <Input
+                  id="username"
+                  value={formData.Username}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      Username: e.target.value,
+                    }))
                   }
-                  className="h-24"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg">👨‍🎓</span>
-                    <span>Student</span>
-                  </div>
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.role === "teacher" ? "default" : "outline"}
-                  onClick={() =>
-                    setFormData((prev) => ({ ...prev, role: "teacher" }))
-                  }
-                  className="h-24"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg">👨‍🏫</span>
-                    <span>Teacher</span>
-                  </div>
-                </Button>
+                  placeholder="Enter your username"
+                />
               </div>
-            </div>
-          </motion.div>
-        );
-      default:
-        return null;
-    }
-  };
+              <div className="grid gap-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  value={formData.Bio}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, Bio: e.target.value }))
+                  }
+                  placeholder="Tell us about yourself"
+                />
+              </div>
+            </motion.div>
+          );
+        case 1:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label htmlFor="profilePicture" className="text-sm font-medium">
+                  Profile Picture URL
+                </Label>
+                <Input
+                  id="profilePicture"
+                  value={formData.ProfilePicture}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      ProfilePicture: e.target.value,
+                    }))
+                  }
+                  placeholder="Enter your profile picture URL"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="banner" className="text-sm font-medium">
+                  Banner URL
+                </Label>
+                <Input
+                  id="banner"
+                  value={formData.Banner}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, Banner: e.target.value }))
+                  }
+                  placeholder="Enter your banner URL"
+                />
+              </div>
+            </motion.div>
+          );
+        case 2:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label className="text-sm font-medium">Select Role</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button
+                    type="button"
+                    variant={
+                      formData.role === "student" ? "default" : "outline"
+                    }
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, role: "student" }))
+                    }
+                    className="h-24"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-lg">👨‍🎓</span>
+                      <span>Student</span>
+                    </div>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={
+                      formData.role === "teacher" ? "default" : "outline"
+                    }
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, role: "teacher" }))
+                    }
+                    className="h-24"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-lg">👨‍🏫</span>
+                      <span>Teacher</span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          );
+        default:
+          return null;
+      }
+    };
 
-  useEffect(() => {
-    if (onStepChange) onStepChange(currentStep);
-  }, [currentStep, onStepChange]);
+    useEffect(() => {
+      if (onStepChange) onStepChange(currentStep);
+    }, [currentStep, onStepChange]);
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        {steps.map((step, index) => (
-          <div
-            key={step.id}
-            className={`flex items-center ${
-              index < steps.length - 1 ? "flex-1" : ""
-            }`}
-          >
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          {steps.map((step, index) => (
             <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                index <= currentStep
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+              key={step.id}
+              className={`flex items-center ${
+                index < steps.length - 1 ? "flex-1" : ""
               }`}
             >
-              {index + 1}
-            </div>
-            {index < steps.length - 1 && (
               <div
-                className={`h-0.5 flex-1 ${
-                  index < currentStep ? "bg-primary" : "bg-muted"
+                className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                  index <= currentStep
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
                 }`}
-              />
-            )}
-          </div>
-        ))}
+              >
+                {index + 1}
+              </div>
+              {index < steps.length - 1 && (
+                <div
+                  className={`h-0.5 flex-1 ${
+                    index < currentStep ? "bg-primary" : "bg-muted"
+                  }`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <Alert>
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            All information is optinal, but the more you provide, the better
+            your experience will be. You can always update your profile later.
+          </AlertDescription>
+        </Alert>
+
+        <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
+
+        <DialogFooter className="flex justify-between">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleBack}
+              disabled={isLoading}
+            >
+              Back
+            </Button>
+          )}
+          {currentStep < steps.length - 1 ? (
+            <Button
+              type="button"
+              onClick={handleNext}
+              disabled={isLoading || !formData.Username}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isLoading || !formData.Username}
+            >
+              {isLoading ? "Creating..." : "Create Account"}
+            </Button>
+          )}
+        </DialogFooter>
       </div>
+    );
+  },
+);
 
-      <Alert>
-        <Terminal className="h-4 w-4" />
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          All information is optinal, but the more you provide, the better your
-          experience will be. You can always update your profile later.
-        </AlertDescription>
-      </Alert>
-
-      <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
-
-      <DialogFooter className="flex justify-between">
-        {currentStep > 0 && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleBack}
-            disabled={isLoading}
-          >
-            Back
-          </Button>
-        )}
-        {currentStep < steps.length - 1 ? (
-          <Button
-            type="button"
-            onClick={handleNext}
-            disabled={isLoading || !formData.Username}
-          >
-            Next
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isLoading || !formData.Username}
-          >
-            {isLoading ? "Creating..." : "Create Account"}
-          </Button>
-        )}
-      </DialogFooter>
-    </div>
-  );
-};
+CreateAccountForm.displayName = "CreateAccountForm"; // Good practice for React.memo components
 
 export const WalletConnectButton = () => {
   const { connect } = useConnectModal();
@@ -335,7 +348,7 @@ export const WalletConnectButton = () => {
     null,
   );
   const [createStep, setCreateStep] = useState(0);
-  const processedAddressRef = React.useRef<string | null>(null);
+  // const processedAddressRef = React.useRef<string | null>(null); // This ref is not used, consider removing if not needed
 
   useEffect(() => {
     if (!wallet) {
@@ -368,14 +381,12 @@ export const WalletConnectButton = () => {
 
       if (accountCreated) return;
 
-      // Attempt login
       try {
         await axios.post(baseUrl + "/user/login", {
           WalletAddress: account.address,
         });
         setAccountCreated(true);
         setShowCreateUserDialog(false);
-        // Fetch user profile
         const response = await axios.get(baseUrl + `/user/${account.address}`);
         setUser({
           walletAddress: account.address,
@@ -403,8 +414,7 @@ export const WalletConnectButton = () => {
     };
 
     run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account?.address]);
+  }, [account?.address, accountCreated, setUser]); // Added accountCreated and setUser to dependencies based on usage
 
   const wallets = useMemo(
     () => [
@@ -459,7 +469,6 @@ export const WalletConnectButton = () => {
   const handleCreateAccountSuccess = useCallback(() => {
     setAccountCreated(true);
     setShowCreateUserDialog(false);
-    // Fetch user info and set in zustand
     if (account?.address) {
       axios.get(baseUrl + `/user/${account.address}`).then((response) => {
         setUser({
@@ -477,12 +486,33 @@ export const WalletConnectButton = () => {
     }
   }, [account?.address, setUser]);
 
-  const handleCreateAccountErrorLogout = () => {
+  // Memoize handleCreateAccountErrorLogout
+  const handleCreateAccountErrorLogout = useCallback(() => {
     if (wallet) disconnect(wallet);
     setCreateAccountError(null);
     setShowCreateUserDialog(false);
-    window.location.reload();
-  };
+    window.location.reload(); // Consider if a full reload is always necessary or if resetting state is enough
+  }, [wallet, disconnect]);
+
+  // Memoize onOpenChange for the create user dialog
+  const handleCreateUserDialogOpenChange = useCallback(
+    (open: boolean) => {
+      if (!open && showCreateUserDialog) return; // Prevent closing by X or overlay
+      setShowCreateUserDialog(open);
+    },
+    [showCreateUserDialog],
+  );
+
+  // Memoize onOpenChange for the error dialog
+  const handleErrorDialogOpenChange = useCallback(() => {
+    setCreateAccountError(null);
+  }, []);
+
+  // Memoize the cancel and logout handler for the create account form
+  const handleCancelAndLogout = useCallback(() => {
+    if (wallet) disconnect(wallet);
+    setShowCreateUserDialog(false);
+  }, [wallet, disconnect]);
 
   return (
     <>
@@ -521,11 +551,7 @@ export const WalletConnectButton = () => {
 
       <Dialog
         open={showCreateUserDialog}
-        onOpenChange={(open) => {
-          // Prevent closing by X or overlay when dialog is for account creation
-          if (!open && showCreateUserDialog) return;
-          setShowCreateUserDialog(open);
-        }}
+        onOpenChange={handleCreateUserDialogOpenChange}
       >
         <DialogContent className="no-x-close max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -544,13 +570,7 @@ export const WalletConnectButton = () => {
           )}
           {account?.address && createStep === 0 && (
             <DialogFooter className="flex flex-row-reverse justify-between gap-2">
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  if (wallet) disconnect(wallet);
-                  setShowCreateUserDialog(false);
-                }}
-              >
+              <Button variant="destructive" onClick={handleCancelAndLogout}>
                 Cancel and Logout
               </Button>
             </DialogFooter>
@@ -560,7 +580,7 @@ export const WalletConnectButton = () => {
       {/* Error Dialog for account creation */}
       <Dialog
         open={!!createAccountError}
-        onOpenChange={() => setCreateAccountError(null)}
+        onOpenChange={handleErrorDialogOpenChange}
       >
         <DialogContent className="max-w-md">
           <DialogHeader>

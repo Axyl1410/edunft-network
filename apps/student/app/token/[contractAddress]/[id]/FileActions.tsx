@@ -1,6 +1,7 @@
 "use client";
 import { retrieveFile } from "@/services/file";
 import { Button } from "@workspace/ui/components/button";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -59,7 +60,7 @@ export function FileActions({
               className="absolute right-2 top-2 text-xl"
               onClick={() => setPreviewOpen(false)}
             >
-              ×
+              <X />
             </button>
             <div className="mb-2 font-semibold">Xem file đính kèm</div>
             {externalUrl.match(/\.(jpg|jpeg|png|gif)$/i) ? (

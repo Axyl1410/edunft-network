@@ -110,7 +110,7 @@ export const FileUpload = ({
               <motion.div
                 layoutId="file-upload"
                 className={cn(
-                  "relative z-40 mx-auto mt-4 flex w-full flex-col items-start justify-start overflow-hidden rounded-md bg-white p-4 md:h-24 dark:bg-neutral-900",
+                  "relative z-30 mx-auto mt-4 flex w-full flex-col items-start justify-start overflow-hidden rounded-md bg-white p-4 md:h-24 dark:bg-neutral-900",
                   "shadow-sm",
                 )}
               >

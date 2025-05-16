@@ -28,6 +28,7 @@ import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { Search } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { mintTo } from "thirdweb/extensions/erc721";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
@@ -329,9 +330,12 @@ export default function Page() {
                         <div className="p-4 text-center text-gray-500">
                           <p>
                             You don't have any collections yet.{" "}
-                            <span className="cursor-pointer text-blue-500 hover:underline">
+                            <Link
+                              href="/collection"
+                              className="cursor-pointer text-blue-500 hover:underline"
+                            >
                               Create one
-                            </span>
+                            </Link>
                           </p>
                         </div>
                       ) : (
