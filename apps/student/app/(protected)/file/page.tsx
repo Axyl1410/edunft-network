@@ -105,17 +105,14 @@ export default function Page() {
   useEffect(() => {
     if (!walletAddress) return;
     setLoading(true);
-    console.log("Fetching files for wallet:", walletAddress);
     getUserFiles(walletAddress)
       .then((data: FileData[]) => {
-        console.log("Fetched files:", data);
         setFiles(data);
       })
       .finally(() => setLoading(false));
   }, [walletAddress]);
 
   const handlePreview = async (file: FileData) => {
-    console.log("Preview file:", file);
     setPreviewDialogOpen(true);
     setPreviewLoading(true);
     setPreviewFile(file);
@@ -133,7 +130,6 @@ export default function Page() {
   };
 
   const handleDownload = async (file: FileData) => {
-    console.log("Download file:", file);
     setDownloadDialogOpen(true);
     setDownloadLoading(true);
     setDownloadFile(file);

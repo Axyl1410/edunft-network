@@ -8,11 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
 import { Download, Eye, Trash2 } from "lucide-react";
 
 export interface FileData {
@@ -72,58 +67,45 @@ export function FileTable({
                   {shortenDate(file.createdAt)}
                 </TableCell>
                 <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                        onClick={() => {
-                          onPreview(file);
-                        }}
-                      >
-                        <span>
-                          <Eye className="h-4 w-4" />
-                        </span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Preview</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                        onClick={() => {
-                          onDownload(file);
-                        }}
-                      >
-                        <span>
-                          <Download className="h-4 w-4" />
-                        </span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Download</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer text-red-500"
-                        onClick={() => {
-                          onDelete(file);
-                        }}
-                        disabled={deletingFileId === file.id}
-                      >
-                        <span>
-                          <Trash2 className="h-4 w-4" />
-                        </span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Delete</TooltipContent>
-                  </Tooltip>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      onPreview(file);
+                    }}
+                  >
+                    <span>
+                      <Eye className="h-4 w-4" />
+                    </span>
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      onDownload(file);
+                    }}
+                  >
+                    <span>
+                      <Download className="h-4 w-4" />
+                    </span>
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer text-red-500"
+                    onClick={() => {
+                      onDelete(file);
+                    }}
+                    disabled={deletingFileId === file.id}
+                  >
+                    <span>
+                      <Trash2 className="h-4 w-4" />
+                    </span>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))
