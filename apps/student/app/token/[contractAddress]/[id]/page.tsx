@@ -1,3 +1,4 @@
+import BackButton from "@/components/layout/back-button";
 import BuyListingButton from "@/components/nft/buy-listing-button";
 import Events from "@/components/nft/events";
 import { baseUrl } from "@/lib/client";
@@ -5,9 +6,8 @@ import { MARKETPLACE, thirdwebClientPublic } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
 import Loading from "@workspace/ui/components/loading";
-import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import axios from "axios";
-import { ArrowLeft, Clock, ExternalLink, Tag } from "lucide-react";
+import { Clock, ExternalLink, Tag } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -91,12 +91,7 @@ export default async function Page({
     <div className="container mx-auto p-4">
       {/* Breadcrumb Navigation */}
       <div className="mb-2">
-        <Link
-          href="/"
-          className="mb-4 inline-flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Browse
-        </Link>
+        <BackButton to="/" variant="outline" />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">

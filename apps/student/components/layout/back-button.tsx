@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -8,18 +9,28 @@ export interface BackButtonProps {
   to?: string;
   className?: string;
   children?: React.ReactNode;
+  variant?:
+    | "default"
+    | "outline"
+    | "link"
+    | "destructive"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
 }
 
 export const BackButton: React.FC<BackButtonProps> = ({
   to,
   className = "",
   children,
+  variant = "default",
 }) => {
   if (to) {
     return (
-      <Button asChild className={className}>
+      <Button asChild className={className} variant={variant}>
         <Link href={to} prefetch={false}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-1 h-4 w-4" />
           {children || "Back"}
         </Link>
       </Button>
@@ -30,8 +41,13 @@ export const BackButton: React.FC<BackButtonProps> = ({
     window.history.back();
   };
   return (
-    <Button type="button" onClick={handleClick} className={className}>
-      <ArrowLeft className="mr-2 h-4 w-4" />
+    <Button
+      type="button"
+      onClick={handleClick}
+      variant={variant}
+      className={className}
+    >
+      <ArrowLeft className="mr-1 h-4 w-4" />
       {children || "Back"}
     </Button>
   );

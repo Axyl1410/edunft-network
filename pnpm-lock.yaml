@@ -9497,6 +9497,15 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
 
+  '@ckeditor/ckeditor5-autoformat@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-heading': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
+
   '@ckeditor/ckeditor5-autoformat@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9742,6 +9751,17 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 44.3.0
       '@ckeditor/ckeditor5-utils': 44.3.0
       ckeditor5: 44.3.0
+
+  '@ckeditor/ckeditor5-code-block@45.0.0':
+    dependencies:
+      '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-enter': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-icons': 45.0.0
+      '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-code-block@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11016,7 +11036,7 @@ snapshots:
   '@ckeditor/ckeditor5-track-changes@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-code-block': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-code-block': 45.0.0
       '@ckeditor/ckeditor5-comments': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-editor-multi-root': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -15773,7 +15793,7 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-adapter-ckfinder': 45.0.0
       '@ckeditor/ckeditor5-alignment': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-autoformat': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-autoformat': 45.0.0
       '@ckeditor/ckeditor5-autosave': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-basic-styles': 45.0.0
       '@ckeditor/ckeditor5-block-quote': 45.0.0
@@ -15782,7 +15802,7 @@ snapshots:
       '@ckeditor/ckeditor5-ckfinder': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-cloud-services': 45.0.0
-      '@ckeditor/ckeditor5-code-block': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-code-block': 45.0.0
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-easy-image': 45.0.0
       '@ckeditor/ckeditor5-editor-balloon': 45.0.0

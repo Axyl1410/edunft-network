@@ -147,12 +147,12 @@ export default function Page() {
               Create a new NFT in your collection
             </p>
           </div>
-          <BackButton className="h-fit" to="/mint" />
+          <BackButton className="h-fit" to="/" />
         </div>
         <div className="flex w-full flex-col gap-12 md:flex-row">
           <div className="flex flex-1 flex-col gap-8">
             <Suspense fallback={<div>Loading...</div>}>
-              <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed border-gray-500 bg-white dark:border-neutral-600 dark:bg-black">
+              <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white dark:bg-black">
                 <FileUpload onChange={handleFileUpload} accept="image/*" />
               </div>
             </Suspense>

@@ -5,7 +5,7 @@ import {
   type Chain,
 } from "thirdweb";
 
-const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
+const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 const secretKey = process.env.TW_SECRET_KEY;
 
 if (!clientId) {
