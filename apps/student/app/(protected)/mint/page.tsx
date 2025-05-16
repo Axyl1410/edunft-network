@@ -10,6 +10,7 @@ import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
 import { baseUrl } from "@/lib/client";
+import { uploadFile } from "@/services/file";
 import getThirdwebContract from "@/services/get-contract";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -27,7 +28,7 @@ import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { Search } from "lucide-react";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { mintTo } from "thirdweb/extensions/erc721";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
 
@@ -96,6 +97,9 @@ export default function Page() {
     null,
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [fileDialogOpen, setFileDialogOpen] = useState(false);
 
   const {
     traitType,
@@ -151,12 +155,75 @@ export default function Page() {
         </div>
         <div className="flex w-full flex-col gap-12 md:flex-row">
           <div className="flex flex-1 flex-col gap-8">
-            <Suspense fallback={<div>Loading...</div>}>
-              <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white dark:bg-black">
-                <FileUpload onChange={handleFileUpload} accept="image/*" />
-              </div>
-            </Suspense>
-
+            {/* FileUpload cho ảnh NFT */}
+            <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white p-4 dark:bg-black">
+              <Label className="mb-2 block font-semibold">
+                Ảnh NFT <span className="text-red-600">*</span>
+              </Label>
+              <FileUpload onChange={setFiles} accept="image/*" />
+              {files && (
+                <div className="mt-2 text-xs text-gray-500">{files.name}</div>
+              )}
+            </div>
+            {/* Nút chọn file đính kèm */}
+            <div className="mx-auto flex w-full max-w-5xl items-center gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setFileDialogOpen(true)}
+                className=""
+              >
+                {attachedFile
+                  ? "Thay đổi tài liệu đính kèm"
+                  : "Đính kèm tài liệu (private, optional)"}
+              </Button>
+              {attachedFile && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-600">
+                    {attachedFile.name}
+                  </span>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setAttachedFile(null)}
+                    title="Xóa file đính kèm"
+                  >
+                    ✕
+                  </Button>
+                </div>
+              )}
+            </div>
+            {/* Dialog chọn file đính kèm */}
+            <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Chọn tài liệu đính kèm (private)</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                  <FileUpload onChange={setAttachedFile} accept="*" />
+                  {attachedFile && (
+                    <div className="mt-2 text-xs text-gray-500">
+                      {attachedFile.name}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setFileDialogOpen(false)}
+                  >
+                    Đóng
+                  </Button>
+                  <Button
+                    onClick={() => setFileDialogOpen(false)}
+                    disabled={!attachedFile}
+                  >
+                    Xác nhận
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
             {/* Live Preview */}
             <div className="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
               <h2 className="mb-4 text-lg font-semibold">NFT Preview</h2>
@@ -371,9 +438,34 @@ export default function Page() {
 
               <div className={"h-[45px]"}>
                 <TransactionButton
-                  disabled={!name || !selectedOption || !files || !description}
+                  disabled={
+                    !name ||
+                    !selectedOption ||
+                    !files ||
+                    !description ||
+                    uploading
+                  }
                   className={"!w-full"}
-                  transaction={() => {
+                  transaction={async () => {
+                    let externalUrl: string | undefined = undefined;
+                    if (attachedFile) {
+                      setUploading(true);
+                      try {
+                        const uploadRes = await uploadFile({
+                          file: attachedFile,
+                          type: "private",
+                        });
+                        // Chỉ lấy cid hoặc id
+                        const cid = uploadRes.cid || uploadRes.id;
+                        externalUrl = cid;
+                      } catch (err) {
+                        setUploading(false);
+                        setCurrentStep("error");
+                        setMessage("Tải file đính kèm thất bại");
+                        throw err;
+                      }
+                      setUploading(false);
+                    }
                     const metadata = {
                       name,
                       description,
@@ -382,11 +474,10 @@ export default function Page() {
                         attributesArray.length > 0
                           ? attributesArray
                           : undefined,
+                      ...(externalUrl ? { external_url: externalUrl } : {}),
                     };
-
                     setIsOpen(true);
                     setCurrentStep("sent");
-
                     return mintTo({
                       contract: handleContract(selectAddress as string) as any,
                       to: account.address,
@@ -406,13 +497,14 @@ export default function Page() {
                     setFiles(null);
                     setName("");
                     setDescription("");
+                    setAttachedFile(null);
                   }}
                   onError={(error) => {
                     setCurrentStep("error");
                     setMessage("Transaction failed: " + error.message);
                   }}
                 >
-                  <span>Mint NFT</span>
+                  <span>{uploading ? "Đang tải file..." : "Mint NFT"}</span>
                 </TransactionButton>
               </div>
             </form>

@@ -14,6 +14,7 @@ import { Suspense } from "react";
 import { getNFT } from "thirdweb/extensions/erc721";
 import { getAllValidListings } from "thirdweb/extensions/marketplace";
 import { Blobbie, MediaRenderer } from "thirdweb/react";
+import { FileActions } from "./FileActions";
 
 export const dynamic = "force-dynamic";
 
@@ -91,7 +92,7 @@ export default async function Page({
     <div className="container mx-auto p-4">
       {/* Breadcrumb Navigation */}
       <div className="mb-2">
-        <BackButton to="/" variant="outline" />
+        <BackButton variant="outline" className="cursor-pointer" />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -219,6 +220,13 @@ export default async function Page({
                 </a>
               </div>
             )}
+
+            {nft.metadata.external_url && (
+              <FileActions
+                externalUrl={nft.metadata.external_url}
+                owner={nft.owner}
+              />
+            )}
           </div>
 
           {/* Price and Buy Section */}
@@ -269,7 +277,7 @@ export default async function Page({
               <Clock className="mr-2 h-5 w-5 text-gray-500" />
               Transaction History
             </h2>
-            <div className="rounded-lg border border-gray-100 dark:border-gray-800">
+            <div className="rounded-lg">
               <Suspense fallback={<Loading text="Loading history..." />}>
                 <Events tokenId={nft.id} address={contractAddress} />
               </Suspense>
