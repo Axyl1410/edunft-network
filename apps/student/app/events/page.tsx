@@ -1,9 +1,16 @@
 "use client";
-import { useState } from "react";
-import { toast } from "sonner";
-// Update imports at the top
-import { AnimatePresence, motion } from "motion/react";
-
+import { baseUrl } from "@/lib/client";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog";
+import { Input } from "@workspace/ui/components/input";
+import { Label } from "@workspace/ui/components/label";
+import { Textarea } from "@workspace/ui/components/textarea";
+import axios from "axios";
 import {
   CheckCircle,
   ChevronLeft,
@@ -13,250 +20,93 @@ import {
   Search,
   Trophy,
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useActiveAccount } from "thirdweb/react";
 import { CompetitionCard } from "./components/CompetitionCard";
 import { EventCard } from "./components/EventCard";
 import { EventModal } from "./components/EventModal";
-
-// Remove the interfaces and update imports at the top
 import { Competition, Event, UserEvents } from "./types";
 
-// Example Data (updated dates to be relevant for May 15, 2025)
-const eventsData: (Event | Competition)[] = [
-  {
-    id: "1",
-    type: "event",
-    title:
-      "Harvard Business School Faculty Talk: Prof. Hise Gibson | Harvard Club of Vietnam",
-    startTime: "19:00",
-    endTime: "21:00",
-    date: new Date(2025, 4, 16), // May 16, 2025
-    location: {
-      address: "Quận 3, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-      coordinates: { lat: 10.7769, lng: 106.7009 },
-    },
-    organizer: {
-      id: "org1",
-      name: "Stephen & Nguyen",
-      avatar:
-        "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    },
-    participants: {
-      count: 24,
-      registered: Array(24).fill({
-        id: "user1",
-        avatar:
-          "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-      }),
-    },
-    category: "Education",
-    status: "upcoming",
-    imageUrl:
-      "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    description: "Join us for an insightful talk...",
-    capacity: 50,
-  },
-  {
-    id: "2",
-    type: "competition",
-    title: "Hackathon Fintech 2025",
-    startTime: "08:00",
-    endTime: "17:00",
-    date: new Date(2025, 4, 20), // May 20, 2025
-    deadline: new Date(2025, 4, 15), // May 15, 2025
-    location: {
-      address: "Quận 7, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-      coordinates: { lat: 10.7288, lng: 106.7182 },
-    },
-    organizer: {
-      id: "org2",
-      name: "Tech Community",
-      avatar:
-        "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    },
-    participants: {
-      count: 120,
-      registered: Array(120).fill({
-        id: "user1",
-        avatar:
-          "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-      }),
-    },
-    status: "upcoming",
-    imageUrl: "/images/hackathon.jpg",
-    description: "Build the future of finance...",
-    capacity: 200,
-    prize: "100,000,000 VND",
-    requirements: [
-      "Sinh viên năm 3-4",
-      "Có kiến thức về lập trình",
-      "Làm việc nhóm tốt",
-    ],
-  },
-  {
-    id: "3",
-    type: "competition",
-    title: "AI Challenge 2025",
-    startTime: "09:00",
-    endTime: "18:00",
-    date: new Date(2025, 4, 15), // May 15, 2025 (today)
-    deadline: new Date(2025, 4, 10), // May 10, 2025
-    location: {
-      address: "Quận 1, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-    },
-    organizer: {
-      id: "org3",
-      name: "AI Vietnam",
-      avatar:
-        "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    },
-    participants: {
-      count: 80,
-      registered: Array(80).fill({
-        id: "user1",
-        avatar:
-          "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-      }),
-    },
-    status: "ongoing",
-    imageUrl:
-      "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    description: "Solve real-world problems with AI...",
-    capacity: 100,
-    prize: "50,000,000 VND",
-    requirements: ["Kiến thức về ML/AI", "Python programming", "Data analysis"],
-  },
-  {
-    id: "4",
-    type: "event",
-    title: "Workshop: Blockchain Development",
-    startTime: "14:00",
-    endTime: "17:00",
-    date: new Date(2025, 4, 15), // May 15, 2025 (today)
-    location: {
-      address: "Quận 1, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-      coordinates: { lat: 10.7756, lng: 106.7019 },
-    },
-    organizer: {
-      id: "org4",
-      name: "Blockchain Vietnam",
-      avatar: "/avatars/blockchain.jpg",
-    },
-    participants: {
-      count: 45,
-      registered: Array(45).fill({
-        id: "user1",
-        avatar: "/avatars/default.jpg",
-      }),
-    },
-    category: "Technology",
-    status: "ongoing",
-    imageUrl:
-      "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    description: "Learn about blockchain development and Web3 technologies",
-    capacity: 50,
-  },
-  {
-    id: "5",
-    type: "event",
-    title: "UX/UI Design Meetup",
-    startTime: "18:30",
-    endTime: "20:30",
-    date: new Date(2025, 4, 17), // May 17, 2025
-    location: {
-      address: "Quận 2, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-      coordinates: { lat: 10.7868, lng: 106.7468 },
-    },
-    organizer: {
-      id: "org5",
-      name: "Design Community",
-      avatar: "/avatars/design.jpg",
-    },
-    participants: {
-      count: 30,
-      registered: Array(30).fill({
-        id: "user1",
-        avatar: "/avatars/default.jpg",
-      }),
-    },
-    category: "Design",
-    status: "upcoming",
-    imageUrl:
-      "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    description: "Monthly meetup for UX/UI designers to share experiences",
-    capacity: 40,
-  },
-  {
-    id: "6",
-    type: "event",
-    title: "Startup Networking Night",
-    startTime: "19:00",
-    endTime: "22:00",
-    date: new Date(2025, 4, 20), // May 20, 2025
-    location: {
-      address: "Quận 4, Hồ Chí Minh",
-      city: "Ho Chi Minh City",
-      coordinates: { lat: 10.7578, lng: 106.7042 },
-    },
-    organizer: {
-      id: "org6",
-      name: "Startup Vietnam",
-      avatar:
-        "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    },
-    participants: {
-      count: 65,
-      registered: Array(65).fill({
-        id: "user1",
-        avatar:
-          "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-      }),
-    },
-    category: "Networking",
-    status: "upcoming",
-    imageUrl:
-      "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400",
-    description: "Connect with fellow entrepreneurs and investors",
-    capacity: 100,
-  },
-];
-
 export default function Events() {
+  const account = useActiveAccount();
+  const walletAddress = account?.address;
+
   const [selectedItem, setSelectedItem] = useState<Event | Competition | null>(
     null,
   );
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [events, setEvents] = useState<(Event | Competition)[]>([]);
   const [userEvents, setUserEvents] = useState<UserEvents>({
-    registered: eventsData
-      .filter((event) => event.status === "upcoming")
-      .slice(0, 2),
-    attended: eventsData
-      .filter((event) => event.status === "completed")
-      .slice(0, 2),
+    registered: [],
+    attended: [],
   });
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [activeTab, setActiveTab] = useState<"events" | "competitions">(
     "events",
   );
-
-  const filteredEvents = eventsData.filter((item) => {
-    if (activeTab === "events") {
-      return item.type === "event";
-    } else {
-      return item.type === "competition";
-    }
+  const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    location: "",
+    description: "",
+    imageUrl: "",
+    category: "",
+    prize: "",
+    requirements: "",
+    deadline: "",
+    type: "event",
   });
+  const [step, setStep] = useState(0);
+
+  // Fetch all events/competitions
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(baseUrl + "/events")
+      .then((res) => {
+        const mapped = res.data.map((item: any) => ({
+          ...item,
+          id: item._id || item.id,
+        }));
+        setEvents(mapped);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Fetch user events (registered/attended)
+  useEffect(() => {
+    if (!walletAddress) return;
+    axios
+      .get(baseUrl + `/events/by-participant/${walletAddress}`)
+      .then((res) => {
+        const mapped = res.data.map((item: any) => ({
+          ...item,
+          id: item._id || item.id,
+        }));
+        setUserEvents((prev) => ({ ...prev, registered: mapped }));
+      });
+    // TODO: If you have attended events API, fetch and set attended
+  }, [walletAddress]);
+
+  // Filtered events/competitions
+  const filteredEvents = events.filter((item) =>
+    activeTab === "events"
+      ? item.type === "event"
+      : item.type === "competition",
+  );
 
   const todayEvents = filteredEvents.filter(
-    (e) => e.date.toDateString() === new Date().toDateString(),
+    (e) => new Date(e.date).toDateString() === new Date().toDateString(),
   );
 
   const upcomingEvents = filteredEvents.filter(
-    (e) => e.date > new Date() && e.status === "upcoming",
+    (e) => new Date(e.date) > new Date() && e.status === "upcoming",
   );
 
   const ongoingCompetitions = filteredEvents.filter(
@@ -267,69 +117,138 @@ export default function Events() {
     (e) => e.type === "competition" && e.status === "upcoming",
   );
 
-  const handleRegister = () => {
-    if (!selectedItem) return;
-
+  // Register event/competition
+  const handleRegister = useCallback(async () => {
+    if (!selectedItem || !walletAddress) return;
     // Check if already registered
     const isAlreadyRegistered = userEvents.registered.some(
       (event) => event.id === selectedItem.id,
     );
-
     if (isAlreadyRegistered) {
       toast.error("Bạn đã đăng ký sự kiện này!");
       return;
     }
-
     // Check capacity
-    if (selectedItem.participants.count >= selectedItem.capacity!) {
+    if (selectedItem.participants.count >= (selectedItem.capacity || 999999)) {
       toast.error("Sự kiện đã đạt số lượng người tham gia tối đa!");
       return;
     }
+    // Call API
+    try {
+      const isCompetition = selectedItem.type === "competition";
+      const url = isCompetition
+        ? baseUrl + `/events/competition/${selectedItem.id}/register`
+        : baseUrl + `/events/${selectedItem.id}/register`;
+      await axios.post(url, {
+        id: walletAddress,
+        avatar: "/avatars/default.jpg",
+      });
+      toast.success("Đăng ký thành công!", {
+        description: `Bạn đã đăng ký tham gia "${selectedItem.title}"`,
+      });
+      // Refetch user events
+      axios
+        .get(baseUrl + `/events/by-participant/${walletAddress}`)
+        .then((res) => {
+          const mapped = res.data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+          }));
+          setUserEvents((prev) => ({ ...prev, registered: mapped }));
+        });
+      // Refetch all events to update participants count
+      axios.get(baseUrl + "/events").then((res) => {
+        const mapped = res.data.map((item: any) => ({
+          ...item,
+          id: item._id || item.id,
+        }));
+        setEvents(mapped);
+        // Nếu modal đang mở, fetch lại event/competition vừa đăng ký và cập nhật selectedItem
+        if (selectedItem) {
+          const isCompetition = selectedItem.type === "competition";
+          const detailUrl = isCompetition
+            ? baseUrl + `/events/competition/${selectedItem.id}`
+            : baseUrl + `/events/${selectedItem.id}`;
+          axios.get(detailUrl).then((detailRes) => {
+            const updated = {
+              ...detailRes.data,
+              id: detailRes.data._id || detailRes.data.id,
+            };
+            setSelectedItem(updated);
+          });
+        }
+      });
+    } catch (e) {
+      toast.error("Đăng ký thất bại!");
+    }
+  }, [selectedItem, walletAddress, userEvents.registered]);
 
-    setUserEvents((prev) => ({
-      ...prev,
-      registered: [...prev.registered, selectedItem],
-    }));
-
-    // Update the participants count in eventsData
-    const updatedEventsData = eventsData.map((event) =>
-      event.id === selectedItem.id
-        ? {
-            ...event,
-            participants: {
-              ...event.participants,
-              count: event.participants.count + 1,
-            },
-          }
-        : event,
-    );
-
-    // Update the filtered events
-    const updatedEvent = updatedEventsData.find(
-      (event) => event.id === selectedItem.id,
-    );
-    setSelectedItem(updatedEvent || null);
-
-    toast.success("Đăng ký thành công!", {
-      description: `Bạn đã đăng ký tham gia "${selectedItem.title}"`,
-    });
-  };
   const getEventsForDate = (date: Date) => {
-    return eventsData.filter(
-      (event) => event.date.toDateString() === date.toDateString(),
+    return events.filter(
+      (event) => new Date(event.date).toDateString() === date.toDateString(),
     );
+  };
+
+  // Thêm hàm tạo cuộc thi
+  const handleCreateCompetition = async () => {
+    setFormLoading(true);
+    try {
+      await axios.post(baseUrl + "/events/competition", {
+        ...formData,
+        type: "competition",
+        requirements: formData.requirements
+          ? formData.requirements
+              .split("\n")
+              .map((r) => r.trim())
+              .filter(Boolean)
+          : [],
+      });
+      toast.success("Tạo cuộc thi thành công!");
+      setOpenDialog(false);
+      setStep(0);
+      setFormData({
+        title: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        location: "",
+        description: "",
+        imageUrl: "",
+        category: "",
+        prize: "",
+        requirements: "",
+        deadline: "",
+        type: "event",
+      });
+      // Refetch events/competitions
+      setLoading(true);
+      axios
+        .get(baseUrl + "/events")
+        .then((res) => {
+          const mapped = res.data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+          }));
+          setEvents(mapped);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      toast.error("Tạo cuộc thi thất bại!");
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-white">
-      <div className="container mx-auto flex flex-col gap-6 p-6 md:flex-row">
+      <div className="container mx-auto flex flex-col gap-4 p-2 md:flex-row md:gap-6 md:p-6">
         {/* Main Content */}
-        <div className="max-h-[calc(100vh-2rem)] w-full overflow-auto md:w-3/4">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="max-h-[calc(100vh-2rem)] w-full overflow-auto pb-4 md:w-3/4 md:pb-0">
+          <div className="mb-4 flex flex-col items-start justify-between gap-2 md:mb-6 md:flex-row md:items-center md:gap-0">
+            <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setActiveTab("events")}
-                className={`border-b-2 pb-2 text-2xl font-bold ${
+                className={`border-b-2 pb-2 text-base font-bold md:text-2xl ${
                   activeTab === "events"
                     ? "border-blue-500 text-blue-500"
                     : "border-transparent hover:border-gray-200"
@@ -339,7 +258,7 @@ export default function Events() {
               </button>
               <button
                 onClick={() => setActiveTab("competitions")}
-                className={`border-b-2 pb-2 text-2xl font-bold ${
+                className={`border-b-2 pb-2 text-base font-bold md:text-2xl ${
                   activeTab === "competitions"
                     ? "border-blue-500 text-blue-500"
                     : "border-transparent hover:border-gray-200"
@@ -348,8 +267,11 @@ export default function Events() {
                 Cuộc thi
               </button>
             </div>
-            <div className="flex gap-4">
-              <button className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm shadow-sm hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700">
+            <div className="flex w-full gap-2 md:w-auto md:gap-4">
+              <button
+                className="flex flex-1 items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm shadow-sm hover:bg-gray-200 md:flex-none dark:bg-zinc-800 dark:hover:bg-zinc-700"
+                onClick={() => setOpenDialog(true)}
+              >
                 <Plus size={18} />
                 {activeTab === "events" ? "Gửi sự kiện" : "Tạo cuộc thi"}
               </button>
@@ -363,7 +285,7 @@ export default function Events() {
           </div>
 
           {/* Timeline Events with scroll */}
-          <div className="space-y-6 pr-4">
+          <div className="space-y-4 pr-0 md:space-y-6 md:pr-4">
             {activeTab === "events" ? (
               <>
                 {/* Today's Events */}
@@ -478,10 +400,10 @@ export default function Events() {
         </div>
 
         {/* Sidebar */}
-        <div className="mt-6 w-full space-y-6 md:mt-0 md:w-1/4">
-          <div className="sticky top-6 space-y-6">
+        <div className="mt-4 w-full space-y-4 md:mt-0 md:w-1/4 md:space-y-6">
+          <div className="sticky top-4 space-y-4 md:top-6 md:space-y-6">
             {/* Calendar Section */}
-            <div className="rounded-xl bg-gray-50 p-4 shadow-lg dark:bg-zinc-900">
+            <div className="rounded-xl bg-gray-50 p-3 shadow-lg md:p-4 dark:bg-zinc-900">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold">
                   {currentMonth.toLocaleString("default", {
@@ -569,9 +491,9 @@ export default function Events() {
                           onClick={() => {
                             setDate(currentDate);
                             if (hasEvents) {
-                              const filtered = eventsData.filter(
+                              const filtered = events.filter(
                                 (event) =>
-                                  event.date.toDateString() ===
+                                  new Date(event.date).toDateString() ===
                                   currentDate.toDateString(),
                               );
                               filtered.forEach((event) => {
@@ -602,7 +524,7 @@ export default function Events() {
             </div>
 
             {/* Registered Events */}
-            <div className="rounded-xl bg-gray-50 p-4 shadow-lg dark:bg-zinc-900">
+            <div className="rounded-xl bg-gray-50 p-3 shadow-lg md:p-4 dark:bg-zinc-900">
               <h2 className="mb-4 text-xl font-bold">Your Events</h2>
               <div className="space-y-4">
                 <div>
@@ -616,7 +538,10 @@ export default function Events() {
                         className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 dark:bg-zinc-800"
                       >
                         <img
-                          src={event.imageUrl}
+                          src={
+                            event.imageUrl ||
+                            "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400"
+                          }
                           alt={event.title}
                           className="h-8 w-8 rounded"
                         />
@@ -644,7 +569,10 @@ export default function Events() {
                         className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 dark:bg-zinc-800"
                       >
                         <img
-                          src={event.imageUrl}
+                          src={
+                            event.imageUrl ||
+                            "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400"
+                          }
                           alt={event.title}
                           className="h-8 w-8 rounded"
                         />
@@ -668,32 +596,225 @@ export default function Events() {
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {selectedItem && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm dark:bg-black/40"
-              onClick={() => setSelectedItem(null)}
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 z-50"
+      <EventModal
+        item={selectedItem!}
+        open={!!selectedItem}
+        onOpenChange={(open) => {
+          if (!open) setSelectedItem(null);
+        }}
+        onRegister={handleRegister}
+      />
+
+      {/* Dialog tạo cuộc thi */}
+      {activeTab === "competitions" && (
+        <Dialog
+          open={openDialog}
+          onOpenChange={(open) => {
+            setOpenDialog(open);
+            if (!open) setStep(0);
+          }}
+        >
+          <DialogContent className="w-full max-w-lg overflow-hidden">
+            <DialogHeader className="px-6 pt-6">
+              <DialogTitle>Tạo cuộc thi mới</DialogTitle>
+            </DialogHeader>
+            <form
+              className="flex max-h-[80vh] flex-col gap-6 overflow-y-auto px-6 pb-6 pt-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateCompetition();
+              }}
             >
-              <EventModal
-                item={selectedItem}
-                onClose={() => setSelectedItem(null)}
-                onRegister={handleRegister}
-              />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              {step === 0 && (
+                <>
+                  <div>
+                    <Label htmlFor="title">Tên cuộc thi</Label>
+                    <Input
+                      id="title"
+                      value={formData.title}
+                      onChange={(e) =>
+                        setFormData((f) => ({ ...f, title: e.target.value }))
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Label htmlFor="date">Ngày</Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) =>
+                          setFormData((f) => ({ ...f, date: e.target.value }))
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label htmlFor="deadline">Hạn chót đăng ký</Label>
+                      <Input
+                        id="deadline"
+                        type="date"
+                        value={formData.deadline}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            deadline: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Label htmlFor="startTime">Bắt đầu</Label>
+                      <Input
+                        id="startTime"
+                        type="time"
+                        value={formData.startTime}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            startTime: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label htmlFor="endTime">Kết thúc</Label>
+                      <Input
+                        id="endTime"
+                        type="time"
+                        value={formData.endTime}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            endTime: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="imageUrl">Ảnh (URL)</Label>
+                    <Input
+                      id="imageUrl"
+                      value={formData.imageUrl}
+                      onChange={(e) =>
+                        setFormData((f) => ({ ...f, imageUrl: e.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Label htmlFor="location">Địa chỉ</Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            location: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label htmlFor="category">Thành phố</Label>
+                      <Input
+                        id="category"
+                        value={formData.category}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            category: e.target.value,
+                          }))
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setOpenDialog(false)}
+                    >
+                      Huỷ
+                    </Button>
+                    <Button type="button" onClick={() => setStep(1)}>
+                      Tiếp tục
+                    </Button>
+                  </div>
+                </>
+              )}
+              {step === 1 && (
+                <>
+                  <div>
+                    <Label htmlFor="prize">Giải thưởng</Label>
+                    <Input
+                      id="prize"
+                      value={formData.prize}
+                      onChange={(e) =>
+                        setFormData((f) => ({ ...f, prize: e.target.value }))
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Mô tả</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData((f) => ({
+                          ...f,
+                          description: e.target.value,
+                        }))
+                      }
+                      required
+                      rows={3}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="requirements">
+                      Yêu cầu (mỗi dòng 1 yêu cầu)
+                    </Label>
+                    <Textarea
+                      id="requirements"
+                      value={formData.requirements}
+                      onChange={(e) =>
+                        setFormData((f) => ({
+                          ...f,
+                          requirements: e.target.value,
+                        }))
+                      }
+                      rows={3}
+                    />
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setStep(0)}
+                    >
+                      Quay lại
+                    </Button>
+                    <Button type="submit" disabled={formLoading}>
+                      {formLoading ? "Đang tạo..." : "Tạo cuộc thi"}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
