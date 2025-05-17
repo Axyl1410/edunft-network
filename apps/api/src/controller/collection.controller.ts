@@ -102,4 +102,13 @@ export class CollectionController {
       await this.collectionService.getOwnersByWalletAddress(walletAddress);
     return this.handleResult(result);
   }
+
+  @Get(':walletAddress/collection')
+  async getCollectionByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<{ holders: HoldingItem[]; owner: OwnerItem[] }> {
+    const result =
+      await this.collectionService.getCollectionByWalletAddress(walletAddress);
+    return this.handleResult(result);
+  }
 }

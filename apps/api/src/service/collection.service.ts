@@ -275,4 +275,44 @@ export class CollectionService {
       );
     }
   }
+
+  async getCollectionByWalletAddress(
+    walletAddress: string,
+  ): Promise<
+    Result<
+      { holders: HoldingItem[]; owner: OwnerItem[] },
+      DatabaseFailure | ValidationFailure
+    >
+  > {
+    if (!walletAddress) {
+      return new Fail(new ValidationFailure('User', walletAddress));
+    }
+    try {
+      const user =
+        await this.userService.getUserIdByWalletAddress(walletAddress);
+      if (!user) {
+        return new Fail(
+          new DatabaseFailure(
+            `User with wallet address ${walletAddress} not found.`,
+          ),
+        );
+      }
+      const collection = await this.collectionModel
+        .findOne({ user: user._id })
+        .lean()
+        .exec();
+      if (!collection) {
+        return new Success({ holders: [], owner: [] });
+      }
+      return new Success({
+        holders: collection.holders || [],
+        owner: collection.owner || [],
+      });
+    } catch (error) {
+      console.error('Error fetching collection by wallet address:', error);
+      return new Fail(
+        new DatabaseFailure('Failed to fetch collection by wallet address.'),
+      );
+    }
+  }
 }

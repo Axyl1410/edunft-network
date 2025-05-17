@@ -207,20 +207,6 @@ export default async function Page({
               </div>
             )}
 
-            {/* Additional Details */}
-            {nft.metadata.external_url && (
-              <div className="mt-4 text-sm">
-                <a
-                  href={nft.metadata.external_url as string}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" /> External Link
-                </a>
-              </div>
-            )}
-
             {nft.metadata.external_url && (
               <FileActions
                 externalUrl={nft.metadata.external_url}

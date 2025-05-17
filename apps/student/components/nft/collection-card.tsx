@@ -70,6 +70,16 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
           <span className="mb-1 text-sm">
             {`Symbol: ${metadata?.symbol || "N/A"}`}
           </span>
+          {metadata?.external_url && (
+            <a
+              href={metadata.external_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-1 w-fit rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700 hover:underline"
+            >
+              📎 File attached
+            </a>
+          )}
           {showTotal && (
             <span className="text-sm">
               {`Total: ${total === null ? "..." : total}`}

@@ -1,5 +1,5 @@
 import type { NFT as NFTType } from "thirdweb";
-import { DirectListing, EnglishAuction } from "thirdweb/extensions/marketplace";
+import { DirectListing } from "thirdweb/extensions/marketplace";
 import NFT, { LoadingNFTComponent } from "./nft";
 
 type Props = {
@@ -7,7 +7,6 @@ type Props = {
     tokenId: bigint;
     nft?: NFTType;
     directListing?: DirectListing;
-    auctionListing?: EnglishAuction;
   }[];
   address: string;
 };

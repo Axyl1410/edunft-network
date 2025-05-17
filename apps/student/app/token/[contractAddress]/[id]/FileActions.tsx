@@ -1,6 +1,7 @@
 "use client";
 import { retrieveFile } from "@/services/file";
 import { Button } from "@workspace/ui/components/button";
+import Loading from "@workspace/ui/components/loading";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
@@ -15,13 +16,33 @@ export function FileActions({
   const account = useActiveAccount();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState<string | null>(null);
 
   if (!account || !externalUrl) return null;
   if (account.address.toLowerCase() !== owner.toLowerCase()) return null;
 
   return (
     <div className="mt-4 flex gap-2">
-      <Button variant="outline" onClick={() => setPreviewOpen(true)}>
+      <Button
+        variant="outline"
+        onClick={async () => {
+          setPreviewOpen(true);
+          setPreviewLoading(true);
+          setPreviewError(null);
+          setPreviewUrl(null);
+          try {
+            const { url } = await retrieveFile(externalUrl, "private");
+            if (!url) throw new Error("Cannot preview this file");
+            setPreviewUrl(url);
+          } catch (error) {
+            setPreviewError("Không thể xem trước file này");
+          } finally {
+            setPreviewLoading(false);
+          }
+        }}
+      >
         Xem file đính kèm
       </Button>
       <Button
@@ -63,30 +84,26 @@ export function FileActions({
               <X />
             </button>
             <div className="mb-2 font-semibold">Xem file đính kèm</div>
-            {externalUrl.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-              <img
-                src={externalUrl}
-                alt="attachment"
-                className="mx-auto max-h-96"
-              />
-            ) : externalUrl.match(/\.(pdf)$/i) ? (
+            {previewLoading ? (
+              <div className="flex h-96 items-center justify-center">
+                <Loading text="Đang tải file..." />
+              </div>
+            ) : previewUrl ? (
               <iframe
-                src={externalUrl}
+                src={previewUrl}
                 title="attachment"
                 className="h-96 w-full"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const fallback = document.createElement("div");
+                  fallback.className = "text-red-500 text-center";
+                  fallback.innerText = "Không thể xem trước file này";
+                  e.currentTarget.parentNode?.appendChild(fallback);
+                }}
               />
-            ) : externalUrl.match(/\.(mp4|webm)$/i) ? (
-              <video src={externalUrl} controls className="mx-auto max-h-96" />
-            ) : (
-              <a
-                href={externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                Mở file
-              </a>
-            )}
+            ) : previewError ? (
+              <div className="text-red-500">{previewError}</div>
+            ) : null}
           </div>
         </div>
       )}
