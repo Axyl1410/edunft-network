@@ -143,12 +143,14 @@ export default function Page() {
   };
 
   return (
-    <div className="my-4 flex w-full justify-center">
+    <div className="my-4 flex w-full justify-center bg-white dark:bg-black">
       <div className="mb-4 flex w-full flex-col">
         <div className="flex flex-col-reverse justify-between gap-8 pb-10 md:flex-row">
           <div>
-            <h1 className="text-xl font-bold sm:text-3xl">Mint your NFT</h1>
-            <p className="text-md font-bold sm:text-xl">
+            <h1 className="text-xl font-bold sm:text-3xl dark:text-neutral-100">
+              Mint your NFT
+            </h1>
+            <p className="text-md font-bold sm:text-xl dark:text-neutral-200">
               Create a new NFT in your collection
             </p>
           </div>
@@ -158,12 +160,14 @@ export default function Page() {
           <div className="flex flex-1 flex-col gap-8">
             {/* FileUpload cho ảnh NFT */}
             <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white p-4 dark:bg-black">
-              <Label className="mb-2 block font-semibold">
+              <Label className="mb-2 block font-semibold dark:text-neutral-200">
                 Ảnh NFT <span className="text-red-600">*</span>
               </Label>
               <FileUpload onChange={setFiles} accept="image/*" />
               {files && (
-                <div className="mt-2 text-xs text-gray-500">{files.name}</div>
+                <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                  {files.name}
+                </div>
               )}
             </div>
             {/* Nút chọn file đính kèm */}
@@ -180,7 +184,7 @@ export default function Page() {
               </Button>
               {attachedFile && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400">
                     {attachedFile.name}
                   </span>
                   <Button
@@ -204,7 +208,7 @@ export default function Page() {
                 <div className="flex flex-col gap-4">
                   <FileUpload onChange={setAttachedFile} accept="*" />
                   {attachedFile && (
-                    <div className="mt-2 text-xs text-gray-500">
+                    <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                       {attachedFile.name}
                     </div>
                   )}
@@ -226,10 +230,12 @@ export default function Page() {
               </DialogContent>
             </Dialog>
             {/* Live Preview */}
-            <div className="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-              <h2 className="mb-4 text-lg font-semibold">NFT Preview</h2>
+            <div className="w-full rounded-lg border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+              <h2 className="mb-4 text-lg font-semibold dark:text-neutral-100">
+                NFT Preview
+              </h2>
               <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
-                <div className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-lg border border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                <div className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-lg border border-neutral-300 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800">
                   {files ? (
                     <SkeletonImage
                       src={URL.createObjectURL(files)}
@@ -237,31 +243,41 @@ export default function Page() {
                       className="h-full w-full object-contain"
                     />
                   ) : (
-                    <span className="text-sm text-gray-400">No image</span>
+                    <span className="text-sm text-neutral-400 dark:text-neutral-500">
+                      No image
+                    </span>
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="mb-2 text-xl font-semibold">
-                    {name || <span className="text-gray-400">NFT Name</span>}
+                  <div className="mb-2 text-xl font-semibold dark:text-neutral-100">
+                    {name || (
+                      <span className="text-neutral-400 dark:text-neutral-500">
+                        NFT Name
+                      </span>
+                    )}
                   </div>
                   {selectedOption && (
-                    <div className="mb-2 text-sm text-gray-500">
+                    <div className="mb-2 text-sm text-neutral-500 dark:text-neutral-400">
                       Collection: {selectedOption}
                     </div>
                   )}
-                  <div className="mb-4 whitespace-pre-wrap text-sm text-gray-600 dark:text-gray-300">
+                  <div className="mb-4 whitespace-pre-wrap text-sm text-neutral-600 dark:text-neutral-300">
                     {description || (
-                      <span className="text-gray-400">No description</span>
+                      <span className="text-neutral-400 dark:text-neutral-500">
+                        No description
+                      </span>
                     )}
                   </div>
                   {attributesArray.length > 0 && (
                     <div className="mt-4">
-                      <h3 className="mb-2 text-sm font-medium">Attributes</h3>
+                      <h3 className="mb-2 text-sm font-medium dark:text-neutral-200">
+                        Attributes
+                      </h3>
                       <div className="flex flex-wrap gap-2">
                         {attributesArray.map((attr, index) => (
                           <div
                             key={index}
-                            className="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
+                            className="rounded-md bg-neutral-100 px-2 py-1 text-xs dark:bg-neutral-800 dark:text-neutral-200"
                           >
                             <span className="font-medium">
                               {attr.trait_type}:
@@ -288,19 +304,21 @@ export default function Page() {
               <div>
                 <Label
                   htmlFor="collection"
-                  className="dark:text-text-dark text-sm/6 font-bold"
+                  className="dark:text-text-dark text-sm/6 font-bold dark:text-neutral-200"
                 >
                   Collection <span className="text-red-600"> *</span>
                 </Label>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <div className="relative mt-2 flex h-24 w-full cursor-pointer items-center gap-4 overflow-hidden rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                    <div className="relative mt-2 flex h-24 w-full cursor-pointer items-center gap-4 overflow-hidden rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
                       {selectedOption || (
                         <>
-                          <div className="grid h-16 w-16 place-items-center rounded-md bg-gray-200 dark:bg-neutral-800">
-                            <span className="text-gray-500">+</span>
+                          <div className="grid h-16 w-16 place-items-center rounded-md bg-neutral-200 dark:bg-neutral-800">
+                            <span className="text-neutral-500 dark:text-neutral-400">
+                              +
+                            </span>
                           </div>
-                          <p className="text-sm/6 font-medium">
+                          <p className="text-sm/6 font-medium dark:text-neutral-200">
                             Select a collection
                           </p>
                         </>
@@ -309,16 +327,18 @@ export default function Page() {
                   </DialogTrigger>
                   <DialogContent className="max-w-md">
                     <DialogHeader>
-                      <DialogTitle>Select Collection</DialogTitle>
+                      <DialogTitle className="dark:text-neutral-100">
+                        Select Collection
+                      </DialogTitle>
                     </DialogHeader>
                     <div className="relative my-2">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                       <Input
                         type="text"
                         placeholder="Search collections..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-8"
+                        className="pl-8 dark:bg-neutral-900 dark:text-neutral-100"
                       />
                     </div>
                     <div className="mb-4 max-h-[300px] overflow-y-auto">
@@ -327,12 +347,12 @@ export default function Page() {
                           .toLowerCase()
                           .includes(searchQuery.toLowerCase()),
                       ).length === 0 ? (
-                        <div className="p-4 text-center text-gray-500">
+                        <div className="p-4 text-center text-neutral-500 dark:text-neutral-400">
                           <p>
                             You don't have any collections yet.{" "}
                             <Link
                               href="/collection"
-                              className="cursor-pointer text-blue-500 hover:underline"
+                              className="cursor-pointer text-blue-500 hover:underline dark:text-blue-400"
                             >
                               Create one
                             </Link>
@@ -348,7 +368,7 @@ export default function Page() {
                           .map((collection) => (
                             <div
                               key={collection.address}
-                              className={`cursor-pointer border-b border-gray-100 p-1 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800 ${tempSelectAddress === collection.address ? "bg-gray-100 dark:bg-gray-700" : ""}`}
+                              className={`cursor-pointer border-b border-neutral-100 p-1 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800 ${tempSelectAddress === collection.address ? "bg-neutral-100 dark:bg-neutral-700" : ""}`}
                               onClick={() => {
                                 setTempSelectAddress(collection.address);
                                 setTempSelectedOption(
@@ -390,7 +410,7 @@ export default function Page() {
               <div>
                 <Label
                   htmlFor="title"
-                  className="dark:text-text-dark text-sm/6 font-bold"
+                  className="dark:text-text-dark text-sm/6 font-bold dark:text-neutral-200"
                 >
                   NFT Name <span className="text-red-600"> *</span>
                 </Label>
@@ -401,14 +421,14 @@ export default function Page() {
                   placeholder="Enter a name for your NFT"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="mt-2"
+                  className="mt-2 dark:bg-neutral-900 dark:text-neutral-100"
                 />
               </div>
 
               <div>
                 <Label
                   htmlFor="description"
-                  className="dark:text-text-dark text-sm/6 font-bold text-gray-900"
+                  className="dark:text-text-dark text-sm/6 font-bold text-neutral-900 dark:text-neutral-200"
                 >
                   Description <span className="text-red-600"> *</span>
                 </Label>
@@ -418,9 +438,9 @@ export default function Page() {
                   rows={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="mt-2"
+                  className="mt-2 dark:bg-neutral-900 dark:text-neutral-100"
                 />
-                <p className="mt-3 text-sm/6">
+                <p className="mt-3 text-sm/6 dark:text-neutral-400">
                   Write a few sentences about your NFT
                 </p>
               </div>

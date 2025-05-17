@@ -5,7 +5,6 @@ import TransactionDialog, {
 } from "@/components/wallet/transaction-dialog";
 import { baseUrl } from "@/lib/client";
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
-import getMetadata from "@/services/get-metadata";
 import { Button } from "@workspace/ui/components/button";
 import { FileUpload } from "@workspace/ui/components/file-upload";
 import { Input } from "@workspace/ui/components/input";
@@ -101,16 +100,15 @@ export default function Page() {
         contractAddress = unwrapped;
       }
 
-      if (!contractAddress)
+      if (!contractAddress || !name)
         throw new Error("Failed to extract contract address");
 
       console.log("Contract address:", contractAddress);
-
-      const { metadata } = await getMetadata(contractAddress);
+      console.log("Name:", name);
 
       await axios.post(`${baseUrl}/collections/${account.address}/owners`, {
         address: contractAddress,
-        name: (await metadata).name as string,
+        name: name,
       });
 
       setCurrentStep("success");
