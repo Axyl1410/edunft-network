@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { EventGateway } from '../gateway/event.gateway';
 import {
   Competition,
   CompetitionDocument,
@@ -14,16 +15,21 @@ export class EventService {
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
     @InjectModel(Competition.name)
     private competitionModel: Model<CompetitionDocument>,
+    private readonly eventGateway: EventGateway,
   ) {}
 
   async createEvent(data: Partial<Event>): Promise<Event> {
     const created = new this.eventModel(data);
-    return created.save();
+    const saved = await created.save();
+    this.eventGateway.emitEventCreated(saved);
+    return saved;
   }
 
   async createCompetition(data: Partial<Competition>): Promise<Competition> {
     const created = new this.competitionModel(data);
-    return created.save();
+    const saved = await created.save();
+    this.eventGateway.emitCompetitionCreated(saved);
+    return saved;
   }
 
   async getAllEvents(): Promise<Event[]> {
@@ -56,7 +62,7 @@ export class EventService {
     eventId: string,
     participant: { id: string; avatar: string },
   ): Promise<Event | null> {
-    return this.eventModel
+    const updated = await this.eventModel
       .findByIdAndUpdate(
         eventId,
         {
@@ -66,13 +72,21 @@ export class EventService {
         { new: true },
       )
       .exec();
+    if (updated) {
+      this.eventGateway.emitParticipantRegistered({
+        type: 'event',
+        item: updated,
+        participant,
+      });
+    }
+    return updated;
   }
 
   async registerParticipantToCompetition(
     competitionId: string,
     participant: { id: string; avatar: string },
   ): Promise<Competition | null> {
-    return this.competitionModel
+    const updated = await this.competitionModel
       .findByIdAndUpdate(
         competitionId,
         {
@@ -82,6 +96,14 @@ export class EventService {
         { new: true },
       )
       .exec();
+    if (updated) {
+      this.eventGateway.emitParticipantRegistered({
+        type: 'competition',
+        item: updated,
+        participant,
+      });
+    }
+    return updated;
   }
 
   async getEventsByParticipant(walletAddress: string): Promise<Event[]> {

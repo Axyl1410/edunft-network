@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { EventGateway } from 'src/gateway/event.gateway';
 import { EventController } from '../controller/event.controller';
 import {
   Competition,
@@ -17,7 +18,6 @@ import { EventService } from '../service/event.service';
     ]),
   ],
   controllers: [EventController],
-  providers: [EventService],
-  exports: [EventService],
+  providers: [EventService, EventGateway],
 })
 export class EventModule {}

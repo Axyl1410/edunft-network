@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from '../controller/app.controller';
+import { EventGateway } from '../gateway/event.gateway';
 import { AppService } from '../service/app.service';
 import { CollectionModule } from './collection.module';
 import { EventModule } from './event.module';
@@ -33,6 +34,6 @@ import { VoteModule } from './vote.module';
     EventModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventGateway],
 })
 export class AppModule {}

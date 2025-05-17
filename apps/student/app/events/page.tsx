@@ -21,6 +21,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
 import { CompetitionCard } from "./components/CompetitionCard";
@@ -238,6 +239,87 @@ export default function Events() {
       setFormLoading(false);
     }
   };
+
+  // Add handleCreateEvent function
+  const handleCreateEvent = async () => {
+    setFormLoading(true);
+    try {
+      await axios.post(baseUrl + "/events", {
+        ...formData,
+        type: "event",
+      });
+      toast.success("Gửi sự kiện thành công!");
+      setOpenDialog(false);
+      setStep(0);
+      setFormData({
+        title: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        location: "",
+        description: "",
+        imageUrl: "",
+        category: "",
+        prize: "",
+        requirements: "",
+        deadline: "",
+        type: "event",
+      });
+      // Refetch events
+      setLoading(true);
+      axios
+        .get(baseUrl + "/events")
+        .then((res) => {
+          const mapped = res.data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+          }));
+          setEvents(mapped);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      toast.error("Gửi sự kiện thất bại!");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Connect to the backend gateway (adjust the URL if needed)
+    const socket: Socket = io(baseUrl.replace(/\/api$/, ""));
+
+    socket.on("eventCreated", (event) => {
+      setEvents((prev) => [{ ...event, id: event._id || event.id }, ...prev]);
+      toast.success("Sự kiện mới được tạo!", { description: event.title });
+    });
+
+    socket.on("competitionCreated", (competition) => {
+      setEvents((prev) => [
+        { ...competition, id: competition._id || competition.id },
+        ...prev,
+      ]);
+      toast.success("Cuộc thi mới được tạo!", {
+        description: competition.title,
+      });
+    });
+
+    socket.on("participantRegistered", ({ type, item, participant }) => {
+      setEvents((prev) =>
+        prev.map((e) =>
+          e.id === item._id || e.id === item.id
+            ? { ...item, id: item._id || item.id }
+            : e,
+        ),
+      );
+      toast("Có người vừa đăng ký tham gia!", {
+        description: `${participant.id} đã đăng ký ${type === "event" ? "sự kiện" : "cuộc thi"} "${item.title}"`,
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-white">
@@ -811,6 +893,138 @@ export default function Events() {
                   </div>
                 </>
               )}
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Add Dialog for creating event */}
+      {activeTab === "events" && (
+        <Dialog
+          open={openDialog}
+          onOpenChange={(open) => {
+            setOpenDialog(open);
+            if (!open) setStep(0);
+          }}
+        >
+          <DialogContent className="w-full max-w-lg overflow-hidden">
+            <DialogHeader className="px-6 pt-6">
+              <DialogTitle>Gửi sự kiện mới</DialogTitle>
+            </DialogHeader>
+            <form
+              className="flex max-h-[80vh] flex-col gap-6 overflow-y-auto px-6 pb-6 pt-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateEvent();
+              }}
+            >
+              <div>
+                <Label htmlFor="title">Tên sự kiện</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData((f) => ({ ...f, title: e.target.value }))
+                  }
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="date">Ngày</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, date: e.target.value }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="category">Thành phố</Label>
+                  <Input
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, category: e.target.value }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="startTime">Bắt đầu</Label>
+                  <Input
+                    id="startTime"
+                    type="time"
+                    value={formData.startTime}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, startTime: e.target.value }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="endTime">Kết thúc</Label>
+                  <Input
+                    id="endTime"
+                    type="time"
+                    value={formData.endTime}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, endTime: e.target.value }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="imageUrl">Ảnh (URL)</Label>
+                <Input
+                  id="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={(e) =>
+                    setFormData((f) => ({ ...f, imageUrl: e.target.value }))
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="location">Địa chỉ</Label>
+                <Input
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData((f) => ({ ...f, location: e.target.value }))
+                  }
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Mô tả</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData((f) => ({ ...f, description: e.target.value }))
+                  }
+                  required
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpenDialog(false)}
+                >
+                  Huỷ
+                </Button>
+                <Button type="submit" disabled={formLoading}>
+                  {formLoading ? "Đang gửi..." : "Gửi sự kiện"}
+                </Button>
+              </div>
             </form>
           </DialogContent>
         </Dialog>
