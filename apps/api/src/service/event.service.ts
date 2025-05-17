@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -7,6 +8,7 @@ import {
   CompetitionDocument,
   Event,
   EventDocument,
+  Participant,
 } from '../schema/event.schema';
 
 @Injectable()
@@ -61,7 +63,14 @@ export class EventService {
   async registerParticipantToEvent(
     eventId: string,
     participant: { id: string; avatar: string },
-  ): Promise<Event | null> {
+  ): Promise<Event | { error: string } | null> {
+    const event = await this.eventModel.findById(eventId).exec();
+    if (!event) return null;
+    const registered = event.participants.registered as Participant[];
+    const alreadyRegistered = registered.some((p) => p.id === participant.id);
+    if (alreadyRegistered) {
+      return { error: 'already_registered' };
+    }
     const updated = await this.eventModel
       .findByIdAndUpdate(
         eventId,
@@ -85,7 +94,16 @@ export class EventService {
   async registerParticipantToCompetition(
     competitionId: string,
     participant: { id: string; avatar: string },
-  ): Promise<Competition | null> {
+  ): Promise<Competition | { error: string } | null> {
+    const competition = await this.competitionModel
+      .findById(competitionId)
+      .exec();
+    if (!competition) return null;
+    const registered = competition.participants.registered as Participant[];
+    const alreadyRegistered = registered.some((p) => p.id === participant.id);
+    if (alreadyRegistered) {
+      return { error: 'already_registered' };
+    }
     const updated = await this.competitionModel
       .findByIdAndUpdate(
         competitionId,
@@ -115,8 +133,14 @@ export class EventService {
   async getCompetitionsByParticipant(
     walletAddress: string,
   ): Promise<Competition[]> {
-    return this.competitionModel
+    // Query for competitions where any registered participant has the given walletAddress
+    const competitions = await this.competitionModel
       .find({ 'participants.registered.id': walletAddress })
       .exec();
+    // Debug log if empty
+    if (!competitions || competitions.length === 0) {
+      console.log('No competitions found for participant', walletAddress);
+    }
+    return competitions;
   }
 }

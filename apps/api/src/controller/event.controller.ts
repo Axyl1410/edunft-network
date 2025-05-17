@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { Competition, Event } from '../schema/event.schema';
 import { EventService } from '../service/event.service';
 
@@ -52,16 +53,42 @@ export class EventController {
   async registerParticipantToEvent(
     @Param('id') id: string,
     @Body() participant: { id: string; avatar: string },
+    @Res() res: Response,
   ) {
-    return this.eventService.registerParticipantToEvent(id, participant);
+    const result = await this.eventService.registerParticipantToEvent(
+      id,
+      participant,
+    );
+    if (
+      result &&
+      typeof result === 'object' &&
+      'error' in result &&
+      result.error === 'already_registered'
+    ) {
+      return res.status(409).json({ message: 'Bạn đã đăng ký sự kiện này!' });
+    }
+    return res.json(result);
   }
 
   @Post('competition/:id/register')
   async registerParticipantToCompetition(
     @Param('id') id: string,
     @Body() participant: { id: string; avatar: string },
+    @Res() res: Response,
   ) {
-    return this.eventService.registerParticipantToCompetition(id, participant);
+    const result = await this.eventService.registerParticipantToCompetition(
+      id,
+      participant,
+    );
+    if (
+      result &&
+      typeof result === 'object' &&
+      'error' in result &&
+      result.error === 'already_registered'
+    ) {
+      return res.status(409).json({ message: 'Bạn đã đăng ký cuộc thi này!' });
+    }
+    return res.json(result);
   }
 
   @Get('by-participant/:walletAddress')

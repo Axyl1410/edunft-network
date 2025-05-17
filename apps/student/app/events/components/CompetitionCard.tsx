@@ -49,7 +49,15 @@ export function CompetitionCard({
             <div className="flex items-center gap-1">
               <Clock size={16} />
               <span>
-                Hạn chót: {competition.deadline.toLocaleDateString("vi-VN")}
+                Hạn chót:{" "}
+                {(() => {
+                  if (!competition.deadline) return "-";
+                  const deadlineDate =
+                    typeof competition.deadline === "string"
+                      ? new Date(competition.deadline)
+                      : competition.deadline;
+                  return deadlineDate.toLocaleDateString("vi-VN");
+                })()}
               </span>
             </div>
             <div className="flex items-center gap-1">

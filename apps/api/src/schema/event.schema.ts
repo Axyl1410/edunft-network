@@ -26,7 +26,7 @@ class Organizer {
   avatar: string;
 }
 
-class Participant {
+export class Participant {
   @Prop({ required: true })
   id: string;
   @Prop({ required: true })

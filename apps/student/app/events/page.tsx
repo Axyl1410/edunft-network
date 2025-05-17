@@ -65,33 +65,84 @@ export default function Events() {
   });
   const [step, setStep] = useState(0);
 
+  // State for dialogs and forms
+  const [openEventDialog, setOpenEventDialog] = useState(false);
+  const [openCompetitionDialog, setOpenCompetitionDialog] = useState(false);
+  const [formDataEvent, setFormDataEvent] = useState({
+    title: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    location: "",
+    description: "",
+    imageUrl: "",
+    category: "",
+    type: "event",
+  });
+  const [formDataCompetition, setFormDataCompetition] = useState({
+    title: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    location: "",
+    description: "",
+    imageUrl: "",
+    category: "",
+    prize: "",
+    requirements: "",
+    deadline: "",
+    type: "competition",
+  });
+  const [stepEvent, setStepEvent] = useState(0);
+  const [stepCompetition, setStepCompetition] = useState(0);
+
   // Fetch all events/competitions
   useEffect(() => {
     setLoading(true);
+    const url =
+      activeTab === "competitions"
+        ? baseUrl + "/events/competition"
+        : baseUrl + "/events";
     axios
-      .get(baseUrl + "/events")
+      .get(url)
       .then((res) => {
         const mapped = res.data.map((item: any) => ({
           ...item,
           id: item._id || item.id,
+          date: item.date ? new Date(item.date) : undefined,
+          deadline: item.deadline ? new Date(item.deadline) : undefined,
         }));
         setEvents(mapped);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [activeTab]);
 
   // Fetch user events (registered/attended)
   useEffect(() => {
     if (!walletAddress) return;
-    axios
-      .get(baseUrl + `/events/by-participant/${walletAddress}`)
-      .then((res) => {
-        const mapped = res.data.map((item: any) => ({
-          ...item,
-          id: item._id || item.id,
-        }));
-        setUserEvents((prev) => ({ ...prev, registered: mapped }));
-      });
+    Promise.all([
+      axios.get(baseUrl + `/events/by-participant/${walletAddress}`),
+      axios.get(
+        baseUrl + `/events/competition/by-participant/${walletAddress}`,
+      ),
+    ]).then(([eventsRes, competitionsRes]) => {
+      const eventsMapped = eventsRes.data.map((item: any) => ({
+        ...item,
+        id: item._id || item.id,
+        date: item.date ? new Date(item.date) : undefined,
+        deadline: item.deadline ? new Date(item.deadline) : undefined,
+      }));
+      const competitionsMapped = competitionsRes.data.map((item: any) => ({
+        ...item,
+        id: item._id || item.id,
+        date: item.date ? new Date(item.date) : undefined,
+        deadline: item.deadline ? new Date(item.deadline) : undefined,
+      }));
+      setUserEvents((prev) => ({
+        ...prev,
+        registered: [...eventsMapped, ...competitionsMapped],
+      }));
+    });
     // TODO: If you have attended events API, fetch and set attended
   }, [walletAddress]);
 
@@ -121,12 +172,12 @@ export default function Events() {
   // Register event/competition
   const handleRegister = useCallback(async () => {
     if (!selectedItem || !walletAddress) return;
-    // Check if already registered
+    // Check if already registered (frontend check)
     const isAlreadyRegistered = userEvents.registered.some(
       (event) => event.id === selectedItem.id,
     );
     if (isAlreadyRegistered) {
-      toast.error("Bạn đã đăng ký sự kiện này!");
+      toast.error("Bạn đã đăng ký sự kiện/cuộc thi này!");
       return;
     }
     // Check capacity
@@ -154,33 +205,48 @@ export default function Events() {
           const mapped = res.data.map((item: any) => ({
             ...item,
             id: item._id || item.id,
+            date: item.date ? new Date(item.date) : undefined,
+            deadline: item.deadline ? new Date(item.deadline) : undefined,
           }));
           setUserEvents((prev) => ({ ...prev, registered: mapped }));
         });
       // Refetch all events to update participants count
-      axios.get(baseUrl + "/events").then((res) => {
-        const mapped = res.data.map((item: any) => ({
-          ...item,
-          id: item._id || item.id,
-        }));
-        setEvents(mapped);
-        // Nếu modal đang mở, fetch lại event/competition vừa đăng ký và cập nhật selectedItem
-        if (selectedItem) {
-          const isCompetition = selectedItem.type === "competition";
-          const detailUrl = isCompetition
-            ? baseUrl + `/events/competition/${selectedItem.id}`
-            : baseUrl + `/events/${selectedItem.id}`;
-          axios.get(detailUrl).then((detailRes) => {
-            const updated = {
-              ...detailRes.data,
-              id: detailRes.data._id || detailRes.data.id,
-            };
-            setSelectedItem(updated);
-          });
-        }
-      });
-    } catch (e) {
-      toast.error("Đăng ký thất bại!");
+      axios
+        .get(baseUrl + (isCompetition ? "/events/competition" : "/events"))
+        .then((res) => {
+          const mapped = res.data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+            date: item.date ? new Date(item.date) : undefined,
+            deadline: item.deadline ? new Date(item.deadline) : undefined,
+          }));
+          setEvents(mapped);
+          // Nếu modal đang mở, fetch lại event/competition vừa đăng ký và cập nhật selectedItem
+          if (selectedItem) {
+            const detailUrl = isCompetition
+              ? baseUrl + `/events/competition/${selectedItem.id}`
+              : baseUrl + `/events/${selectedItem.id}`;
+            axios.get(detailUrl).then((detailRes) => {
+              const updated = {
+                ...detailRes.data,
+                id: detailRes.data._id || detailRes.data.id,
+                date: detailRes.data.date
+                  ? new Date(detailRes.data.date)
+                  : undefined,
+                deadline: detailRes.data.deadline
+                  ? new Date(detailRes.data.deadline)
+                  : undefined,
+              };
+              setSelectedItem(updated);
+            });
+          }
+        });
+    } catch (e: any) {
+      if (e.response && e.response.status === 409 && e.response.data?.message) {
+        toast.error(e.response.data.message);
+      } else {
+        toast.error("Đăng ký thất bại!");
+      }
     }
   }, [selectedItem, walletAddress, userEvents.registered]);
 
@@ -190,68 +256,48 @@ export default function Events() {
     );
   };
 
-  // Thêm hàm tạo cuộc thi
-  const handleCreateCompetition = async () => {
-    setFormLoading(true);
-    try {
-      await axios.post(baseUrl + "/events/competition", {
-        ...formData,
-        type: "competition",
-        requirements: formData.requirements
-          ? formData.requirements
-              .split("\n")
-              .map((r) => r.trim())
-              .filter(Boolean)
-          : [],
-      });
-      toast.success("Tạo cuộc thi thành công!");
-      setOpenDialog(false);
-      setStep(0);
-      setFormData({
-        title: "",
-        date: "",
-        startTime: "",
-        endTime: "",
-        location: "",
-        description: "",
-        imageUrl: "",
-        category: "",
-        prize: "",
-        requirements: "",
-        deadline: "",
-        type: "event",
-      });
-      // Refetch events/competitions
-      setLoading(true);
-      axios
-        .get(baseUrl + "/events")
-        .then((res) => {
-          const mapped = res.data.map((item: any) => ({
-            ...item,
-            id: item._id || item.id,
-          }));
-          setEvents(mapped);
-        })
-        .finally(() => setLoading(false));
-    } catch (e) {
-      toast.error("Tạo cuộc thi thất bại!");
-    } finally {
-      setFormLoading(false);
-    }
-  };
-
-  // Add handleCreateEvent function
+  // handleCreateEvent
   const handleCreateEvent = async () => {
     setFormLoading(true);
     try {
+      let organizer = {
+        id: walletAddress,
+        name: walletAddress?.slice(0, 8) || "Unknown",
+        avatar: "/avatars/default.jpg",
+      };
+      if (walletAddress) {
+        try {
+          const userRes = await axios.get(baseUrl + `/user/${walletAddress}`);
+          if (userRes.data) {
+            organizer = {
+              id: walletAddress,
+              name: userRes.data.username || walletAddress.slice(0, 8),
+              avatar: userRes.data.profilePicture || "/avatars/default.jpg",
+            };
+          }
+        } catch {}
+      }
       await axios.post(baseUrl + "/events", {
-        ...formData,
+        title: formDataEvent.title,
+        date: formDataEvent.date,
+        startTime: formDataEvent.startTime,
+        endTime: formDataEvent.endTime,
+        location: {
+          address: formDataEvent.location,
+          city: formDataEvent.category,
+        },
+        organizer,
+        participants: { count: 0, registered: [] },
+        status: "upcoming",
+        imageUrl: formDataEvent.imageUrl,
+        description: formDataEvent.description,
         type: "event",
+        category: formDataEvent.category,
       });
       toast.success("Gửi sự kiện thành công!");
-      setOpenDialog(false);
-      setStep(0);
-      setFormData({
+      setOpenEventDialog(false);
+      setStepEvent(0);
+      setFormDataEvent({
         title: "",
         date: "",
         startTime: "",
@@ -260,12 +306,8 @@ export default function Events() {
         description: "",
         imageUrl: "",
         category: "",
-        prize: "",
-        requirements: "",
-        deadline: "",
         type: "event",
       });
-      // Refetch events
       setLoading(true);
       axios
         .get(baseUrl + "/events")
@@ -273,12 +315,97 @@ export default function Events() {
           const mapped = res.data.map((item: any) => ({
             ...item,
             id: item._id || item.id,
+            date: item.date ? new Date(item.date) : undefined,
+            deadline: item.deadline ? new Date(item.deadline) : undefined,
           }));
           setEvents(mapped);
         })
         .finally(() => setLoading(false));
     } catch (e) {
       toast.error("Gửi sự kiện thất bại!");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // handleCreateCompetition
+  const handleCreateCompetition = async () => {
+    setFormLoading(true);
+    try {
+      let organizer = {
+        id: walletAddress,
+        name: walletAddress?.slice(0, 8) || "Unknown",
+        avatar: "/avatars/default.jpg",
+      };
+      if (walletAddress) {
+        try {
+          const userRes = await axios.get(baseUrl + `/user/${walletAddress}`);
+          if (userRes.data) {
+            organizer = {
+              id: walletAddress,
+              name: userRes.data.username || walletAddress.slice(0, 8),
+              avatar: userRes.data.profilePicture || "/avatars/default.jpg",
+            };
+          }
+        } catch {}
+      }
+      await axios.post(baseUrl + "/events/competition", {
+        title: formDataCompetition.title,
+        date: formDataCompetition.date,
+        startTime: formDataCompetition.startTime,
+        endTime: formDataCompetition.endTime,
+        location: {
+          address: formDataCompetition.location,
+          city: formDataCompetition.category,
+        },
+        organizer,
+        participants: { count: 0, registered: [] },
+        status: "upcoming",
+        imageUrl: formDataCompetition.imageUrl,
+        description: formDataCompetition.description,
+        type: "competition",
+        category: formDataCompetition.category,
+        prize: formDataCompetition.prize,
+        requirements: formDataCompetition.requirements
+          ? formDataCompetition.requirements
+              .split("\n")
+              .map((r) => r.trim())
+              .filter(Boolean)
+          : [],
+        deadline: formDataCompetition.deadline,
+      });
+      toast.success("Tạo cuộc thi thành công!");
+      setOpenCompetitionDialog(false);
+      setStepCompetition(0);
+      setFormDataCompetition({
+        title: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        location: "",
+        description: "",
+        imageUrl: "",
+        category: "",
+        prize: "",
+        requirements: "",
+        deadline: "",
+        type: "competition",
+      });
+      setLoading(true);
+      axios
+        .get(baseUrl + "/events/competition")
+        .then((res) => {
+          const mapped = res.data.map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+            date: item.date ? new Date(item.date) : undefined,
+            deadline: item.deadline ? new Date(item.deadline) : undefined,
+          }));
+          setEvents(mapped);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      toast.error("Tạo cuộc thi thất bại!");
     } finally {
       setFormLoading(false);
     }
@@ -352,7 +479,10 @@ export default function Events() {
             <div className="flex w-full gap-2 md:w-auto md:gap-4">
               <button
                 className="flex flex-1 items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm shadow-sm hover:bg-gray-200 md:flex-none dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                onClick={() => setOpenDialog(true)}
+                onClick={() => {
+                  if (activeTab === "events") setOpenEventDialog(true);
+                  else setOpenCompetitionDialog(true);
+                }}
               >
                 <Plus size={18} />
                 {activeTab === "events" ? "Gửi sự kiện" : "Tạo cuộc thi"}
@@ -687,224 +817,26 @@ export default function Events() {
         onRegister={handleRegister}
       />
 
-      {/* Dialog tạo cuộc thi */}
-      {activeTab === "competitions" && (
-        <Dialog
-          open={openDialog}
-          onOpenChange={(open) => {
-            setOpenDialog(open);
-            if (!open) setStep(0);
-          }}
-        >
-          <DialogContent className="w-full max-w-lg overflow-hidden">
-            <DialogHeader className="px-6 pt-6">
-              <DialogTitle>Tạo cuộc thi mới</DialogTitle>
-            </DialogHeader>
-            <form
-              className="flex max-h-[80vh] flex-col gap-6 overflow-y-auto px-6 pb-6 pt-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreateCompetition();
-              }}
-            >
-              {step === 0 && (
-                <>
-                  <div>
-                    <Label htmlFor="title">Tên cuộc thi</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData((f) => ({ ...f, title: e.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Label htmlFor="date">Ngày</Label>
-                      <Input
-                        id="date"
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) =>
-                          setFormData((f) => ({ ...f, date: e.target.value }))
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor="deadline">Hạn chót đăng ký</Label>
-                      <Input
-                        id="deadline"
-                        type="date"
-                        value={formData.deadline}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            deadline: e.target.value,
-                          }))
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Label htmlFor="startTime">Bắt đầu</Label>
-                      <Input
-                        id="startTime"
-                        type="time"
-                        value={formData.startTime}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            startTime: e.target.value,
-                          }))
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor="endTime">Kết thúc</Label>
-                      <Input
-                        id="endTime"
-                        type="time"
-                        value={formData.endTime}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            endTime: e.target.value,
-                          }))
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="imageUrl">Ảnh (URL)</Label>
-                    <Input
-                      id="imageUrl"
-                      value={formData.imageUrl}
-                      onChange={(e) =>
-                        setFormData((f) => ({ ...f, imageUrl: e.target.value }))
-                      }
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Label htmlFor="location">Địa chỉ</Label>
-                      <Input
-                        id="location"
-                        value={formData.location}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            location: e.target.value,
-                          }))
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor="category">Thành phố</Label>
-                      <Input
-                        id="category"
-                        value={formData.category}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            category: e.target.value,
-                          }))
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setOpenDialog(false)}
-                    >
-                      Huỷ
-                    </Button>
-                    <Button type="button" onClick={() => setStep(1)}>
-                      Tiếp tục
-                    </Button>
-                  </div>
-                </>
-              )}
-              {step === 1 && (
-                <>
-                  <div>
-                    <Label htmlFor="prize">Giải thưởng</Label>
-                    <Input
-                      id="prize"
-                      value={formData.prize}
-                      onChange={(e) =>
-                        setFormData((f) => ({ ...f, prize: e.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="description">Mô tả</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData((f) => ({
-                          ...f,
-                          description: e.target.value,
-                        }))
-                      }
-                      required
-                      rows={3}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="requirements">
-                      Yêu cầu (mỗi dòng 1 yêu cầu)
-                    </Label>
-                    <Textarea
-                      id="requirements"
-                      value={formData.requirements}
-                      onChange={(e) =>
-                        setFormData((f) => ({
-                          ...f,
-                          requirements: e.target.value,
-                        }))
-                      }
-                      rows={3}
-                    />
-                  </div>
-                  <div className="flex justify-between gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setStep(0)}
-                    >
-                      Quay lại
-                    </Button>
-                    <Button type="submit" disabled={formLoading}>
-                      {formLoading ? "Đang tạo..." : "Tạo cuộc thi"}
-                    </Button>
-                  </div>
-                </>
-              )}
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Add Dialog for creating event */}
+      {/* Dialog for event */}
       {activeTab === "events" && (
         <Dialog
-          open={openDialog}
+          open={openEventDialog}
           onOpenChange={(open) => {
-            setOpenDialog(open);
-            if (!open) setStep(0);
+            setOpenEventDialog(open);
+            if (!open) {
+              setStepEvent(0);
+              setFormDataEvent({
+                title: "",
+                date: "",
+                startTime: "",
+                endTime: "",
+                location: "",
+                description: "",
+                imageUrl: "",
+                category: "",
+                type: "event",
+              });
+            }
           }}
         >
           <DialogContent className="w-full max-w-lg overflow-hidden">
@@ -922,9 +854,9 @@ export default function Events() {
                 <Label htmlFor="title">Tên sự kiện</Label>
                 <Input
                   id="title"
-                  value={formData.title}
+                  value={formDataEvent.title}
                   onChange={(e) =>
-                    setFormData((f) => ({ ...f, title: e.target.value }))
+                    setFormDataEvent((f) => ({ ...f, title: e.target.value }))
                   }
                   required
                 />
@@ -935,9 +867,9 @@ export default function Events() {
                   <Input
                     id="date"
                     type="date"
-                    value={formData.date}
+                    value={formDataEvent.date}
                     onChange={(e) =>
-                      setFormData((f) => ({ ...f, date: e.target.value }))
+                      setFormDataEvent((f) => ({ ...f, date: e.target.value }))
                     }
                     required
                   />
@@ -946,9 +878,12 @@ export default function Events() {
                   <Label htmlFor="category">Thành phố</Label>
                   <Input
                     id="category"
-                    value={formData.category}
+                    value={formDataEvent.category}
                     onChange={(e) =>
-                      setFormData((f) => ({ ...f, category: e.target.value }))
+                      setFormDataEvent((f) => ({
+                        ...f,
+                        category: e.target.value,
+                      }))
                     }
                     required
                   />
@@ -960,9 +895,12 @@ export default function Events() {
                   <Input
                     id="startTime"
                     type="time"
-                    value={formData.startTime}
+                    value={formDataEvent.startTime}
                     onChange={(e) =>
-                      setFormData((f) => ({ ...f, startTime: e.target.value }))
+                      setFormDataEvent((f) => ({
+                        ...f,
+                        startTime: e.target.value,
+                      }))
                     }
                     required
                   />
@@ -972,9 +910,12 @@ export default function Events() {
                   <Input
                     id="endTime"
                     type="time"
-                    value={formData.endTime}
+                    value={formDataEvent.endTime}
                     onChange={(e) =>
-                      setFormData((f) => ({ ...f, endTime: e.target.value }))
+                      setFormDataEvent((f) => ({
+                        ...f,
+                        endTime: e.target.value,
+                      }))
                     }
                     required
                   />
@@ -984,9 +925,12 @@ export default function Events() {
                 <Label htmlFor="imageUrl">Ảnh (URL)</Label>
                 <Input
                   id="imageUrl"
-                  value={formData.imageUrl}
+                  value={formDataEvent.imageUrl}
                   onChange={(e) =>
-                    setFormData((f) => ({ ...f, imageUrl: e.target.value }))
+                    setFormDataEvent((f) => ({
+                      ...f,
+                      imageUrl: e.target.value,
+                    }))
                   }
                 />
               </div>
@@ -994,9 +938,12 @@ export default function Events() {
                 <Label htmlFor="location">Địa chỉ</Label>
                 <Input
                   id="location"
-                  value={formData.location}
+                  value={formDataEvent.location}
                   onChange={(e) =>
-                    setFormData((f) => ({ ...f, location: e.target.value }))
+                    setFormDataEvent((f) => ({
+                      ...f,
+                      location: e.target.value,
+                    }))
                   }
                   required
                 />
@@ -1005,9 +952,12 @@ export default function Events() {
                 <Label htmlFor="description">Mô tả</Label>
                 <Textarea
                   id="description"
-                  value={formData.description}
+                  value={formDataEvent.description}
                   onChange={(e) =>
-                    setFormData((f) => ({ ...f, description: e.target.value }))
+                    setFormDataEvent((f) => ({
+                      ...f,
+                      description: e.target.value,
+                    }))
                   }
                   required
                   rows={3}
@@ -1017,12 +967,231 @@ export default function Events() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setOpenDialog(false)}
+                  onClick={() => setOpenEventDialog(false)}
                 >
                   Huỷ
                 </Button>
                 <Button type="submit" disabled={formLoading}>
                   {formLoading ? "Đang gửi..." : "Gửi sự kiện"}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Dialog for competition */}
+      {activeTab === "competitions" && (
+        <Dialog
+          open={openCompetitionDialog}
+          onOpenChange={(open) => {
+            setOpenCompetitionDialog(open);
+            if (!open) {
+              setStepCompetition(0);
+              setFormDataCompetition({
+                title: "",
+                date: "",
+                startTime: "",
+                endTime: "",
+                location: "",
+                description: "",
+                imageUrl: "",
+                category: "",
+                prize: "",
+                requirements: "",
+                deadline: "",
+                type: "competition",
+              });
+            }
+          }}
+        >
+          <DialogContent className="w-full max-w-lg overflow-hidden">
+            <DialogHeader className="px-6 pt-6">
+              <DialogTitle>Tạo cuộc thi mới</DialogTitle>
+            </DialogHeader>
+            <form
+              className="flex max-h-[80vh] flex-col gap-6 overflow-y-auto px-6 pb-6 pt-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateCompetition();
+              }}
+            >
+              <div>
+                <Label htmlFor="title">Tên cuộc thi</Label>
+                <Input
+                  id="title"
+                  value={formDataCompetition.title}
+                  onChange={(e) =>
+                    setFormDataCompetition((f) => ({
+                      ...f,
+                      title: e.target.value,
+                    }))
+                  }
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="date">Ngày</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formDataCompetition.date}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        date: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="deadline">Hạn chót đăng ký</Label>
+                  <Input
+                    id="deadline"
+                    type="date"
+                    value={formDataCompetition.deadline}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        deadline: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="startTime">Bắt đầu</Label>
+                  <Input
+                    id="startTime"
+                    type="time"
+                    value={formDataCompetition.startTime}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        startTime: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="endTime">Kết thúc</Label>
+                  <Input
+                    id="endTime"
+                    type="time"
+                    value={formDataCompetition.endTime}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        endTime: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="imageUrl">Ảnh (URL)</Label>
+                <Input
+                  id="imageUrl"
+                  value={formDataCompetition.imageUrl}
+                  onChange={(e) =>
+                    setFormDataCompetition((f) => ({
+                      ...f,
+                      imageUrl: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="location">Địa chỉ</Label>
+                  <Input
+                    id="location"
+                    value={formDataCompetition.location}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        location: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="category">Thành phố</Label>
+                  <Input
+                    id="category"
+                    value={formDataCompetition.category}
+                    onChange={(e) =>
+                      setFormDataCompetition((f) => ({
+                        ...f,
+                        category: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="prize">Giải thưởng</Label>
+                <Input
+                  id="prize"
+                  value={formDataCompetition.prize}
+                  onChange={(e) =>
+                    setFormDataCompetition((f) => ({
+                      ...f,
+                      prize: e.target.value,
+                    }))
+                  }
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Mô tả</Label>
+                <Textarea
+                  id="description"
+                  value={formDataCompetition.description}
+                  onChange={(e) =>
+                    setFormDataCompetition((f) => ({
+                      ...f,
+                      description: e.target.value,
+                    }))
+                  }
+                  required
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="requirements">
+                  Yêu cầu (mỗi dòng 1 yêu cầu)
+                </Label>
+                <Textarea
+                  id="requirements"
+                  value={formDataCompetition.requirements}
+                  onChange={(e) =>
+                    setFormDataCompetition((f) => ({
+                      ...f,
+                      requirements: e.target.value,
+                    }))
+                  }
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpenCompetitionDialog(false)}
+                >
+                  Huỷ
+                </Button>
+                <Button type="submit" disabled={formLoading}>
+                  {formLoading ? "Đang tạo..." : "Tạo cuộc thi"}
                 </Button>
               </div>
             </form>
