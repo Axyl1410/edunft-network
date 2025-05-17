@@ -11,22 +11,17 @@ import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
-import {
-  CheckCircle,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  RssIcon,
-  Search,
-  Trophy,
-} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
-import { CompetitionCard } from "./components/CompetitionCard";
-import { EventCard } from "./components/EventCard";
+import { CalendarSection } from "./components/CalendarSection";
+import { CompetitionList } from "./components/CompetitionList";
+import { EventActionButtons } from "./components/EventActionButtons";
+import { EventList } from "./components/EventList";
 import { EventModal } from "./components/EventModal";
+import RegisteredEventsSection from "./components/RegisteredEventsSection";
+import { TabSwitcher } from "./components/TabSwitcher";
 import { Competition, Event, UserEvents } from "./types";
 
 export default function Events() {
@@ -42,6 +37,8 @@ export default function Events() {
     registered: [],
     attended: [],
   });
+  const [userEventsLoading, setUserEventsLoading] = useState(false);
+  const [userEventsError, setUserEventsError] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [activeTab, setActiveTab] = useState<"events" | "competitions">(
     "events",
@@ -120,30 +117,37 @@ export default function Events() {
   // Fetch user events (registered/attended)
   useEffect(() => {
     if (!walletAddress) return;
+    setUserEventsLoading(true);
+    setUserEventsError(null);
     Promise.all([
       axios.get(baseUrl + `/events/by-participant/${walletAddress}`),
       axios.get(
         baseUrl + `/events/competition/by-participant/${walletAddress}`,
       ),
-    ]).then(([eventsRes, competitionsRes]) => {
-      const eventsMapped = eventsRes.data.map((item: any) => ({
-        ...item,
-        id: item._id || item.id,
-        date: item.date ? new Date(item.date) : undefined,
-        deadline: item.deadline ? new Date(item.deadline) : undefined,
-      }));
-      const competitionsMapped = competitionsRes.data.map((item: any) => ({
-        ...item,
-        id: item._id || item.id,
-        date: item.date ? new Date(item.date) : undefined,
-        deadline: item.deadline ? new Date(item.deadline) : undefined,
-      }));
-      setUserEvents((prev) => ({
-        ...prev,
-        registered: [...eventsMapped, ...competitionsMapped],
-      }));
-    });
-    // TODO: If you have attended events API, fetch and set attended
+    ])
+      .then(([eventsRes, competitionsRes]) => {
+        const eventsMapped = eventsRes.data.map((item: any) => ({
+          ...item,
+          id: item._id || item.id,
+          date: item.date ? new Date(item.date) : undefined,
+          deadline: item.deadline ? new Date(item.deadline) : undefined,
+        }));
+        const competitionsMapped = competitionsRes.data.map((item: any) => ({
+          ...item,
+          id: item._id || item.id,
+          date: item.date ? new Date(item.date) : undefined,
+          deadline: item.deadline ? new Date(item.deadline) : undefined,
+        }));
+        setUserEvents((prev) => ({
+          ...prev,
+          registered: [...eventsMapped, ...competitionsMapped],
+        }));
+        setUserEventsLoading(false);
+      })
+      .catch((err) => {
+        setUserEventsError("Không thể tải sự kiện của bạn. Vui lòng thử lại.");
+        setUserEventsLoading(false);
+      });
   }, [walletAddress]);
 
   // Filtered events/competitions
@@ -454,159 +458,28 @@ export default function Events() {
         {/* Main Content */}
         <div className="max-h-[calc(100vh-2rem)] w-full overflow-auto pb-4 md:w-3/4 md:pb-0">
           <div className="mb-4 flex flex-col items-start justify-between gap-2 md:mb-6 md:flex-row md:items-center md:gap-0">
-            <div className="flex items-center gap-2 md:gap-4">
-              <button
-                onClick={() => setActiveTab("events")}
-                className={`border-b-2 pb-2 text-base font-bold md:text-2xl ${
-                  activeTab === "events"
-                    ? "border-blue-500 text-blue-500"
-                    : "border-transparent hover:border-gray-200"
-                }`}
-              >
-                Sự kiện
-              </button>
-              <button
-                onClick={() => setActiveTab("competitions")}
-                className={`border-b-2 pb-2 text-base font-bold md:text-2xl ${
-                  activeTab === "competitions"
-                    ? "border-blue-500 text-blue-500"
-                    : "border-transparent hover:border-gray-200"
-                }`}
-              >
-                Cuộc thi
-              </button>
-            </div>
-            <div className="flex w-full gap-2 md:w-auto md:gap-4">
-              <button
-                className="flex flex-1 items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm shadow-sm hover:bg-gray-200 md:flex-none dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                onClick={() => {
-                  if (activeTab === "events") setOpenEventDialog(true);
-                  else setOpenCompetitionDialog(true);
-                }}
-              >
-                <Plus size={18} />
-                {activeTab === "events" ? "Gửi sự kiện" : "Tạo cuộc thi"}
-              </button>
-              <button className="rounded-full bg-gray-100 p-2 shadow-sm hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700">
-                <RssIcon size={18} />
-              </button>
-              <button className="rounded-full bg-gray-100 p-2 shadow-sm hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700">
-                <Search size={18} />
-              </button>
-            </div>
+            <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+            <EventActionButtons
+              activeTab={activeTab}
+              setOpenEventDialog={setOpenEventDialog}
+              setOpenCompetitionDialog={setOpenCompetitionDialog}
+            />
           </div>
 
           {/* Timeline Events with scroll */}
           <div className="space-y-4 pr-0 md:space-y-6 md:pr-4">
             {activeTab === "events" ? (
-              <>
-                {/* Today's Events */}
-                <div className="relative">
-                  <div className="absolute bottom-0 left-3 top-0 w-0.5 bg-gray-200 dark:bg-zinc-800"></div>
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 shadow-sm dark:bg-zinc-800">
-                      <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                    </div>
-                    <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                      Hôm nay •{" "}
-                      {new Date().toLocaleDateString("vi-VN", {
-                        weekday: "long",
-                      })}
-                    </h2>
-                    {todayEvents.length > 0 ? (
-                      todayEvents.map((event) => (
-                        <EventCard
-                          key={event.id}
-                          event={event as Event}
-                          onClick={() => setSelectedItem(event)}
-                        />
-                      ))
-                    ) : (
-                      <EventCard isEmpty />
-                    )}
-                  </div>
-                </div>
-
-                {/* Future Events */}
-                <div className="relative">
-                  <div className="absolute bottom-0 left-3 top-0 w-0.5 bg-gray-200 dark:bg-zinc-800"></div>
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 shadow-sm dark:bg-zinc-800">
-                      <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                    </div>
-                    <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                      Sắp diễn ra
-                    </h2>
-                    {upcomingEvents.length > 0 ? (
-                      upcomingEvents.map((event) => (
-                        <EventCard
-                          key={event.id}
-                          event={event as Event}
-                          onClick={() => setSelectedItem(event)}
-                        />
-                      ))
-                    ) : (
-                      <EventCard isEmpty />
-                    )}
-                  </div>
-                </div>
-              </>
+              <EventList
+                todayEvents={todayEvents as Event[]}
+                upcomingEvents={upcomingEvents as Event[]}
+                setSelectedItem={setSelectedItem}
+              />
             ) : (
-              <>
-                {/* Ongoing Competitions */}
-                <div className="relative">
-                  <div className="absolute bottom-0 left-3 top-0 w-0.5 bg-gray-200 dark:bg-zinc-800"></div>
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 shadow-sm dark:bg-zinc-800">
-                      <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                    </div>
-                    <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                      Cuộc thi đang diễn ra
-                    </h2>
-                    {ongoingCompetitions.map((competition) => (
-                      <CompetitionCard
-                        key={competition.id}
-                        competition={competition as Competition}
-                        onClick={() => setSelectedItem(competition)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Upcoming Competitions */}
-                <div className="relative">
-                  <div className="absolute bottom-0 left-3 top-0 w-0.5 bg-gray-200 dark:bg-zinc-800"></div>
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 shadow-sm dark:bg-zinc-800">
-                      <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                    </div>
-                    <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                      Cuộc thi sắp tới
-                    </h2>
-                    {upcomingCompetitions.length > 0 ? (
-                      upcomingCompetitions.map((competition) => (
-                        <CompetitionCard
-                          key={competition.id}
-                          competition={competition as Competition}
-                          onClick={() => setSelectedItem(competition)}
-                        />
-                      ))
-                    ) : (
-                      <div className="mb-4 rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-                        <div className="ITEMS-center flex flex-col justify-center gap-3 text-center">
-                          <Trophy
-                            size={40}
-                            className="text-gray-400 dark:text-gray-600"
-                          />
-                          <p className="text-gray-500 dark:text-gray-400">
-                            Không có cuộc thi nào sắp diễn ra
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
+              <CompetitionList
+                ongoingCompetitions={ongoingCompetitions as Competition[]}
+                upcomingCompetitions={upcomingCompetitions as Competition[]}
+                setSelectedItem={setSelectedItem}
+              />
             )}
           </div>
         </div>
@@ -614,195 +487,21 @@ export default function Events() {
         {/* Sidebar */}
         <div className="mt-4 w-full space-y-4 md:mt-0 md:w-1/4 md:space-y-6">
           <div className="sticky top-4 space-y-4 md:top-6 md:space-y-6">
-            {/* Calendar Section */}
-            <div className="rounded-xl bg-gray-50 p-3 shadow-lg md:p-4 dark:bg-zinc-900">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold">
-                  {currentMonth.toLocaleString("default", {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </h2>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() - 1,
-                        ),
-                      )
-                    }
-                    className="rounded p-1 hover:bg-gray-200 dark:hover:bg-zinc-800"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() + 1,
-                        ),
-                      )
-                    }
-                    className="rounded p-1 hover:bg-gray-200 dark:hover:bg-zinc-800"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              </div>
-              <div className="mb-2 grid grid-cols-7 gap-1 text-center text-sm">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <div key={day} className="text-gray-500 dark:text-gray-400">
-                      {day}
-                    </div>
-                  ),
-                )}
-              </div>
-              <div className="grid grid-cols-7 gap-1">
-                {Array.from(
-                  {
-                    length: new Date(
-                      currentMonth.getFullYear(),
-                      currentMonth.getMonth(),
-                      1,
-                    ).getDay(),
-                  },
-                  (_, i) => (
-                    <div key={`empty-${i}`} />
-                  ),
-                )}
-
-                {Array.from(
-                  {
-                    length: new Date(
-                      currentMonth.getFullYear(),
-                      currentMonth.getMonth() + 1,
-                      0,
-                    ).getDate(),
-                  },
-                  (_, i) => {
-                    const day = i + 1;
-                    const currentDate = new Date(
-                      currentMonth.getFullYear(),
-                      currentMonth.getMonth(),
-                      day,
-                    );
-                    const eventsOnDay = getEventsForDate(currentDate);
-                    const hasEvents = eventsOnDay.length > 0;
-                    const isSelected =
-                      date?.toDateString() === currentDate.toDateString();
-                    const isToday =
-                      currentDate.toDateString() === new Date().toDateString();
-
-                    return (
-                      <div key={day} className="relative">
-                        <button
-                          onClick={() => {
-                            setDate(currentDate);
-                            if (hasEvents) {
-                              const filtered = events.filter(
-                                (event) =>
-                                  new Date(event.date).toDateString() ===
-                                  currentDate.toDateString(),
-                              );
-                              filtered.forEach((event) => {
-                                toast(event.title, {
-                                  description: `${event.startTime} - ${event.type === "event" ? "Sự kiện" : "Cuộc thi"}`,
-                                  action: {
-                                    label: "Xem chi tiết",
-                                    onClick: () => setSelectedItem(event),
-                                  },
-                                });
-                              });
-                            }
-                          }}
-                          className={`relative flex aspect-square w-full items-center justify-center rounded-full text-sm ${hasEvents ? "bg-orange-100 dark:bg-orange-900/20" : "hover:bg-gray-100 dark:hover:bg-zinc-800"} ${isSelected ? "bg-blue-500 text-white hover:bg-blue-600" : ""} ${isToday ? "font-bold" : ""} `}
-                        >
-                          {day}
-                          {hasEvents && (
-                            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-                              {eventsOnDay.length > 1 ? eventsOnDay.length : ""}
-                            </span>
-                          )}
-                        </button>
-                      </div>
-                    );
-                  },
-                )}
-              </div>
-            </div>
-
-            {/* Registered Events */}
-            <div className="rounded-xl bg-gray-50 p-3 shadow-lg md:p-4 dark:bg-zinc-900">
-              <h2 className="mb-4 text-xl font-bold">Your Events</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
-                    Registered
-                  </h3>
-                  <div className="max-h-40 space-y-2 overflow-y-auto">
-                    {userEvents.registered.map((event) => (
-                      <div
-                        key={event.id}
-                        className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 dark:bg-zinc-800"
-                      >
-                        <img
-                          src={
-                            event.imageUrl ||
-                            "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400"
-                          }
-                          alt={event.title}
-                          className="h-8 w-8 rounded"
-                        />
-                        <div className="flex-1 truncate">
-                          <p className="truncate text-sm font-medium">
-                            {event.title}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {event.startTime}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
-                    Attended
-                  </h3>
-                  <div className="max-h-40 space-y-2 overflow-y-auto">
-                    {userEvents.attended.map((event) => (
-                      <div
-                        key={event.id}
-                        className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 dark:bg-zinc-800"
-                      >
-                        <img
-                          src={
-                            event.imageUrl ||
-                            "https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400"
-                          }
-                          alt={event.title}
-                          className="h-8 w-8 rounded"
-                        />
-                        <div className="flex-1 truncate">
-                          <p className="truncate text-sm font-medium">
-                            {event.title}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {event.startTime}
-                          </p>
-                        </div>
-                        <CheckCircle size={16} className="text-green-500" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CalendarSection
+              currentMonth={currentMonth}
+              setCurrentMonth={setCurrentMonth}
+              date={date}
+              setDate={setDate}
+              events={events}
+              getEventsForDate={getEventsForDate}
+              setSelectedItem={setSelectedItem}
+              toast={toast}
+            />
+            <RegisteredEventsSection
+              userEvents={userEvents}
+              loading={userEventsLoading}
+              error={userEventsError}
+            />
           </div>
         </div>
       </div>
