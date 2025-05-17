@@ -3,6 +3,7 @@
 import ReadMore from "@/components/common/read-more-text";
 import { thirdwebClient } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
@@ -28,37 +29,43 @@ export function Metadata({ address }: { address: string }) {
   if (error) return <div>Error</div>;
 
   return (
-    <div className="mt-4 flex w-full flex-col gap-4 rounded-lg border border-gray-500/50 bg-white/[.04] p-4 sm:flex-row">
-      <div className="align-center h-32 w-32 flex-shrink-0 items-center rounded-lg">
-        {metadata?.image ? (
-          <MediaRenderer
-            src={metadata.image}
-            client={thirdwebClient}
-            className="aspect-square object-cover object-center"
-            style={{ height: "100%", width: "100%" }}
-          />
-        ) : (
-          <div className="grid h-full w-full place-items-center bg-gray-200">
-            <Image src={"/default-image.jpg"} alt="" height={300} width={300} />
-          </div>
-        )}
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col justify-center py-3">
-        <p className="truncate text-lg text-black dark:text-white">
-          {metadata?.name}
-        </p>
-        <p className="text-text text-sm font-semibold dark:text-white/80">
-          Symbol: {metadata?.symbol || "N/A"}
-        </p>
-        <div className="relative mt-2 max-h-32 w-full">
-          <ReadMore
-            text={metadata?.description}
-            maxLength={50}
-            className="overflow-y-auto break-words pr-2 text-sm"
-          />
+    <Card className="mt-4 flex w-full flex-col gap-4 rounded-xl border bg-white/80 p-4 shadow-sm dark:bg-neutral-900">
+      <CardContent className="flex flex-row gap-6 p-0">
+        <div className="flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-neutral-800">
+          {metadata?.image ? (
+            <MediaRenderer
+              src={metadata.image}
+              client={thirdwebClient}
+              className="aspect-square rounded-lg object-cover object-center"
+              style={{ height: "100%", width: "100%" }}
+            />
+          ) : (
+            <Image
+              src={"/default-image.jpg"}
+              alt=""
+              height={128}
+              width={128}
+              className="rounded-lg"
+            />
+          )}
         </div>
-      </div>
-    </div>
+        <div className="flex min-w-0 flex-1 flex-col justify-center py-3">
+          <p className="truncate text-lg font-bold text-gray-900 dark:text-white">
+            {metadata?.name}
+          </p>
+          <p className="text-sm font-semibold text-gray-500 dark:text-white/80">
+            Symbol: {metadata?.symbol || "N/A"}
+          </p>
+          <div className="relative mt-2 max-h-32 w-full">
+            <ReadMore
+              text={metadata?.description}
+              maxLength={80}
+              className="overflow-y-auto break-words pr-2 text-sm text-gray-700 dark:text-gray-200"
+            />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

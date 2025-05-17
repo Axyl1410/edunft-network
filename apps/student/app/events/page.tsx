@@ -458,7 +458,18 @@ export default function Events() {
         {/* Main Content */}
         <div className="max-h-[calc(100vh-2rem)] w-full overflow-auto pb-4 md:w-3/4 md:pb-0">
           <div className="mb-4 flex flex-col items-start justify-between gap-2 md:mb-6 md:flex-row md:items-center md:gap-0">
-            <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+            <div className="flex items-center gap-3">
+              <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+              <div className="flex items-center gap-1 rounded-md border bg-white/80 px-2 py-0.5 shadow-sm dark:bg-neutral-900">
+                <p className="text-sm font-medium text-sky-600 dark:text-sky-400">
+                  Live
+                </p>
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-sky-500" />
+                </span>
+              </div>
+            </div>
             <EventActionButtons
               activeTab={activeTab}
               setOpenEventDialog={setOpenEventDialog}

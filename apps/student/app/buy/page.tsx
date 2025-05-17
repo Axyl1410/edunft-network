@@ -108,6 +108,20 @@ export default function Buy() {
   // Render logic
   return (
     <div className="my-4 px-4">
+      <div className="mb-6 flex items-center gap-3">
+        <p className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Buy
+        </p>
+        <div className="flex items-center gap-1 rounded-md border bg-white/80 px-2 py-0.5 shadow-sm dark:bg-neutral-900">
+          <p className="text-sm font-medium text-sky-600 dark:text-sky-400">
+            Live
+          </p>
+          <span className="relative flex size-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+            <span className="relative inline-flex size-2 rounded-full bg-sky-500" />
+          </span>
+        </div>
+      </div>
       <Suspense fallback={<NFTGridLoading />}>
         <div className="min-h-[200px]">
           {loadingCollections && (
@@ -138,6 +152,7 @@ export default function Buy() {
                     <Link
                       key={collection.address}
                       href={`/buy/${collection.address}`}
+                      className="block h-full w-full"
                     >
                       <CollectionCard
                         address={collection.address}
