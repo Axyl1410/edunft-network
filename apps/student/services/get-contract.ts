@@ -1,4 +1,4 @@
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
 import { getContract } from "thirdweb";
 
 const getThirdwebContract = (address: string) => {

@@ -1,5 +1,5 @@
 import { baseUrl } from "@/lib/client";
-import pinataClient from "@/lib/pinata-client";
+import pinataClient from "@/lib/pinata";
 import axios from "axios";
 
 // Upload file (public or private)

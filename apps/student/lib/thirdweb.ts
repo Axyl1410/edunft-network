@@ -18,6 +18,8 @@ export const thirdwebClient = createThirdwebClient(
   secretKey ? { secretKey } : { clientId },
 );
 
+export const thirdwebClientPublic = createThirdwebClient({ clientId });
+
 export const FORMA_SKETCHPAD: Chain = defineChain({
   id: 984123,
   name: "Forma Sketchpad",
@@ -39,6 +41,8 @@ export const FORMA_SKETCHPAD: Chain = defineChain({
   },
   testnet: true,
 });
+
+export const FORMASCAN_URL = "https://explorer.sketchpad-1.forma.art";
 
 export const MARKETPLACE = getContract({
   client: thirdwebClient,

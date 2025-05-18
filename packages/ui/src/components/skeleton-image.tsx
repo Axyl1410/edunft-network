@@ -1,3 +1,5 @@
+"use client";
+
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useState } from "react";
 

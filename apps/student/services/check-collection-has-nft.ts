@@ -1,41 +1,43 @@
-import { MARKETPLACE } from "@/lib/thirdweb-client";
+import { MARKETPLACE } from "@/lib/thirdweb";
 import { toast } from "sonner";
-import {
-  DirectListing,
-  getAllValidListings,
-} from "thirdweb/extensions/marketplace";
+import { getAllValidListings } from "thirdweb/extensions/marketplace";
 
-type Collection = {
-  listings: DirectListing[];
-};
+let cachedListingSet: Set<string> | null = null;
+let lastFetchTime = 0;
+let fetchPromise: Promise<void> | null = null;
+const CACHE_TTL = 60 * 1000; // 1 minute
 
-const cache = new Map<string, Collection>();
-
-async function fetchListings(collection: string) {
-  const listings = await getAllValidListings({ contract: MARKETPLACE });
-  return listings.filter(
-    (listing) => listing.assetContractAddress === collection,
-  );
+async function ensureListingCache() {
+  const now = Date.now();
+  if (cachedListingSet && now - lastFetchTime < CACHE_TTL) {
+    return;
+  }
+  if (fetchPromise) {
+    return fetchPromise;
+  }
+  fetchPromise = (async () => {
+    try {
+      const listings = await getAllValidListings({ contract: MARKETPLACE });
+      cachedListingSet = new Set(
+        listings.map((l) => l.assetContractAddress.toLowerCase()),
+      );
+      lastFetchTime = Date.now();
+    } catch (error) {
+      toast.error("Error fetching marketplace listings", {
+        description: (error as Error).message,
+      });
+      cachedListingSet = new Set();
+    } finally {
+      fetchPromise = null;
+    }
+  })();
+  return fetchPromise;
 }
 
 export async function checkCollectionHasNFTs(
   collection: string,
 ): Promise<boolean> {
-  if (cache.has(collection)) {
-    const { listings } = cache.get(collection)!;
-    return listings.length > 0;
-  }
-
-  try {
-    const listings = await fetchListings(collection);
-
-    cache.set(collection, { listings });
-
-    return listings.length > 0;
-  } catch (error) {
-    toast.error("Error fetching data:", {
-      description: error as string,
-    });
-    return false;
-  }
+  await ensureListingCache();
+  if (!cachedListingSet) return false;
+  return cachedListingSet.has(collection.toLowerCase());
 }

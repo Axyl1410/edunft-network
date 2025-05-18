@@ -1,6 +1,5 @@
 "use client";
 
-import { formatBytes, shortenDate } from "@/lib/utils";
 import {
   deleteFileInDatabase,
   deleteFilePinata,
@@ -40,32 +39,23 @@ import {
 import { Progress } from "@workspace/ui/components/progress";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import {
   Download,
-  Eye,
   List,
   Loader2,
   PanelLeftIcon,
   Terminal,
-  Trash2,
   Upload,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
+import { FileTable, FileData as FileTableData } from "./FileTable";
 
 interface FileData {
   id: string;
@@ -116,7 +106,9 @@ export default function Page() {
     if (!walletAddress) return;
     setLoading(true);
     getUserFiles(walletAddress)
-      .then((data: FileData[]) => setFiles(data))
+      .then((data: FileData[]) => {
+        setFiles(data);
+      })
       .finally(() => setLoading(false));
   }, [walletAddress]);
 
@@ -162,7 +154,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto flex min-h-svh flex-col p-4">
+    <div className="container mx-auto flex flex-col p-4">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">FILES</h1>
         <div className="flex gap-2">
@@ -302,10 +294,23 @@ export default function Page() {
                         setUploadProgress(0);
                         setUploadResult(null);
                         try {
+                          // take the extension of the file
+                          const ext = selectedFile.name.split(".").pop();
+                          let finalName =
+                            customFileName.trim() || selectedFile.name;
+                          if (
+                            customFileName.trim() &&
+                            ext &&
+                            !finalName
+                              .toLowerCase()
+                              .endsWith("." + ext.toLowerCase())
+                          ) {
+                            finalName = finalName + "." + ext;
+                          }
                           // 1. Upload to Pinata
                           const pinataRes = await uploadFile({
                             file: selectedFile,
-                            name: customFileName.trim() || selectedFile.name,
+                            name: finalName,
                             type: "private",
                           });
                           // pinataRes is { ...upload, pinataId } for private
@@ -316,7 +321,7 @@ export default function Page() {
                           const fileData = {
                             walletAddress,
                             hash: pinataRes.cid,
-                            name: customFileName.trim() || selectedFile.name,
+                            name: finalName,
                             size: selectedFile.size,
                             mimeType: selectedFile.type,
                             network: "private" as "private" | "public",
@@ -360,91 +365,15 @@ export default function Page() {
         <Loading text="Loading..." />
       ) : (
         <>
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Name
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Size
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Created At
-                  </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-500">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {displayedFiles.map((file) => (
-                  <TableRow key={file.id}>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {file.name}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {formatBytes(file.size)}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2">
-                      {shortenDate(file.createdAt)}
-                    </TableCell>
-                    <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handlePreview(file)}
-                            className="cursor-pointer"
-                          >
-                            <span>
-                              <Eye className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Preview</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handleDownload(file)}
-                            className="cursor-pointer"
-                          >
-                            <span>
-                              <Download className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Download</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer text-red-500"
-                            onClick={() =>
-                              setConfirmDelete({ open: true, file })
-                            }
-                            disabled={deletingFileId === file.id}
-                          >
-                            <span>
-                              <Trash2 className="h-4 w-4" />
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Delete</TooltipContent>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <FileTable
+            files={displayedFiles as FileTableData[]}
+            onPreview={handlePreview}
+            onDownload={handleDownload}
+            onDelete={(file) => {
+              setConfirmDelete({ open: true, file });
+            }}
+            deletingFileId={deletingFileId}
+          />
           {viewMode === "pagination" && files.length > filesPerPage && (
             <Pagination className="mt-4">
               <PaginationContent>
@@ -641,7 +570,7 @@ export default function Page() {
                   </div>
                 ) : downloadUrl ? (
                   <Button
-                    className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
+                    className="w-full cursor-pointer rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
                     onClick={async () => {
                       if (!downloadUrl) return;
                       try {

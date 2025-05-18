@@ -56,14 +56,9 @@ export class CollectionController {
   @Delete(':walletAddress/holders')
   async removeHolder(
     @Param('walletAddress') walletAddress: string,
-    @Body()
-    body: {
-      Address: string;
-      TokenId: string;
-    },
+    @Body('Address') Address: string,
+    @Body('TokenId') TokenId: string,
   ): Promise<Collection> {
-    const { Address, TokenId } = body;
-
     const result = await this.collectionService.removeHolder(
       walletAddress,
       Address,
@@ -96,6 +91,24 @@ export class CollectionController {
   @Get('owners')
   async getAllOwners(): Promise<OwnerItem[]> {
     const result = await this.collectionService.getAllOwners();
+    return this.handleResult(result);
+  }
+
+  @Get(':walletAddress/owners')
+  async getOwnersByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<OwnerItem[]> {
+    const result =
+      await this.collectionService.getOwnersByWalletAddress(walletAddress);
+    return this.handleResult(result);
+  }
+
+  @Get(':walletAddress/collection')
+  async getCollectionByWalletAddress(
+    @Param('walletAddress') walletAddress: string,
+  ): Promise<{ holders: HoldingItem[]; owner: OwnerItem[] }> {
+    const result =
+      await this.collectionService.getCollectionByWalletAddress(walletAddress);
     return this.handleResult(result);
   }
 }

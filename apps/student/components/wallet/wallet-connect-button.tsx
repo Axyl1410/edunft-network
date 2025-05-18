@@ -1,6 +1,5 @@
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb-client";
-import { formatAddress } from "@/lib/utils";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
 import { useUserStore } from "@/store";
 import {
   Alert,
@@ -8,26 +7,17 @@ import {
   AlertTitle,
 } from "@workspace/ui/components/alert";
 import { Button } from "@workspace/ui/components/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@workspace/ui/components/dialog";
+import { DialogFooter } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { Terminal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  Blobbie,
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
@@ -36,6 +26,11 @@ import {
   useWalletDetailsModal,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { AccountButton } from "./account-button";
+import { ConnectButton } from "./connect-button";
+import { CreateAccountDialog } from "./create-account-dialog";
+import { ErrorDialog } from "./error-dialog";
+import { SwitchNetworkButton } from "./switch-network-button";
 
 interface CreateUserFormData {
   Username: string;
@@ -63,257 +58,274 @@ const steps = [
   },
 ];
 
-const CreateAccountForm = ({
-  onSuccess,
-  walletAddress,
-  setCreateAccountError,
-  onStepChange,
-}: {
+interface CreateAccountFormProps {
   onSuccess: () => void;
   walletAddress: string;
   setCreateAccountError: (err: string) => void;
   onStepChange: (step: number) => void;
-}) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<CreateUserFormData>({
-    Username: "",
-    Bio: "",
-    ProfilePicture: "",
-    Banner: "",
-    role: "student",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+}
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
+// Wrap CreateAccountForm with React.memo
+const CreateAccountForm = React.memo(
+  ({
+    onSuccess,
+    walletAddress,
+    setCreateAccountError,
+    onStepChange,
+  }: CreateAccountFormProps) => {
+    const [currentStep, setCurrentStep] = useState(0);
+    const [formData, setFormData] = useState<CreateUserFormData>({
+      Username: "",
+      Bio: "",
+      ProfilePicture: "",
+      Banner: "",
+      role: "student",
+    });
+    const [isLoading, setIsLoading] = useState(false);
 
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
+    const handleNext = () => {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep((prev) => prev + 1);
+      }
+    };
 
-  const handleSubmit = async () => {
-    if (!walletAddress) return;
+    const handleBack = () => {
+      if (currentStep > 0) {
+        setCurrentStep((prev) => prev - 1);
+      }
+    };
 
-    setIsLoading(true);
-    try {
-      await axios.post(baseUrl + "/user/create", {
-        walletAddress: walletAddress,
-        ...formData,
-      });
-      toast.success("Account created successfully!");
-      onSuccess();
-    } catch (error) {
-      console.error(error);
-      // Show error dialog instead of toast
-      setCreateAccountError(
-        error instanceof Error ? error.message : "Unknown error occurred",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const handleSubmit = async () => {
+      if (!walletAddress) return;
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="username">Username (required)</Label>
-              <Input
-                id="username"
-                value={formData.Username}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Username: e.target.value }))
-                }
-                placeholder="Enter your username"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                value={formData.Bio}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Bio: e.target.value }))
-                }
-                placeholder="Tell us about yourself"
-              />
-            </div>
-          </motion.div>
+      setIsLoading(true);
+      try {
+        await axios.post(baseUrl + "/user/create", {
+          walletAddress: walletAddress,
+          username: formData.Username,
+          bio: formData.Bio,
+          profilePicture: formData.ProfilePicture,
+          banner: formData.Banner,
+          role: formData.role,
+        });
+        toast.success("Account created successfully!");
+        onSuccess();
+      } catch (error) {
+        console.error(error);
+        setCreateAccountError(
+          error instanceof Error ? error.message : "Unknown error occurred",
         );
-      case 1:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label htmlFor="profilePicture" className="text-sm font-medium">
-                Profile Picture URL
-              </Label>
-              <Input
-                id="profilePicture"
-                value={formData.ProfilePicture}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    ProfilePicture: e.target.value,
-                  }))
-                }
-                placeholder="Enter your profile picture URL"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="banner" className="text-sm font-medium">
-                Banner URL
-              </Label>
-              <Input
-                id="banner"
-                value={formData.Banner}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, Banner: e.target.value }))
-                }
-                placeholder="Enter your banner URL"
-              />
-            </div>
-          </motion.div>
-        );
-      case 2:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
-          >
-            <div className="grid gap-2">
-              <Label className="text-sm font-medium">Select Role</Label>
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  type="button"
-                  variant={formData.role === "student" ? "default" : "outline"}
-                  onClick={() =>
-                    setFormData((prev) => ({ ...prev, role: "student" }))
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const renderStep = () => {
+      switch (currentStep) {
+        case 0:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label htmlFor="username">Username (required)</Label>
+                <Input
+                  id="username"
+                  value={formData.Username}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      Username: e.target.value,
+                    }))
                   }
-                  className="h-24"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg">👨‍🎓</span>
-                    <span>Student</span>
-                  </div>
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.role === "teacher" ? "default" : "outline"}
-                  onClick={() =>
-                    setFormData((prev) => ({ ...prev, role: "teacher" }))
-                  }
-                  className="h-24"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-lg">👨‍🏫</span>
-                    <span>Teacher</span>
-                  </div>
-                </Button>
+                  placeholder="Enter your username"
+                />
               </div>
-            </div>
-          </motion.div>
-        );
-      default:
-        return null;
-    }
-  };
+              <div className="grid gap-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  value={formData.Bio}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, Bio: e.target.value }))
+                  }
+                  placeholder="Tell us about yourself"
+                />
+              </div>
+            </motion.div>
+          );
+        case 1:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label htmlFor="profilePicture" className="text-sm font-medium">
+                  Profile Picture URL
+                </Label>
+                <Input
+                  id="profilePicture"
+                  value={formData.ProfilePicture}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      ProfilePicture: e.target.value,
+                    }))
+                  }
+                  placeholder="Enter your profile picture URL"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="banner" className="text-sm font-medium">
+                  Banner URL
+                </Label>
+                <Input
+                  id="banner"
+                  value={formData.Banner}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, Banner: e.target.value }))
+                  }
+                  placeholder="Enter your banner URL"
+                />
+              </div>
+            </motion.div>
+          );
+        case 2:
+          return (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div className="grid gap-2">
+                <Label className="text-sm font-medium">Select Role</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button
+                    type="button"
+                    variant={
+                      formData.role === "student" ? "default" : "outline"
+                    }
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, role: "student" }))
+                    }
+                    className="h-24"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-lg">👨‍🎓</span>
+                      <span>Student</span>
+                    </div>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={
+                      formData.role === "teacher" ? "default" : "outline"
+                    }
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, role: "teacher" }))
+                    }
+                    className="h-24"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-lg">👨‍🏫</span>
+                      <span>Teacher</span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          );
+        default:
+          return null;
+      }
+    };
 
-  useEffect(() => {
-    if (onStepChange) onStepChange(currentStep);
-  }, [currentStep, onStepChange]);
+    useEffect(() => {
+      if (onStepChange) onStepChange(currentStep);
+    }, [currentStep, onStepChange]);
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        {steps.map((step, index) => (
-          <div
-            key={step.id}
-            className={`flex items-center ${
-              index < steps.length - 1 ? "flex-1" : ""
-            }`}
-          >
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          {steps.map((step, index) => (
             <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                index <= currentStep
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+              key={step.id}
+              className={`flex items-center ${
+                index < steps.length - 1 ? "flex-1" : ""
               }`}
             >
-              {index + 1}
-            </div>
-            {index < steps.length - 1 && (
               <div
-                className={`h-0.5 flex-1 ${
-                  index < currentStep ? "bg-primary" : "bg-muted"
+                className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                  index <= currentStep
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
                 }`}
-              />
-            )}
-          </div>
-        ))}
+              >
+                {index + 1}
+              </div>
+              {index < steps.length - 1 && (
+                <div
+                  className={`h-0.5 flex-1 ${
+                    index < currentStep ? "bg-primary" : "bg-muted"
+                  }`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <Alert>
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            All information is optinal, but the more you provide, the better
+            your experience will be. You can always update your profile later.
+          </AlertDescription>
+        </Alert>
+
+        <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
+
+        <DialogFooter className="flex justify-between">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleBack}
+              disabled={isLoading}
+            >
+              Back
+            </Button>
+          )}
+          {currentStep < steps.length - 1 ? (
+            <Button
+              type="button"
+              onClick={handleNext}
+              disabled={isLoading || !formData.Username}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isLoading || !formData.Username}
+            >
+              {isLoading ? "Creating..." : "Create Account"}
+            </Button>
+          )}
+        </DialogFooter>
       </div>
+    );
+  },
+);
 
-      <Alert>
-        <Terminal className="h-4 w-4" />
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          All information is optinal, but the more you provide, the better your
-          experience will be. You can always update your profile later.
-        </AlertDescription>
-      </Alert>
-
-      <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
-
-      <DialogFooter className="flex justify-between">
-        {currentStep > 0 && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleBack}
-            disabled={isLoading}
-          >
-            Back
-          </Button>
-        )}
-        {currentStep < steps.length - 1 ? (
-          <Button
-            type="button"
-            onClick={handleNext}
-            disabled={isLoading || !formData.Username}
-          >
-            Next
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isLoading || !formData.Username}
-          >
-            {isLoading ? "Creating..." : "Create Account"}
-          </Button>
-        )}
-      </DialogFooter>
-    </div>
-  );
-};
+CreateAccountForm.displayName = "CreateAccountForm"; // Good practice for React.memo components
 
 export const WalletConnectButton = () => {
   const { connect } = useConnectModal();
@@ -333,9 +345,7 @@ export const WalletConnectButton = () => {
   const [createStep, setCreateStep] = useState(0);
 
   useEffect(() => {
-    if (!wallet) {
-      return;
-    }
+    if (!wallet) return;
     const unsubscribeAccount = wallet.subscribe(
       "accountChanged",
       (newAccount) => {
@@ -345,7 +355,6 @@ export const WalletConnectButton = () => {
     const unsubscribeChain = wallet.subscribe("chainChanged", (newChain) => {
       console.log("Chain changed via subscribe:", newChain);
     });
-
     return () => {
       unsubscribeAccount();
       unsubscribeChain();
@@ -353,68 +362,51 @@ export const WalletConnectButton = () => {
   }, [wallet]);
 
   useEffect(() => {
-    if (!account?.address) {
-      // No active account, ensure dialog is closed and account status is reset
-      setShowCreateUserDialog(false);
-      setAccountCreated(false);
-      return;
-    }
-
-    if (accountCreated) {
-      // Account is already marked as created for this session/address, do nothing.
-      return;
-    }
-
-    if (!wallet) {
-      return;
-    }
-
-    // At this point, an account address exists, and we haven't confirmed account creation yet.
-    // Attempt to log in / check for user existence.
-    axios
-      .post(baseUrl + "/user/login", {
-        WalletAddress: account.address,
-      })
-      .then(() => {
-        setAccountCreated(true);
-        setShowCreateUserDialog(false); // Ensure dialog is closed if login is successful
-        // Fetch user info and set in zustand
-        axios.get(baseUrl + `/user/${account.address}`).then((response) => {
-          setUser({
-            walletAddress: account.address,
-            username: response.data.username || "",
-            bio: response.data.bio || "",
-            profilePicture: response.data.profilePicture || "",
-            banner: response.data.banner || "",
-            reputation: response.data.reputation || 100,
-            violations: response.data.violations || 0,
-            bannedUntil: response.data.bannedUntil || null,
-            role: response.data.role || "student",
-          });
+    const run = async () => {
+      if (!account?.address) {
+        setShowCreateUserDialog(false);
+        setAccountCreated(false);
+        return;
+      }
+      if (accountCreated) return;
+      try {
+        await axios.post(baseUrl + "/user/login", {
+          WalletAddress: account.address,
         });
-      })
-      .catch((error) => {
+        setAccountCreated(true);
+        setShowCreateUserDialog(false);
+        const response = await axios.get(baseUrl + `/user/${account.address}`);
+        setUser({
+          walletAddress: account.address,
+          username: response.data.username || "",
+          bio: response.data.bio || "",
+          profilePicture: response.data.profilePicture || "",
+          banner: response.data.banner || "",
+          reputation: response.data.reputation || 100,
+          violations: response.data.violations || 0,
+          bannedUntil: response.data.bannedUntil || null,
+          role: response.data.role || "student",
+        });
+      } catch (error: any) {
         if (error.response?.status === 404) {
-          // User not found, prompt for account creation (no error toast)
           setShowCreateUserDialog(true);
-          setAccountCreated(false); // Ensure this is false as we are prompting creation
+          setAccountCreated(false);
         } else {
-          // Only show toast for real errors
           console.error("Login/check error:", error);
           toast.error("Đã xảy ra lỗi khi kết nối tới EduNFT", {
             description:
               error instanceof Error ? error.message : "Unknown error occurred",
           });
         }
-      });
-  }, [account?.address, accountCreated, setUser, wallet]); // Thêm wallet vào dependencies
+      }
+    };
+    run();
+  }, [account?.address, accountCreated, setUser]);
 
   const wallets = useMemo(
     () => [
       inAppWallet({
-        auth: {
-          options: ["google", "email", "facebook", "apple", "github"],
-        },
+        auth: { options: ["google", "email", "facebook", "apple", "github"] },
       }),
       createWallet("io.metamask"),
       createWallet("com.coinbase.wallet"),
@@ -462,7 +454,6 @@ export const WalletConnectButton = () => {
   const handleCreateAccountSuccess = useCallback(() => {
     setAccountCreated(true);
     setShowCreateUserDialog(false);
-    // Fetch user info and set in zustand
     if (account?.address) {
       axios.get(baseUrl + `/user/${account.address}`).then((response) => {
         setUser({
@@ -480,106 +471,58 @@ export const WalletConnectButton = () => {
     }
   }, [account?.address, setUser]);
 
-  const handleCreateAccountErrorLogout = () => {
+  const handleCreateAccountErrorLogout = useCallback(() => {
     if (wallet) disconnect(wallet);
     setCreateAccountError(null);
     setShowCreateUserDialog(false);
     window.location.reload();
-  };
+  }, [wallet, disconnect]);
+
+  const handleCreateUserDialogOpenChange = useCallback(
+    (open: boolean) => {
+      if (!open && showCreateUserDialog) return;
+      setShowCreateUserDialog(open);
+    },
+    [showCreateUserDialog],
+  );
+
+  const handleErrorDialogOpenChange = useCallback(() => {
+    setCreateAccountError(null);
+  }, []);
+
+  const handleCancelAndLogout = useCallback(() => {
+    if (wallet) disconnect(wallet);
+    setShowCreateUserDialog(false);
+  }, [wallet, disconnect]);
 
   return (
     <>
       {!account?.address ? (
-        <Button onClick={handleConnect} className="cursor-pointer">
-          Connect
-        </Button>
+        <ConnectButton onClick={handleConnect} />
       ) : activeChain?.id !== FORMA_SKETCHPAD.id ? (
-        <Button onClick={handleSwitch} className="cursor-pointer">
-          Switch network
-        </Button>
+        <SwitchNetworkButton onClick={handleSwitch} />
       ) : (
-        <Button
-          variant={"outline"}
+        <AccountButton
+          user={user ?? undefined}
+          address={account.address}
           onClick={handleDetail}
-          className="flex cursor-pointer items-center dark:bg-transparent"
-        >
-          {user?.profilePicture ? (
-            <SkeletonImage
-              src={user.profilePicture}
-              alt="Avatar"
-              width={24}
-              height={24}
-              rounded="rounded-full"
-              className="mr-1 size-6 rounded-full"
-            />
-          ) : (
-            <Blobbie
-              address={account.address}
-              className="mr-1 size-6 rounded-full"
-            />
-          )}
-          {formatAddress(account.address)}
-        </Button>
+        />
       )}
-
-      <Dialog
+      <CreateAccountDialog
         open={showCreateUserDialog}
-        onOpenChange={(open) => {
-          // Prevent closing by X or overlay when dialog is for account creation
-          if (!open && showCreateUserDialog) return;
-          setShowCreateUserDialog(open);
-        }}
-      >
-        <DialogContent className="no-x-close max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create Your Account</DialogTitle>
-            <DialogDescription>
-              Please fill in your details to complete your account setup.
-            </DialogDescription>
-          </DialogHeader>
-          {account?.address && (
-            <CreateAccountForm
-              walletAddress={account.address}
-              onSuccess={handleCreateAccountSuccess}
-              setCreateAccountError={setCreateAccountError}
-              onStepChange={setCreateStep}
-            />
-          )}
-          {account?.address && createStep === 0 && (
-            <DialogFooter className="flex flex-row-reverse justify-between gap-2">
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  if (wallet) disconnect(wallet);
-                  setShowCreateUserDialog(false);
-                }}
-              >
-                Cancel and Logout
-              </Button>
-            </DialogFooter>
-          )}
-        </DialogContent>
-      </Dialog>
-      {/* Error Dialog for account creation */}
-      <Dialog
+        onOpenChange={handleCreateUserDialogOpenChange}
+        account={account}
+        onSuccess={handleCreateAccountSuccess}
+        setCreateAccountError={setCreateAccountError}
+        setCreateStep={setCreateStep}
+        handleCancelAndLogout={handleCancelAndLogout}
+      />
+      <ErrorDialog
         open={!!createAccountError}
-        onOpenChange={() => setCreateAccountError(null)}
-      >
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Đã xảy ra lỗi khi tạo tài khoản</DialogTitle>
-            <DialogDescription>{createAccountError}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="destructive"
-              onClick={handleCreateAccountErrorLogout}
-            >
-              Đăng xuất và thử lại
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        onOpenChange={handleErrorDialogOpenChange}
+        createAccountError={createAccountError}
+        handleCreateAccountErrorLogout={handleCreateAccountErrorLogout}
+      />
     </>
   );
 };

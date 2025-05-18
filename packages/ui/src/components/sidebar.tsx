@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
+import { useDevice } from "@workspace/ui/hooks/use-device";
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -66,6 +67,7 @@ function SidebarProvider({
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
+  const { isDesktop } = useDevice();
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
 
@@ -90,8 +92,10 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen, setOpenMobile]);
+    return !isDesktop
+      ? setOpenMobile((open) => !open)
+      : setOpen((open) => !open);
+  }, [isDesktop, setOpen, setOpenMobile]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -163,7 +167,8 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const { state, openMobile, setOpenMobile } = useSidebar();
+  const { isDesktop } = useDevice();
 
   if (collapsible === "none") {
     return (
@@ -180,7 +185,7 @@ function Sidebar({
     );
   }
 
-  if (isMobile) {
+  if (!isDesktop) {
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
@@ -264,7 +269,7 @@ function SidebarTrigger({
     <Button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      variant="ghost"
+      variant="outline"
       size="icon"
       className={cn("size-9", className)}
       onClick={(event) => {
