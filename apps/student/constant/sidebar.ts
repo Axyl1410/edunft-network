@@ -76,7 +76,7 @@ export const SidebarData = {
   more: [
     {
       name: "Resources",
-      url: "#",
+      url: "/resources",
       icon: BookText,
     },
     {

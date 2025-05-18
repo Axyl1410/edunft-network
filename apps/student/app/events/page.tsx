@@ -9,6 +9,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
+import Loading from "@workspace/ui/components/loading";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
@@ -479,7 +480,11 @@ export default function Events() {
 
           {/* Timeline Events with scroll */}
           <div className="space-y-4 pr-0 md:space-y-6 md:pr-4">
-            {activeTab === "events" ? (
+            {loading ? (
+              <div className="py-8 text-center">
+                <Loading text="Đang tải dữ liệu..." />
+              </div>
+            ) : activeTab === "events" ? (
               <EventList
                 todayEvents={todayEvents as Event[]}
                 upcomingEvents={upcomingEvents as Event[]}
