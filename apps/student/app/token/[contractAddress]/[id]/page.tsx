@@ -176,7 +176,10 @@ export default async function Page({
             </div>
 
             {/* Owner Info */}
-            <div className="mb-6 mt-4 flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800/50">
+            <Link
+              href={`/profile/${nft.owner}`}
+              className="mb-6 mt-4 flex cursor-pointer items-center gap-3 rounded-lg bg-gray-50 p-3 transition hover:bg-blue-50 dark:bg-gray-800/50 dark:hover:bg-gray-800"
+            >
               <Suspense
                 fallback={
                   <Blobbie
@@ -195,7 +198,7 @@ export default async function Page({
                   {formatAddress(nft.owner)}
                 </span>
               </div>
-            </div>
+            </Link>
 
             {/* Description */}
             {nft.metadata.description && (
