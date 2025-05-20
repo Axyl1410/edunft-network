@@ -167,6 +167,7 @@ export default function HomePage() {
                         chain={FORMA_SKETCHPAD}
                         loadingComponent={<Loading />}
                         fallbackComponent={<div>Failed to load</div>}
+                        
                       />
                     </motion.div>
                   </AccountProvider>

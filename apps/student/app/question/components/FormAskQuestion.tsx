@@ -5,9 +5,15 @@ import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { toast } from "sonner";
-
-// Mock user token balance
-const MOCK_USER_TOKEN_BALANCE = 200;
+import {
+  AccountBalance,
+  AccountProvider,
+  Blobbie,
+  useActiveAccount,
+} from "thirdweb/react";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import Loading from "@workspace/ui/components/loading";
+import { motion } from "motion/react";
 
 // Mock similar questions
 const MOCK_QUESTIONS = [
@@ -54,6 +60,20 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
   const [videos, setVideos] = useState<File[]>([]);
   const [similarQuestions, setSimilarQuestions] = useState<typeof MOCK_QUESTIONS>([]);
   const [step, setStep] = useState(1);
+  const [userBalance, setUserBalance] = useState(0);
+  const account = useActiveAccount();
+
+  // Get user's token balance
+  useEffect(() => {
+    if (account?.address) {
+      // Get balance from AccountBalance component
+      const balanceElement = document.getElementById('user-token-balance');
+      if (balanceElement) {
+        const balance = parseInt(balanceElement.textContent || '0');
+        setUserBalance(balance);
+      }
+    }
+  }, [account?.address]);
 
   // Step-by-step guidance
   const steps = [
@@ -115,7 +135,7 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
       toast.warning("Please add at least one tag.");
       return;
     }
-    if (step === 4 && tokens > MOCK_USER_TOKEN_BALANCE) {
+    if (step === 4 && tokens > userBalance) {
       toast.warning("You do not have enough tokens.");
       return;
     }
@@ -128,7 +148,7 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (tokens > MOCK_USER_TOKEN_BALANCE) {
+    if (tokens > userBalance) {
       toast.warning("You do not have enough tokens.");
       return;
     }
@@ -152,6 +172,22 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="relative w-full max-w-2xl">
         <Card className="p-6">
+          {/* Hidden balance element */}
+          <div id="user-token-balance" className="hidden">
+          <AccountProvider
+                    address={`${account?.address}`}
+                    client={thirdwebClient}
+                  >
+                    <motion.div layout>
+                      <AccountBalance
+                        chain={FORMA_SKETCHPAD}
+                        loadingComponent={<Loading />}
+                        fallbackComponent={<div>Failed to load</div>}
+                        
+                      />
+                    </motion.div>
+                  </AccountProvider>
+          </div>
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-400 hover:text-gray-700 text-2xl"
@@ -255,12 +291,12 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
                   placeholder="Number of tokens to reward"
                   value={tokens}
                   min={0}
-                  max={MOCK_USER_TOKEN_BALANCE}
+                  max={userBalance}
                   onChange={(e) => setTokens(Number(e.target.value))}
                   required
                 />
                 <div className="text-xs text-gray-500 mt-1">
-                  Your balance: {MOCK_USER_TOKEN_BALANCE} tokens
+                  Your balance: {userBalance} tokens
                 </div>
                 <div className="mt-2">
                   <label className="block font-semibold mb-1">Token Expiry (optional)</label>

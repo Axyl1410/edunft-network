@@ -15,7 +15,7 @@ type CollectionCardProps = {
 
 const CollectionCard: React.FC<CollectionCardProps> = ({
   address,
-  showTotal = false,
+  showTotal = true,
   ...props
 }) => {
   const contract = getThirdwebContract(address);
