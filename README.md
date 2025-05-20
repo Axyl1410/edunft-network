@@ -74,45 +74,7 @@ EduNFT Network is designed with a microservices architecture:
 - **Smart Contracts**: ERC-721 NFT certificates with verification methods
 - **Token Economy**: Reward system for educational achievements
 
-```solidity
-// Certificate NFT Contract
-contract EduCertificate is ERC721URIStorage, Ownable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-    
-    mapping(uint256 => string) private _certificateHashes;
-    mapping(uint256 => address) private _certificateIssuers;
 
-    event CertificateIssued(uint256 tokenId, address student, string hash);
-    
-    function issueCertificate(
-        address student, 
-        string memory tokenURI,
-        string memory certificateHash
-    ) public onlyOwner returns (uint256) {
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        
-        _mint(student, newTokenId);
-        _setTokenURI(newTokenId, tokenURI);
-        _certificateHashes[newTokenId] = certificateHash;
-        _certificateIssuers[newTokenId] = msg.sender;
-        
-        emit CertificateIssued(newTokenId, student, certificateHash);
-        return newTokenId;
-    }
-    
-    function verifyCertificate(
-        uint256 tokenId, 
-        address student,
-        string memory certificateHash
-    ) public view returns (bool) {
-        return ownerOf(tokenId) == student && 
-               keccak256(bytes(_certificateHashes[tokenId])) == 
-               keccak256(bytes(certificateHash));
-    }
-}
-```
 
 ## Technologies
 
