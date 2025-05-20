@@ -42,7 +42,7 @@ export async function retrieveFile(hash: string, type: "public" | "private") {
       }
       const url = await pinataClient.gateways.private.createAccessLink({
         cid: hash,
-        expires: 30,
+        expires: 60,
       });
       return { data, url };
     }
