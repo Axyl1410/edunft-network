@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export class Author {
   @Prop({ required: true, type: String })
@@ -13,6 +13,9 @@ export class Author {
 }
 
 export class Answer {
+  @Prop({ type: Types.ObjectId, auto: true })
+  _id: Types.ObjectId;
+
   @Prop({ required: true, type: String })
   content: string;
 
@@ -24,10 +27,22 @@ export class Answer {
 
   @Prop({ default: false, type: Boolean })
   isAccepted: boolean;
+
+  @Prop({ type: String })
+  blockchainTxHash: string;
+
+  @Prop({ type: String })
+  blockchainVoteTxHash: string;
+
+  @Prop({ type: String })
+  blockchainAcceptTxHash: string;
 }
 
 @Schema({ timestamps: true })
 export class Question {
+  @Prop({ type: Types.ObjectId, auto: true })
+  _id: Types.ObjectId;
+
   @Prop({ required: true, type: String })
   title: string;
 
@@ -54,6 +69,9 @@ export class Question {
 
   @Prop({ type: String })
   timeLeft: string;
+
+  @Prop({ type: String })
+  blockchainTxHash: string;
 }
 
 export type QuestionDocument = Question & Document;

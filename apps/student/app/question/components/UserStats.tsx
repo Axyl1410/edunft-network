@@ -11,12 +11,31 @@ import Link from "next/link";
 import { useState } from "react";
 import "../styles/question.css";
 
+interface Question {
+  _id: string
+  title: string
+  description: string
+  tokens: number
+  tags: string[]
+  votes: number
+  author: {
+    walletAddress: string
+    name: string
+    avatar: string
+  }
+  views: number
+  answers: any[]
+  createdAt: string
+  updatedAt: string
+  __v: number
+}
+
 interface UserStatsProps {
-  questionsAsked: number;
-  answersGiven: number;
-  tokensEarned: number;
-  badgeLevel: "Bronze" | "Silver" | "Gold" | "Platinum";
-  savedQuestions: { id: string; title: string }[];
+  questionsAsked: number
+  answersGiven: number
+  tokensEarned: number
+  badgeLevel: "Bronze" | "Silver" | "Gold" | "Platinum"
+  savedQuestions: Question[]
 }
 
 const badgeStyles = {
@@ -41,11 +60,11 @@ export default function UserStats({
   answersGiven,
   tokensEarned,
   badgeLevel,
-  savedQuestions = [],
+  savedQuestions = []
 }: UserStatsProps) {
-  const [showBadgeModal, setShowBadgeModal] = useState(false);
-  const [animateOut, setAnimateOut] = useState(false);
-  const [showSavedDetail, setShowSavedDetail] = useState(false);
+  const [showBadgeModal, setShowBadgeModal] = useState(false)
+  const [animateOut, setAnimateOut] = useState(false)
+  const [showSavedDetail, setShowSavedDetail] = useState(false)
 
   const handleBadgeClick = () => {
     confetti({
@@ -54,19 +73,19 @@ export default function UserStats({
       spread: 55,
       origin: { x: 0, y: 1 },
       colors: ["#FFD700", "#C0C0C0", "#CD7F32", "#38bdf8", "#fbbf24"],
-    });
+    })
     confetti({
       particleCount: 80,
       angle: 120,
       spread: 55,
       origin: { x: 1, y: 1 },
       colors: ["#FFD700", "#C0C0C0", "#CD7F32", "#38bdf8", "#fbbf24"],
-    });
-    setShowBadgeModal(true);
-    setAnimateOut(false);
-    setTimeout(() => setAnimateOut(true), 2200);
-    setTimeout(() => setShowBadgeModal(false), 3000);
-  };
+    })
+    setShowBadgeModal(true)
+    setAnimateOut(false)
+    setTimeout(() => setAnimateOut(true), 2200)
+    setTimeout(() => setShowBadgeModal(false), 3000)
+  }
 
   return (
     <div className="relative mb-8">
@@ -97,9 +116,9 @@ export default function UserStats({
             ) : (
               <ul className="styled-scrollbar max-h-[60vh] space-y-3 overflow-auto pr-4">
                 {savedQuestions.map((q) => (
-                  <li key={q.id} className="group">
+                  <li key={q._id} className="group">
                     <Link
-                      href={`/question/${q.id}`}
+                      href={`/question/${q._id}`}
                       className="block rounded-lg border border-gray-100 p-4 transition-all duration-300 hover:border-blue-200 hover:bg-blue-50"
                       onClick={() => setShowSavedDetail(false)}
                     >
@@ -120,10 +139,8 @@ export default function UserStats({
         </div>
       )}
 
-      {/* Container bọc các card */}
       <div className="mt-8 rounded-xl border bg-gradient-to-br from-blue-600 to-cyan-400 p-6 shadow-lg">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          {/* Card Questions Asked */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <HelpCircle className="text-blue-500" size={20} /> Questions Asked
@@ -133,19 +150,15 @@ export default function UserStats({
             </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
-              onClick={() =>
-                alert("Show questions asked history (blockchain)...")
-              }
+              onClick={() => alert("Show questions asked history (blockchain)...")}
             >
               View History
             </button>
           </div>
 
-          {/* Card Answers Given */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
-              <MessageCircle className="text-green-500" size={20} /> Answers
-              Given
+              <MessageCircle className="text-green-500" size={20} /> Answers Given
             </span>
             <span className="text-2xl font-bold text-gray-900">
               {answersGiven}
@@ -158,7 +171,6 @@ export default function UserStats({
             </button>
           </div>
 
-          {/* Card Tokens Earned */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <Coins className="text-orange-500" size={20} /> Tokens Earned
@@ -168,15 +180,12 @@ export default function UserStats({
             </span>
             <button
               className="mt-2 text-xs text-blue-500 hover:underline"
-              onClick={() =>
-                alert("Show token earning history (blockchain)...")
-              }
+              onClick={() => alert("Show token earning history (blockchain)...")}
             >
               View History
             </button>
           </div>
 
-          {/* Card Saved Questions */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <Bookmark className="text-blue-500" size={20} /> Saved Questions
@@ -192,7 +201,6 @@ export default function UserStats({
             </button>
           </div>
 
-          {/* Card Reputation Badge */}
           <div className="flex min-h-[120px] flex-col items-center justify-between rounded-lg border bg-gray-50 p-4 shadow-sm transition-shadow hover:shadow-md">
             <span className="mb-2 flex items-center gap-2 font-semibold text-gray-700">
               <Medal className="text-purple-500" size={20} /> Reputation
@@ -239,5 +247,5 @@ export default function UserStats({
         </>
       )}
     </div>
-  );
+  )
 }
