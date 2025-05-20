@@ -21,7 +21,7 @@ export class VoteController {
     error?: any;
   }): T {
     if (result.isSuccess()) {
-      return result.value as T;
+      return result.value;
     }
     this.handleError(result.error);
   }

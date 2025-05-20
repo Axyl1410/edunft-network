@@ -44,4 +44,4 @@ export class HttpExceptionFilter implements ExceptionFilter {
       error: exception instanceof Error ? exception.message : 'Unknown error',
     });
   }
-} 
+}

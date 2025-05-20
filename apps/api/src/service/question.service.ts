@@ -20,7 +20,7 @@ export class QuestionService {
   async createQuestion(data: Partial<Question>): Promise<Question> {
     try {
       this.logger.debug('Creating question with data:', data);
-      
+
       if (!data) {
         throw new BadRequestException('Question data is required');
       }
@@ -49,12 +49,13 @@ export class QuestionService {
       }
 
       // Create question in blockchain
-      const questionId = data._id?.toString() || new Date().getTime().toString();
+      const questionId =
+        data._id?.toString() || new Date().getTime().toString();
       const signer = new ethers.Wallet(process.env.PRIVATE_KEY, this.provider);
       const txHash = await this.blockchainService.createQuestion(
         questionId,
         BigInt(data.tokens),
-        signer
+        signer,
       );
 
       const created = new this.questionModel({
@@ -66,10 +67,10 @@ export class QuestionService {
       });
 
       this.logger.debug('Question model created:', created);
-      
+
       const savedQuestion = await created.save();
       this.logger.debug('Question saved successfully:', savedQuestion);
-      
+
       return savedQuestion;
     } catch (error) {
       this.logger.error('Error creating question:', error);
@@ -95,11 +96,7 @@ export class QuestionService {
     try {
       // Find and update in one operation to increment views
       const question = await this.questionModel
-        .findByIdAndUpdate(
-          id,
-          { $inc: { views: 1 } },
-          { new: true }
-        )
+        .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
         .exec();
 
       if (!question) {
@@ -123,20 +120,20 @@ export class QuestionService {
       const txHash = await this.blockchainService.submitAnswer(
         questionId,
         answer._id.toString(),
-        signer
+        signer,
       );
 
       // Add answer to database
       const question = await this.questionModel
         .findByIdAndUpdate(
           questionId,
-          { 
-            $push: { 
+          {
+            $push: {
               answers: {
                 ...answer,
                 blockchainTxHash: txHash,
-              }
-            } 
+              },
+            },
           },
           { new: true },
         )
@@ -170,7 +167,9 @@ export class QuestionService {
         throw new BadRequestException('Question not found');
       }
 
-      const answer = question.answers.find(a => a._id.toString() === answerId);
+      const answer = question.answers.find(
+        (a) => a._id.toString() === answerId,
+      );
       if (!answer) {
         throw new BadRequestException('Answer not found');
       }
@@ -181,21 +180,21 @@ export class QuestionService {
         questionId,
         answerId,
         1, // Upvote
-        signer
+        signer,
       );
 
       // Update vote count in database
       const updatedQuestion = await this.questionModel
         .findOneAndUpdate(
-          { 
+          {
             _id: questionId,
-            'answers._id': answerId
+            'answers._id': answerId,
           },
-          { 
+          {
             $inc: { 'answers.$.votes': 1 },
-            $set: { 'answers.$.blockchainVoteTxHash': txHash }
+            $set: { 'answers.$.blockchainVoteTxHash': txHash },
           },
-          { new: true }
+          { new: true },
         )
         .exec();
 
@@ -216,7 +215,9 @@ export class QuestionService {
         throw new BadRequestException('Question not found');
       }
 
-      const answer = question.answers.find(a => a._id.toString() === answerId);
+      const answer = question.answers.find(
+        (a) => a._id.toString() === answerId,
+      );
       if (!answer) {
         throw new BadRequestException('Answer not found');
       }
@@ -226,7 +227,7 @@ export class QuestionService {
       const txHash = await this.blockchainService.acceptAnswer(
         questionId,
         answer.author.walletAddress,
-        signer
+        signer,
       );
 
       // Update question in database
@@ -237,12 +238,12 @@ export class QuestionService {
             $set: {
               'answers.$[answer].isAccepted': true,
               'answers.$[answer].blockchainAcceptTxHash': txHash,
-            }
+            },
           },
           {
             arrayFilters: [{ 'answer._id': answerId }],
-            new: true
-          }
+            new: true,
+          },
         )
         .exec();
 
