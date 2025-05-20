@@ -7,6 +7,14 @@ import { motion } from "motion/react";
 import { MessageSquare, Clock, Tag, ThumbsUp, ThumbsDown, Eye } from 'lucide-react';
 import Link from 'next/link';
 
+import { toast } from 'sonner';
+import {
+  AccountBalance,
+  AccountProvider,
+  Blobbie,
+  useActiveAccount,
+} from "thirdweb/react"; 
+
 interface LocalQuestion {
   id: string;
   title: string;
@@ -20,11 +28,14 @@ interface LocalQuestion {
   tags: string[];
   createdAt: string;
   status: string;
+  votes: number;
 }
 
 export default function QuestionList() {
   const [questions, setQuestions] = useState<LocalQuestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const account = useActiveAccount();
+  const address = account?.address;
 
   useEffect(() => {
     // Load questions from localStorage
@@ -41,6 +52,97 @@ export default function QuestionList() {
     window.addEventListener('storage', loadQuestions);
     return () => window.removeEventListener('storage', loadQuestions);
   }, []);
+
+  const handleVote = (questionId: string, type: "up" | "down") => {
+    if (!address) {
+      toast.error("Please connect your wallet to vote");
+      return;
+    }
+
+    try {
+      // Get user's vote history from localStorage
+      const userVotes = JSON.parse(localStorage.getItem(`user_votes_${address}`) || '{}');
+      
+      // Check if user has already voted on this question
+      if (userVotes[questionId]) {
+        toast.error("You have already voted on this question");
+        return;
+      }
+
+      const updatedQuestions = questions.map(q => {
+        if (q.id === questionId) {
+          // Try to get current votes from API first
+          const currentVotes = q.votes || 0;
+          const newVotes = currentVotes + (type === "up" ? 1 : -1);
+          
+          // Check if votes go below -5
+          if (newVotes <= -5) {
+            toast.error("This question has received too many downvotes. Please review and remove it.");
+            // Notify question owner
+            if (q.author.walletAddress === address) {
+              toast.warning("Your question has received too many downvotes. Please review and remove it.");
+            }
+          }
+          
+          return { ...q, votes: newVotes };
+        }
+        return q;
+      });
+
+      // Save user's vote
+      userVotes[questionId] = type;
+      localStorage.setItem(`user_votes_${address}`, JSON.stringify(userVotes));
+
+      // Update questions
+      setQuestions(updatedQuestions);
+      localStorage.setItem('questions', JSON.stringify(updatedQuestions));
+      
+      toast.success(`Successfully ${type === 'up' ? 'upvoted' : 'downvoted'} the question`);
+    } catch (error) {
+      console.error('Error voting:', error);
+      toast.error("Failed to vote. Please try again.");
+    }
+  };
+
+  const handleRemoveQuestion = (questionId: string) => {
+    if (!address) {
+      toast.error("Please connect your wallet to remove questions");
+      return;
+    }
+
+    try {
+      const question = questions.find(q => q.id === questionId);
+      if (!question) return;
+
+      // Only allow removal if user is the author or votes are too low
+      if (question.author.walletAddress !== address && question.votes > -5) {
+        toast.error("You can only remove your own questions or questions with too many downvotes");
+        return;
+      }
+
+      // Remove question from localStorage
+      const updatedQuestions = questions.filter(q => q.id !== questionId);
+      setQuestions(updatedQuestions);
+      localStorage.setItem('questions', JSON.stringify(updatedQuestions));
+
+      // Remove votes for this question from all users
+      const allKeys = Object.keys(localStorage);
+      allKeys.forEach(key => {
+        if (key.startsWith('user_votes_')) {
+          const userVotes = JSON.parse(localStorage.getItem(key) || '{}');
+          if (userVotes[questionId]) {
+            delete userVotes[questionId];
+            localStorage.setItem(key, JSON.stringify(userVotes));
+          }
+        }
+      });
+
+      toast.success("Question removed successfully");
+    } catch (error) {
+      console.error('Error removing question:', error);
+      toast.error("Failed to remove question. Please try again.");
+    }
+  };
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
@@ -71,17 +173,21 @@ export default function QuestionList() {
                   variant="ghost"
                   className="p-0 mb-2"
                   style={{ width: 40, height: 40 }}
+                  onClick={() => handleVote(question.id, "up")}
                   aria-label="Upvote"
                 >
                   <span className="flex items-center justify-center text-blue-600 font-bold">
                     <ThumbsUp size={40} />
                   </span>
                 </Button>
-                <span className="font-bold text-xl mb-2">0</span>
+                <span className={`font-bold text-xl mb-2 ${question.votes < 0 ? 'text-red-500' : ''}`}>
+                  {question.votes}
+                </span>
                 <Button
                   variant="ghost"
                   className="p-0"
                   style={{ width: 40, height: 40 }}
+                  onClick={() => handleVote(question.id, "down")}
                   aria-label="Downvote"
                 >
                   <span className="flex items-center justify-center text-gray-400 font-bold">
@@ -101,12 +207,24 @@ export default function QuestionList() {
 
             <div className="flex-1 flex flex-col justify-between px-6 py-4">
               <div className="flex flex-col gap-1">
-                <Link
-                  href={`/question/${question.id}`}
-                  className="text-base font-semibold text-blue-700 hover:underline"
-                >
-                  {question.title}
-                </Link>
+                <div className="flex justify-between items-start">
+                  <Link
+                    href={`/question/${question.id}`}
+                    className="text-base font-semibold text-blue-700 hover:underline"
+                  >
+                    {question.title}
+                  </Link>
+                  {(question.author.walletAddress === address || question.votes <= -5) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleRemoveQuestion(question.id)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
                 <div 
                   className="text-gray-700 text-sm mt-1 line-clamp-2"
                   dangerouslySetInnerHTML={{ __html: question.description }}
