@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
+import { Input } from "@workspace/ui/components/input";
 import { toast } from "sonner";
 import {
   AccountBalance,
@@ -14,6 +15,8 @@ import {
 import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
 import Loading from "@workspace/ui/components/loading";
 import { motion } from "motion/react";
+import { Check, X, ChevronsUpDown } from "lucide-react";
+import { Editor } from '@tinymce/tinymce-react';
 
 // Mock similar questions
 const MOCK_QUESTIONS = [
@@ -34,6 +37,50 @@ const MOCK_QUESTIONS = [
   },
 ];
 
+const AVAILABLE_TAGS = [
+  "QuảnTrịKinhDoanh",
+  "KinhDoanhQuốcTế",
+  "Marketing",
+  "ThươngMạiĐiệnTử",
+  "TàiChínhNgânHàng",
+  "KếToán",
+  "Logistics",
+  "CôngNghệTàiChính",
+  "CôngNghệThôngTin",
+  "KỹThuậtPhầnMềm",
+  "MạngMáyTính",
+  "TruyềnThôngĐaPhươngTiện",
+  "CôngNghệTruyềnThông",
+  "ĐồHọaKỹThuậtSố",
+  "NgônNgữAnh",
+  "ĐôngPhươngHọc",
+  "Luật",
+  "LuậtKinhTế",
+  "QuanHệCôngChúng",
+  "DuLịchLữHành",
+  "QuảnTrịKháchSạn",
+  "DịchVụDuLịch",
+  "NguyênLýKếToán",
+  "MarketingCănBản",
+  "QuảnTrịChiếnLược",
+  "LậpTrìnhCơBản",
+  "PhápLuậtĐạiCương",
+  "GiaoTiếpKinhDoanh",
+  "TiếngAnhChuyênNgành",
+  "QuảnLýDựÁn",
+  "TruyềnThôngSố",
+  "PhânTíchDữLiệu",
+  "LậpTrìnhHướngĐốiTượng",
+  "LậpTrìnhTrựcQuan",
+  "KỹNăngMềm",
+  "CSDL",
+  "QuảnTrịHọc",
+  "HQTCSDL",
+  "PCLVCN",
+  "TriếtHọc",
+  "KhoaHọcMáyTính"
+];
+
 interface AskQuestionFormProps {
   onClose?: () => void;
   onSubmit?: (data: {
@@ -42,9 +89,6 @@ interface AskQuestionFormProps {
     tags: string[];
     tokens: number;
     tokenExpiry: string | null;
-    code?: string;
-    files: File[];
-    videos: File[];
   }) => void;
 }
 
@@ -52,16 +96,15 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [tokens, setTokens] = useState(0);
   const [tokenExpiry, setTokenExpiry] = useState<string | null>(null);
-  const [code, setCode] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
-  const [videos, setVideos] = useState<File[]>([]);
   const [similarQuestions, setSimilarQuestions] = useState<typeof MOCK_QUESTIONS>([]);
   const [step, setStep] = useState(1);
   const [userBalance, setUserBalance] = useState(0);
   const account = useActiveAccount();
+  const [open, setOpen] = useState(false);
+  const [tagInput, setTagInput] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get user's token balance
   useEffect(() => {
@@ -77,13 +120,9 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
 
   // Step-by-step guidance
   const steps = [
-    "Enter a clear and concise title for your question.",
-    "Describe your question in detail. Include what you have tried.",
-    "Add relevant tags to help others find your question.",
+    "Enter your question details and select tags.",
     "Set a token reward and (optionally) an expiry date.",
-    "Attach code, files, or videos if needed.",
-    "Review similar questions to avoid duplicates.",
-    "Submit your question.",
+    "Review and submit your question.",
   ];
 
   // Check for similar questions as user types the title
@@ -98,28 +137,25 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
     }
   }, [title]);
 
-  const handleAddTag = () => {
-    const tag = tagInput.trim();
-    if (tag && !tags.includes(tag)) {
+  // Function to remove diacritics and convert to lowercase
+  const normalizeString = (str: string) => {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  };
+
+  // Filter tags based on input
+  const filteredTags = AVAILABLE_TAGS.filter((tag) =>
+    normalizeString(tag).includes(normalizeString(tagInput))
+  );
+
+  const handleAddTag = (tag: string) => {
+    if (!tags.includes(tag)) {
       setTags([...tags, tag]);
-      setTagInput("");
     }
-  };
-
-  const handleRemoveTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
-    }
-  };
-
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setVideos(Array.from(e.target.files));
-    }
+    setTagInput("");
+    setOpen(false);
   };
 
   const handleNextStep = () => {
@@ -146,26 +182,53 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (tokens > userBalance) {
       toast.warning("You do not have enough tokens.");
       return;
     }
-    if (onSubmit) {
-      onSubmit({ title, description, tags, tokens, tokenExpiry, code, files, videos });
+
+    try {
+      setIsSubmitting(true);
+      
+      // Prepare question data
+      const questionData = {
+        id: Date.now().toString(), // Temporary ID for local storage
+        title,
+        description,
+        tokens,
+        author: {
+          walletAddress: account?.address,
+          name: "Anonymous",
+          avatar: "https://via.placeholder.com/40"
+        },
+        tags,
+        createdAt: new Date().toISOString(),
+        status: 'active'
+      };
+
+      // Store in localStorage for now
+      const existingQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
+      localStorage.setItem('questions', JSON.stringify([...existingQuestions, questionData]));
+
+      toast.success("Question submitted successfully!");
+      
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setTags([]);
+      setTokens(0);
+      setTokenExpiry(null);
+      setStep(1);
+      
+      if (onClose) onClose();
+    } catch (error) {
+      console.error('Error submitting question:', error);
+      toast.error("Failed to submit question. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-    toast.success("Question submitted!");
-    setTitle("");
-    setDescription("");
-    setTags([]);
-    setTokens(0);
-    setTokenExpiry(null);
-    setCode("");
-    setFiles([]);
-    setVideos([]);
-    setStep(1);
-    if (onClose) onClose();
   };
 
   return (
@@ -202,17 +265,139 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
           </div>
           <form onSubmit={handleSubmit}>
             {step === 1 && (
-              <div className="mb-4">
-                <label className="block font-semibold mb-1">Title</label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-3 py-2"
-                  placeholder="e.g. How to manage state in React?"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  maxLength={120}
-                  required
-                />
+              <div className="mb-4 space-y-4">
+                <div>
+                  <label className="block font-semibold mb-1">Title</label>
+                  <input
+                    type="text"
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="e.g. How to manage state in React?"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={120}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">Description</label>
+                  <div className="border rounded">
+                    <Editor
+                      apiKey="dy7n25j6dc5ptz1vvsl9nmxdzobyxut20g2e2debmf99cuvk" // Bạn cần đăng ký key tại https://www.tiny.cloud/
+                      value={description}
+                      onEditorChange={(content) => setDescription(content)}
+                      init={{
+                        height: 300,
+                        menubar: false,
+                        plugins: [
+                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                          'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                        ],
+                        toolbar: 'undo redo | blocks | ' +
+                          'bold italic forecolor | alignleft aligncenter ' +
+                          'alignright alignjustify | bullist numlist outdent indent | ' +
+                          'removeformat | help',
+                        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
+                        placeholder: "Describe your question in detail. What did you try? What did you expect?",
+                        language: 'vi',
+                        language_url: '/langs/vi.js',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">Tags</label>
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        placeholder="Search tags..."
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        className="w-full"
+                      />
+                      {tagInput && (
+                        <div className="absolute top-full left-0 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto z-10">
+                          {filteredTags.length > 0 ? (
+                            filteredTags.map((tag) => (
+                              <button
+                                key={tag}
+                                className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center"
+                                onClick={() => handleAddTag(tag)}
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    tags.includes(tag) ? "text-blue-500" : "text-transparent"
+                                  }`}
+                                />
+                                {tag}
+                              </button>
+                            ))
+                          ) : (
+                            <div className="px-4 py-2 text-gray-500">No tags found</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Selected Tags */}
+                    <div className="mt-2">
+                      <div className="text-sm font-medium text-gray-700 mb-2">Selected Tags:</div>
+                      <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm flex items-center"
+                          >
+                            {tag}
+                            <button
+                              type="button"
+                              className="ml-2 text-blue-500 hover:text-blue-700"
+                              onClick={() => setTags(tags.filter(t => t !== tag))}
+                            >
+                              <X size={14} />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Available Tags Container - Collapsible */}
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setOpen(!open)}
+                        className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                      >
+                        {open ? "Hide available tags" : "Show available tags"}
+                        <ChevronsUpDown className="ml-1 h-4 w-4" />
+                      </button>
+                      
+                      {open && (
+                        <div className="mt-2 p-3 bg-gray-50 rounded-lg border max-h-60 overflow-y-auto">
+                          <div className="flex flex-wrap gap-2">
+                            {AVAILABLE_TAGS.map((tag) => (
+                              <button
+                                key={tag}
+                                onClick={() => handleAddTag(tag)}
+                                className={`px-2 py-1 rounded text-sm ${
+                                  tags.includes(tag)
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                              >
+                                {tag}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {similarQuestions.length > 0 && (
                   <div className="mt-2 bg-yellow-50 border border-yellow-200 rounded p-2">
                     <div className="font-semibold mb-1 text-yellow-700">Similar questions:</div>
@@ -230,59 +415,6 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
               </div>
             )}
             {step === 2 && (
-              <div className="mb-4">
-                <label className="block font-semibold mb-1">Description</label>
-                <Textarea
-                  className="w-full"
-                  placeholder="Describe your question in detail. What did you try? What did you expect?"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  minLength={20}
-                  required
-                />
-              </div>
-            )}
-            {step === 3 && (
-              <div className="mb-4">
-                <label className="block font-semibold mb-1">Tags</label>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="flex-1 border rounded px-3 py-2"
-                    placeholder="Add a tag and press Enter"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddTag();
-                      }
-                    }}
-                  />
-                  <Button type="button" onClick={handleAddTag}>
-                    Add Tag
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-gray-200 rounded-full px-3 py-1 text-sm flex items-center"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        className="ml-2 text-red-500"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {step === 4 && (
               <div className="mb-4">
                 <label className="block font-semibold mb-1">Token Reward</label>
                 <input
@@ -312,86 +444,107 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
                 </div>
               </div>
             )}
-            {step === 5 && (
+            {step === 3 && (
               <div className="mb-4">
-                <label className="block font-semibold mb-1">Code (optional)</label>
-                <Textarea
-                  className="w-full font-mono"
-                  placeholder="Paste your code here (optional)..."
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  rows={6}
-                />
-                <div className="mt-4">
-                  <label className="block font-semibold mb-1">Attach Files (optional)</label>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="block w-full"
-                  />
-                  {files.length > 0 && (
-                    <div className="mt-2 text-xs text-gray-600">
-                      {files.length} file(s) selected
+                <div className="font-semibold mb-4 text-lg text-gray-800">Review Your Question</div>
+                <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
+                  {/* Header */}
+                  <div className="p-4 border-b bg-gray-50">
+                    <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+                    <div className="flex items-center mt-2 text-sm text-gray-600">
+                      <span className="flex items-center">
+                        <img 
+                          src="https://via.placeholder.com/40" 
+                          alt="Author" 
+                          className="w-6 h-6 rounded-full mr-2"
+                        />
+                        Anonymous
+                      </span>
+                      <span className="mx-2">•</span>
+                      <span>{new Date().toLocaleString()}</span>
                     </div>
-                  )}
-                </div>
-                <div className="mt-4">
-                  <label className="block font-semibold mb-1">Attach Videos (optional)</label>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    multiple
-                    onChange={handleVideoChange}
-                    className="block w-full"
-                  />
-                  {videos.length > 0 && (
-                    <div className="mt-2 text-xs text-gray-600">
-                      {videos.length} video(s) selected
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4">
+                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: description }} />
+                  </div>
+
+                  {/* Tags */}
+                  <div className="px-4 py-3 bg-gray-50 border-t">
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <span 
+                          key={tag} 
+                          className="bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                  )}
+                  </div>
+
+                  {/* Token Info */}
+                  <div className="px-4 py-3 bg-gray-50 border-t">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-gray-700 font-medium">Token Reward:</span>
+                        <span className="ml-2 text-blue-600 font-bold">{tokens} tokens</span>
+                      </div>
+                      {tokenExpiry && (
+                        <div className="text-sm text-gray-600">
+                          Expires: {new Date(tokenExpiry).toLocaleString()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
-            {step === 6 && (
-              <div className="mb-4">
-                <div className="font-semibold mb-2">Review similar questions before posting:</div>
-                {similarQuestions.length > 0 ? (
-                  <ul className="list-disc pl-5 text-sm">
-                    {similarQuestions.map((q) => (
-                      <li key={q.id}>
-                        <a href={q.url} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">
-                          {q.title}
+
+                {/* Similar Questions */}
+                {similarQuestions.length > 0 && (
+                  <div className="mt-6">
+                    <div className="font-semibold mb-2 text-gray-800">Similar Questions</div>
+                    <div className="space-y-2">
+                      {similarQuestions.map((q) => (
+                        <a 
+                          key={q.id}
+                          href={q.url}
+                          className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <div className="text-blue-600 font-medium">{q.title}</div>
                         </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="text-gray-500">No similar questions found.</div>
+                      ))}
+                    </div>
+                  </div>
                 )}
-              </div>
-            )}
-            {step === 7 && (
-              <div className="mb-4 text-green-700 bg-green-50 rounded p-3">
-                <strong>All set!</strong> Please review your question and submit.
               </div>
             )}
             <div className="flex justify-between mt-6">
               <Button
                 type="button"
                 onClick={handlePrevStep}
-                disabled={step === 1}
+                disabled={step === 1 || isSubmitting}
                 variant="secondary"
               >
                 Previous
               </Button>
               {step < steps.length ? (
-                <Button type="button" onClick={handleNextStep}>
+                <Button 
+                  type="button" 
+                  onClick={handleNextStep}
+                  disabled={isSubmitting}
+                >
                   Next
                 </Button>
               ) : (
-                <Button type="submit" className="w-40">
-                  Post Your Question
+                <Button 
+                  type="submit" 
+                  className="w-40"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Post Your Question"}
                 </Button>
               )}
             </div>
@@ -401,7 +554,6 @@ export default function FormAskQuestion({ onClose, onSubmit }: AskQuestionFormPr
             <ul className="list-disc pl-5 mt-1">
               <li>Search for similar questions before posting.</li>
               <li>Be clear and concise in your title and description.</li>
-              <li>Include code, screenshots, or videos if relevant.</li>
               <li>Add relevant tags to help others find your question.</li>
               <li>Set a fair token reward and expiry if needed.</li>
             </ul>

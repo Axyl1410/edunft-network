@@ -90,7 +90,7 @@ export default function UserStats({
   return (
     <div className="relative mb-8">
       {showSavedDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm transition-all duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg transition-all duration-300">
           <div className="relative w-full max-w-2xl scale-100 transform rounded-2xl bg-white p-6 opacity-100 shadow-2xl transition-all duration-300">
             <button
               className="absolute -right-3 -top-3 rounded-full border-2 border-gray-100 bg-white p-1 text-gray-600 shadow-lg transition-all duration-300 hover:text-blue-500"

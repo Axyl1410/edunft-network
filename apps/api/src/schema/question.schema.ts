@@ -36,6 +36,9 @@ export class Answer {
 
   @Prop({ type: String })
   blockchainAcceptTxHash: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 @Schema({ timestamps: true })
@@ -72,6 +75,9 @@ export class Question {
 
   @Prop({ type: String })
   blockchainTxHash: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export type QuestionDocument = Question & Document;

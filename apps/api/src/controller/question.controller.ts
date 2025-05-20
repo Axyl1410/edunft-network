@@ -118,12 +118,15 @@ export class QuestionController {
   async voteAnswer(
     @Param('questionId') questionId: string,
     @Param('answerId') answerId: string,
+    @Body('voteType') voteType: 'up' | 'down',
     @Request() req,
   ) {
     return this.questionService.voteAnswer(
       questionId,
       answerId,
       req.user.walletAddress,
+      req.user.reputation || 0,
+      voteType
     );
   }
 
