@@ -14,7 +14,7 @@ export type TextShimmerProps = {
 
 function TextShimmerComponent({
   children,
-  as: Component = "p",
+  as: Component = "div",
   className,
   duration = 2,
   spread = 2,

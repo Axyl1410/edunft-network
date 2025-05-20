@@ -325,9 +325,9 @@ const CreateAccountForm = React.memo(
   },
 );
 
-CreateAccountForm.displayName = "CreateAccountForm"; // Good practice for React.memo components
+CreateAccountForm.displayName = "CreateAccountForm";
 
-export const WalletConnectButton = () => {
+export const WalletConnectButton = React.memo(() => {
   const { connect } = useConnectModal();
   const { theme } = useTheme();
   const account = useActiveAccount();
@@ -343,6 +343,8 @@ export const WalletConnectButton = () => {
     null,
   );
   const [createStep, setCreateStep] = useState(0);
+
+  console.log("WalletConnectButton render");
 
   useEffect(() => {
     if (!wallet) return;
@@ -418,6 +420,7 @@ export const WalletConnectButton = () => {
   );
 
   const handleConnect = useCallback(async () => {
+    console.log("connect");
     await connect({
       client: thirdwebClient,
       chain: FORMA_SKETCHPAD,
@@ -429,6 +432,7 @@ export const WalletConnectButton = () => {
   }, [connect, theme, wallets]);
 
   const handleDetail = useCallback(async () => {
+    console.log("detail");
     detailsModal.open({
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
@@ -438,6 +442,7 @@ export const WalletConnectButton = () => {
   }, [detailsModal, theme]);
 
   const handleSwitch = useCallback(async () => {
+    console.log("switch");
     if (wallet?.switchChain) {
       try {
         await wallet.switchChain(FORMA_SKETCHPAD);
@@ -452,6 +457,7 @@ export const WalletConnectButton = () => {
   }, [wallet]);
 
   const handleCreateAccountSuccess = useCallback(() => {
+    console.log("create account success");
     setAccountCreated(true);
     setShowCreateUserDialog(false);
     if (account?.address) {
@@ -472,6 +478,7 @@ export const WalletConnectButton = () => {
   }, [account?.address, setUser]);
 
   const handleCreateAccountErrorLogout = useCallback(() => {
+    console.log("create account error logout");
     if (wallet) disconnect(wallet);
     setCreateAccountError(null);
     setShowCreateUserDialog(false);
@@ -525,4 +532,4 @@ export const WalletConnectButton = () => {
       />
     </>
   );
-};
+});

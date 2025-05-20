@@ -24,7 +24,7 @@ import {
   Blobbie,
   useActiveAccount,
 } from "thirdweb/react";
-import type { Event } from "./events/types";
+import type { Event } from "../events/types";
 
 const questions = [
   {

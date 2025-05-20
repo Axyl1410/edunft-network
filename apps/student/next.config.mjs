@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@workspace/ui"],
-  reactStrictMode: true,
+  reactStrictMode: false,
 };
 
 export default nextConfig;

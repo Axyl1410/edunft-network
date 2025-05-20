@@ -111,7 +111,7 @@ export default function HomePage() {
   }, [account?.address]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl py-4 sm:px-4 sm:py-8 md:px-6">
+    <div className="mx-auto w-full max-w-6xl py-4 sm:py-8 md:px-6">
       {/* Welcome & Profile */}
       <Card className="mb-6 sm:mb-8">
         <CardHeader className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
@@ -160,7 +160,7 @@ export default function HomePage() {
               </CardTitle>
               <div className="mt-1 flex items-center justify-center gap-2 sm:justify-start">
                 <Badge variant="secondary">{badge}</Badge>
-                <p className="flex items-center gap-1 text-sm text-gray-500">
+                <div className="flex items-center gap-1 text-sm text-gray-500">
                   <AccountProvider
                     address={`${account?.address}`}
                     client={thirdwebClient}
@@ -170,12 +170,11 @@ export default function HomePage() {
                         chain={FORMA_SKETCHPAD}
                         loadingComponent={<Loading />}
                         fallbackComponent={<div>Failed to load</div>}
-                        
                       />
                     </motion.div>
                   </AccountProvider>
                   <p>tokens</p>
-                </p>
+                </div>
               </div>
             </div>
           )}
