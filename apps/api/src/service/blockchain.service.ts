@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ethers } from 'ethers';
 import { ConfigService } from '@nestjs/config';
+import { ethers } from 'ethers';
 import QuestionReward from '../contracts/QuestionReward.json';
 
 @Injectable()
@@ -13,22 +13,27 @@ export class BlockchainService {
   constructor(private configService: ConfigService) {
     const rpcUrl = this.configService.get<string>('BLOCKCHAIN_RPC_URL');
     const privateKey = this.configService.get<string>('BLOCKCHAIN_PRIVATE_KEY');
-    const contractAddress = this.configService.get<string>('QUESTION_REWARD_CONTRACT_ADDRESS');
+    const contractAddress = this.configService.get<string>(
+      'QUESTION_REWARD_CONTRACT_ADDRESS',
+    );
 
     this.provider = new ethers.JsonRpcProvider(rpcUrl);
     this.wallet = new ethers.Wallet(privateKey, this.provider);
     this.contract = new ethers.Contract(
       contractAddress,
       QuestionReward.abi,
-      this.wallet
+      this.wallet,
     );
   }
 
-  async createQuestion(questionId: string, rewardAmount: string): Promise<string> {
+  async createQuestion(
+    questionId: string,
+    rewardAmount: string,
+  ): Promise<string> {
     try {
       const tx = await this.contract.createQuestion(
         ethers.keccak256(ethers.toUtf8Bytes(questionId)),
-        ethers.parseEther(rewardAmount)
+        ethers.parseEther(rewardAmount),
       );
       const receipt = await tx.wait();
       return receipt.hash;
@@ -41,7 +46,7 @@ export class BlockchainService {
   async submitAnswer(questionId: string): Promise<string> {
     try {
       const tx = await this.contract.submitAnswer(
-        ethers.keccak256(ethers.toUtf8Bytes(questionId))
+        ethers.keccak256(ethers.toUtf8Bytes(questionId)),
       );
       const receipt = await tx.wait();
       return receipt.hash;
@@ -51,11 +56,14 @@ export class BlockchainService {
     }
   }
 
-  async voteAnswer(questionId: string, answererAddress: string): Promise<string> {
+  async voteAnswer(
+    questionId: string,
+    answererAddress: string,
+  ): Promise<string> {
     try {
       const tx = await this.contract.voteAnswer(
         ethers.keccak256(ethers.toUtf8Bytes(questionId)),
-        answererAddress
+        answererAddress,
       );
       const receipt = await tx.wait();
       return receipt.hash;
@@ -65,11 +73,14 @@ export class BlockchainService {
     }
   }
 
-  async acceptAnswer(questionId: string, answererAddress: string): Promise<string> {
+  async acceptAnswer(
+    questionId: string,
+    answererAddress: string,
+  ): Promise<string> {
     try {
       const tx = await this.contract.acceptAnswer(
         ethers.keccak256(ethers.toUtf8Bytes(questionId)),
-        answererAddress
+        answererAddress,
       );
       const receipt = await tx.wait();
       return receipt.hash;
@@ -82,7 +93,7 @@ export class BlockchainService {
   async getQuestionDetails(questionId: string) {
     try {
       const details = await this.contract.getQuestionDetails(
-        ethers.keccak256(ethers.toUtf8Bytes(questionId))
+        ethers.keccak256(ethers.toUtf8Bytes(questionId)),
       );
       return {
         author: details[0],
@@ -97,11 +108,14 @@ export class BlockchainService {
     }
   }
 
-  async getAnswerVotes(questionId: string, answererAddress: string): Promise<number> {
+  async getAnswerVotes(
+    questionId: string,
+    answererAddress: string,
+  ): Promise<number> {
     try {
       const votes = await this.contract.getAnswerVotes(
         ethers.keccak256(ethers.toUtf8Bytes(questionId)),
-        answererAddress
+        answererAddress,
       );
       return Number(votes);
     } catch (error) {
@@ -109,4 +123,4 @@ export class BlockchainService {
       throw error;
     }
   }
-} 
+}

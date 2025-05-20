@@ -5,4 +5,4 @@ import { BlockchainService } from './blockchain.service';
   providers: [BlockchainService],
   exports: [BlockchainService],
 })
-export class BlockchainModule {} 
+export class BlockchainModule {}

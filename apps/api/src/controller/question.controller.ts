@@ -49,8 +49,13 @@ export class QuestionController {
     }
 
     // Verify wallet address matches authenticated user
-    if (body.author.walletAddress.toLowerCase() !== req.user.walletAddress.toLowerCase()) {
-      throw new BadRequestException('Wallet address does not match authenticated user');
+    if (
+      body.author.walletAddress.toLowerCase() !==
+      req.user.walletAddress.toLowerCase()
+    ) {
+      throw new BadRequestException(
+        'Wallet address does not match authenticated user',
+      );
     }
 
     return this.questionService.createQuestion(body);
@@ -97,8 +102,13 @@ export class QuestionController {
     }
 
     // Verify wallet address matches authenticated user
-    if (answer.author.walletAddress.toLowerCase() !== req.user.walletAddress.toLowerCase()) {
-      throw new BadRequestException('Wallet address does not match authenticated user');
+    if (
+      answer.author.walletAddress.toLowerCase() !==
+      req.user.walletAddress.toLowerCase()
+    ) {
+      throw new BadRequestException(
+        'Wallet address does not match authenticated user',
+      );
     }
 
     return this.questionService.addAnswer(id, answer);
@@ -132,7 +142,10 @@ export class QuestionController {
     }
 
     // Verify question author matches authenticated user
-    if (question.author.walletAddress.toLowerCase() !== req.user.walletAddress.toLowerCase()) {
+    if (
+      question.author.walletAddress.toLowerCase() !==
+      req.user.walletAddress.toLowerCase()
+    ) {
       throw new BadRequestException('Only question author can accept answers');
     }
 
