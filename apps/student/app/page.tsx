@@ -15,6 +15,7 @@ import {
 import Loading from "@workspace/ui/components/loading";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import axios from "axios";
+import { Coins } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -42,6 +43,8 @@ const questions = [
     tags: ["react", "authentication"],
   },
 ];
+
+const maxToken = Math.max(...questions.map((q) => q.tokens));
 
 const collections = [
   {
@@ -108,7 +111,7 @@ export default function HomePage() {
   }, [account?.address]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl py-4 sm:px-4 sm:py-8 md:px-6">
+    <div className="mx-auto w-full max-w-6xl py-4 sm:py-8 md:px-6">
       {/* Welcome & Profile */}
       <Card className="mb-6 sm:mb-8">
         <CardHeader className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
@@ -157,7 +160,7 @@ export default function HomePage() {
               </CardTitle>
               <div className="mt-1 flex items-center justify-center gap-2 sm:justify-start">
                 <Badge variant="secondary">{badge}</Badge>
-                <p className="flex items-center gap-1 text-sm text-gray-500">
+                <div className="flex items-center gap-1 text-sm text-gray-500">
                   <AccountProvider
                     address={`${account?.address}`}
                     client={thirdwebClient}
@@ -171,7 +174,7 @@ export default function HomePage() {
                     </motion.div>
                   </AccountProvider>
                   <p>tokens</p>
-                </p>
+                </div>
               </div>
             </div>
           )}
@@ -301,9 +304,22 @@ export default function HomePage() {
                       ))}
                     </div>
                   </div>
+
                   <div className="flex flex-row items-end gap-1 sm:flex-col">
-                    <span className="text-xs text-gray-500">
+                    <span
+                      className={`ml-2 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${q.tokens === maxToken ? "border border-orange-300 bg-orange-100 text-orange-700" : "bg-blue-100 text-blue-700"} `}
+                    >
+                      <Coins size={16} className="mr-1" />
                       {q.tokens} tokens
+                      {q.tokens === maxToken && (
+                        <span
+                          role="img"
+                          aria-label="hot"
+                          className="ml-1 text-orange-500"
+                        >
+                          🔥
+                        </span>
+                      )}
                     </span>
                     <span className="text-xs text-gray-500">
                       {q.votes} votes

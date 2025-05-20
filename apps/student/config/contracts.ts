@@ -1,0 +1,1 @@
+export const questionRewardAddress = process.env.NEXT_PUBLIC_QUESTION_REWARD_ADDRESS || ""; 

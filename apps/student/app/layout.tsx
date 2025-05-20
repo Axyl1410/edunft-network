@@ -1,3 +1,4 @@
+import ChatbotPopup from "@/components/common/ChatbotPopup";
 import { Providers } from "@/components/context/providers";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import NavAccount from "@/components/layout/nav-acoount";
@@ -54,6 +55,7 @@ export default function RootLayout({
               </div>
             </SidebarInset>
           </SidebarProvider>
+          <ChatbotPopup />
         </Providers>
       </body>
     </html>

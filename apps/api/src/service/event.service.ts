@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -66,7 +65,7 @@ export class EventService {
   ): Promise<Event | { error: string } | null> {
     const event = await this.eventModel.findById(eventId).exec();
     if (!event) return null;
-    const registered = event.participants.registered as Participant[];
+    const registered = event.participants.registered;
     const alreadyRegistered = registered.some((p) => p.id === participant.id);
     if (alreadyRegistered) {
       return { error: 'already_registered' };
@@ -99,7 +98,7 @@ export class EventService {
       .findById(competitionId)
       .exec();
     if (!competition) return null;
-    const registered = competition.participants.registered as Participant[];
+    const registered = competition.participants.registered;
     const alreadyRegistered = registered.some((p) => p.id === participant.id);
     if (alreadyRegistered) {
       return { error: 'already_registered' };

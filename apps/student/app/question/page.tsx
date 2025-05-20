@@ -1,357 +1,367 @@
-'use client'
+"use client";
 
-import { Button } from "@workspace/ui/components/button"
-import { Card } from "@workspace/ui/components/card"
-import { useState } from "react"
-import Link from "next/link"
-import FormAskQuestion from "./components/FormAskQuestion"
-import { toast } from "sonner"
-import { CircleChevronDown, Handshake, ThumbsDown, ThumbsDownIcon, ThumbsUp } from "lucide-react"; // Add this if you want to use react-icons, or use emoji 🔥
-import { Eye, MessageCircle, Star, Info, Award, Ban, HelpCircle, Coins } from "lucide-react";
-import UserStats from "./components/UserStats";
-import { Bookmark } from "lucide-react";
+import CollectionCard from "@/components/nft/collection-card";
+import { baseUrl } from "@/lib/client";
+import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import { useUserStore } from "@/store";
+import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import Loading from "@workspace/ui/components/loading";
+import { Skeleton } from "@workspace/ui/components/skeleton";
+import axios from "axios";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+  AccountBalance,
+  AccountProvider,
+  Blobbie,
+  useActiveAccount,
+} from "thirdweb/react";
+import type { Event } from "../events/types";
 
-interface Question {
-  id: string
-  title: string
-  description: string
-  tokens: number
-  tags: string[]
-  votes: number
-  author: {
-    name: string
-    avatar: string
+const questions = [
+  {
+    id: "1",
+    title: "Best practices for state management in React?",
+    tokens: 100,
+    votes: 12,
+    tags: ["react", "state-management"],
   },
-  views: number,
-  answers: number
-  timeLeft: string
-  createdAt: string // <-- Add this line
-}
+  {
+    id: "2",
+    title: "How to implement authentication in React?",
+    tokens: 75,
+    votes: 8,
+    tags: ["react", "authentication"],
+  },
+];
 
-export default function QuestionPage() {
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      id: '1',
-      title: 'Best practices for state management in complex React applications?',
-      description: "I'm working on a large-scale React application with complex state. What are the recommended approaches for state management?",
-      tokens: 100,
-      tags: ['react', 'state-management', 'redux', 'context-api'],
-      votes: 12,
-      author: {
-        name: 'Bob Smith',
-        avatar: 'https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400'
-      },
-      answers: 1,
-      timeLeft: '120 hours left',
-      views: 34,
-      createdAt: '2024-06-10T09:30:00Z'
-    },
-    {
-      id: '2',
-      title: 'How to implement authentication in React?',
-      description: "I'm building a React application and need to implement user authentication. What are the best practices?",
-      tokens: 75,
-      tags: ['react', 'authentication', 'javascript'],
-      votes: 8,
-      author: {
-        name: 'Alice Johnson',
-        avatar: 'https://robohash.org/b809f288d1ded8f540c05916cf58cf82?set=set4&bgset=&size=400x400'
-      },
-      answers: 2,
-      timeLeft: '168 hours left',
-      views: 12, // <-- Add views
-      createdAt: '2024-06-11T14:15:00Z' // <-- Add createdAt
-    }
-  ])
-  const [showForm, setShowForm] = useState(false);
+const collections = [
+  {
+    address: "0x123...abc",
+    name: "EduNFT Bears",
+  },
+  {
+    address: "0x456...def",
+    name: "Student Artworks",
+  },
+];
 
-  // Voting handler (mock, replace with API call as needed)
-  const handleVote = (id: string, type: "up" | "down") => {
-    setQuestions((prev) =>
-      prev.map((q) =>
-        q.id === id
-          ? { ...q, votes: q.votes + (type === "up" ? 1 : -1) }
-          : q
-      )
-    );
-  };
+export default function HomePage() {
+  const user = useUserStore((state) => state.user);
+  const account = useActiveAccount();
 
-  // Add new question to the top of the list
-  const handleAddQuestion = (data: any) => {
-    const newQuestion: Question = {
-      id: (questions.length + 1).toString(),
-      title: data.title,
-      description: data.description,
-      tokens: data.tokens,
-      tags: data.tags,
-      votes: 0,
-      author: {
-        name: "You",
-        avatar: "/avatars/default.png"
-      },
-      answers: 0,
-      timeLeft: "168 hours left",
-      views: 0, // <-- Add views
-      createdAt: new Date().toISOString() // <-- Add createdAt
-    };
-    setQuestions([newQuestion, ...questions]);
-    setShowForm(false);
-    toast.success("Your question has been posted!");
-  };
+  // Mock badge/tokens nếu chưa có trong user
+  const badge = user?.role;
 
-  // Sort questions by tokens descending
-  const sortedQuestions = [...questions].sort((a, b) => b.tokens - a.tokens);
-const maxToken = sortedQuestions?.[0]?.tokens ?? 0;
+  // Fetch real events
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [errorEvents, setErrorEvents] = useState<string | null>(null);
 
-  // Calculate stats
-  const questionsAsked = questions.length;
-  const answersGiven = questions.reduce((sum, q) => sum + q.answers, 0);
-  const contributions = questionsAsked + answersGiven;
-    // Example calculation for tokensEarned and badgeLevel
-    // const tokensEarned = questions.reduce((sum, q) => sum + (q.answers > 0 ? q.tokens : 0), 0);
-    const tokensEarned =6500;
-    const badgeLevel =
-    tokensEarned > 1000 ? "Platinum" :
-    tokensEarned > 500 ? "Gold" :
-    tokensEarned > 100 ? "Silver" : "Bronze";
-    
-    // ... inside your component's return:
+  useEffect(() => {
+    setLoadingEvents(true);
+    setErrorEvents(null);
+    axios
+      .get(`${baseUrl}/events`)
+      .then((res) => {
+        // Chỉ lấy event sắp diễn ra hoặc đang diễn ra, lấy tối đa 3 event
+        const mapped = res.data
+          .map((item: any) => ({
+            ...item,
+            id: item._id || item.id,
+            date: item.date ? new Date(item.date) : undefined,
+            deadline: item.deadline ? new Date(item.deadline) : undefined,
+          }))
+          .filter((e: any) => e.status === "upcoming" || e.status === "ongoing")
+          .slice(0, 3);
+        setEvents(mapped);
+      })
+      .catch(() => setErrorEvents("Không thể tải sự kiện nổi bật."))
+      .finally(() => setLoadingEvents(false));
+  }, []);
 
-  const [savedQuestions, setSavedQuestions] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      return JSON.parse(localStorage.getItem("savedQuestions") || "[]");
-    }
-    return [];
-  });
+  const [collections, setCollections] = useState<
+    { address: string; name: string }[]
+  >([]);
+  const [loadingCollections, setLoadingCollections] = useState(false);
+  const [errorCollections, setErrorCollections] = useState<string | null>(null);
 
-  // Save/Unsave handler
-  const handleSaveQuestion = (id: string) => {
-    setSavedQuestions((prev) => {
-      let updated;
-      if (prev.includes(id)) {
-        updated = prev.filter(qid => qid !== id);
-        toast.success("Removed from saved questions!");
-      } else {
-        updated = [...prev, id];
-        toast.success("Question saved!");
-      }
-      localStorage.setItem("savedQuestions", JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  // Get saved question objects
-  const savedQuestionObjects = questions.filter(q => savedQuestions.includes(q.id));
+  useEffect(() => {
+    if (!account?.address) return;
+    setLoadingCollections(true);
+    setErrorCollections(null);
+    axios
+      .get(baseUrl + `/collections/${account.address}/collection`)
+      .then((res) => {
+        setCollections(res.data.owner?.slice(0, 4) || []);
+      })
+      .catch(() => setErrorCollections("Không thể tải bộ sưu tập NFT của bạn."))
+      .finally(() => setLoadingCollections(false));
+  }, [account?.address]);
 
   return (
-    <div className="container mx-auto flex min-h-svh flex-col p-4">
-      <div className=" flex font-bold  " > 
-        <span className="text-blue-200 font-bold mr-2"><Handshake/></span> 
-        Wellcome Back, Nguyen Phi Long
-      </div>
-         <UserStats
-        questionsAsked={questionsAsked}
-        answersGiven={answersGiven}
-        tokensEarned={tokensEarned}
-        badgeLevel={badgeLevel}
-        savedQuestions={savedQuestionObjects}
-      />
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold">Token Q&A Arena - Community Edition</h1>
-          <p className="text-gray-600">Ask questions, earn tokens for the best answers</p>
-        </div>
-        <Button
-          size="lg"
-          onClick={() => setShowForm(true)}
-          className="bg-white hover:bg-blue-200 text-blue-500 font-semibold border border-blue-500"
-        >
-          Ask Question
-        </Button>
-      </div>
-
-      {showForm && (
-        <FormAskQuestion
-          onClose={() => setShowForm(false)}
-          onSubmit={handleAddQuestion}
-        />
-      )}
-     
-  
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Main Content: 9 columns */}
-        <div className="md:col-span-9 space-y-4">
-          {sortedQuestions.map((question) => (
-            <Card
-              key={question.id}
-              className="flex flex-row items-stretch shadow rounded-lg border border-gray-200 bg-white hover:shadow-lg transition-shadow cursor-pointer px-0 py-0 relative"
-            >
-              {/* Save Icon at top-right */}
-              <button
-                className="absolute top-3 right-3 z-10"
-                onClick={e => {
-                  e.stopPropagation();
-                  handleSaveQuestion(question.id);
-                }}
-                aria-label={savedQuestions.includes(question.id) ? "Unsave" : "Save"}
-              >
-                <Bookmark
-                  size={24}
-                  className={savedQuestions.includes(question.id)
-                    ? "text-blue-500 fill-blue-200"
-                    : "text-gray-400"}
-                  fill={savedQuestions.includes(question.id) ? "#bfdbfe" : "none"}
-                />
-              </button>
-              {/* Stats Section */}
-              <div className="flex flex-col justify-center items-center px-4 py-4 min-w-[110px] bg-white border-r border-gray-100">
-                <div className="flex flex-col items-center mb-4">
-                  <Button
-                    variant="ghost"
-                    className="p-0 mb-2"
-                    style={{ width: 40, height: 40 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleVote(question.id, "up");
-                    }}
-                    aria-label="Upvote"
-                  >
-                    <span className="flex items-center justify-center text-blue-600 font-bold">
-                      <ThumbsUp size={40} />
-                    </span>
-                  </Button>
-                  <span className="font-bold text-xl mb-2">{question.votes}</span>
-                  <Button
-                    variant="ghost"
-                    className="p-0"
-                    style={{ width: 40, height: 40 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleVote(question.id, "down");
-                    }}
-                    aria-label="Downvote"
-                  >
-                    <span className="flex items-center justify-center text-gray-400 font-bold">
-                      <ThumbsDownIcon size={32}/>
-                    </span>
-                  </Button>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-green-600 border border-green-400 mb-2 rounded p-2 text-center w-full justify-center">
-                  <MessageCircle size={16} className="mr-1" />
-                  {question.answers} answers
-                </div>
-                <div className="flex items-center gap-1 text-xs text-gray-500 text-center w-full justify-center">
-                  <Eye size={16} className="mr-1" />
-                  {question.views ?? 0} views
+    <div className="mx-auto w-full max-w-6xl py-4 sm:px-4 sm:py-8 md:px-6">
+      {/* Welcome & Profile */}
+      <Card className="mb-6 sm:mb-8">
+        <CardHeader className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+          {!account?.address ? (
+            <>
+              <div className="flex h-16 w-16 items-center justify-center sm:h-12 sm:w-12">
+                <Blobbie size={48} address="0x000" className="rounded-full" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <CardTitle className="text-lg font-bold">
+                  Welcome to EduNFT!
+                </CardTitle>
+                <div className="mt-1 text-sm text-gray-500">
+                  Please connect your wallet to get started.
                 </div>
               </div>
-
-              {/* Main Content Section */}
-              <div className="flex-1 flex flex-col justify-between px-6 py-4">
-                <div className="flex flex-col gap-1">
-                  <Link
-                    href={`/question/${question.id}`}
-                    className="text-base font-semibold text-blue-700 hover:underline"
-                  >
-                    {question.title}
-                  </Link>
-                  <p className="text-gray-700 text-sm mt-1 line-clamp-2">{question.description}</p>
-                  <div className="flex gap-2 mt-2 flex-wrap">
-                    {question.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-gray-100 text-gray-700 rounded px-2 py-0.5 text-xs font-medium flex items-center gap-1"
-                      >
-                        <Star size={12} className="text-yellow-400" />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={question.author.avatar}
-                      alt={question.author.name}
-                      className="h-6 w-6 rounded-full border border-gray-200"
-                    />
-                    <span className="text-xs text-gray-700">{question.author.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400">
-                      {question.createdAt
-                        ? new Date(question.createdAt).toLocaleString()
-                        : question.timeLeft}
-                    </span>
-                    <span className={`ml-2 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1
-                      ${question.tokens === maxToken ? "bg-orange-100 text-orange-700 border border-orange-300" : "bg-blue-100 text-blue-700"}
-                    `}>
-                      <Coins size={16} className="mr-1" />
-                      {question.tokens} tokens
-                      {question.tokens === maxToken && (
-                        <span role="img" aria-label="hot" className="ml-1 text-orange-500">🔥</span>
-                      )}
-                    </span>
-                  </div>
-                </div>
+              <div className="mt-4 sm:ml-auto sm:mt-0">
+                <Button size="sm" variant="outline" className="cursor-pointer">
+                  Connect Wallet
+                </Button>
               </div>
-            </Card>
-          ))}
-        </div>
-        {/* Rules Sidebar: 3 columns */}
-        <div className="md:col-span-3 w-full flex-shrink-0">
-          <div className="bg-white border border-gray-200 rounded-lg shadow p-6 mb-4">
-            {/* Blockchain Rewards Section */}
-            <h2 className="font-semibold text-lg mb-2 flex items-center gap-2">
-             
-              Rewards Tokens:
-            </h2>
-            <ul className="list-none text-sm text-gray-700 mb-4 space-y-3">
-              <li className="flex items-start gap-2">
-                <Coins size={18} className="mt-0.5 text-orange-500" />
-                <span>
-                  <span className="font-medium">Token rewards</span> are set by the asker and given to the best answer.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Award size={18} className="mt-0.5 text-yellow-500" />
-                <span>
-                  <span className="font-medium">You can only claim tokens if your answer is accepted.</span>
-                </span>
-              </li>
-            </ul>
-            {/* Community Guidelines Section */}
-            <h2 className="font-semibold text-lg mb-2 flex items-center gap-2">
-              Community Guidelines:
-            </h2>
-            <ul className="list-none text-sm text-gray-700 mb-4 space-y-3">
-              <li className="flex items-start gap-2">
-                <HelpCircle size={18} className="mt-0.5 text-blue-400" />
-                <span>
-                  <span className="font-medium">Questions must be clear and specific.</span>
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <MessageCircle size={18} className="mt-0.5 text-green-500" />
-                <span>
-                  <span className="font-medium">Answers should be helpful and relevant.</span>
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Ban size={18} className="mt-0.5 text-red-400" />
-                <span>
-                  <span className="font-medium">No spam, off-topic, or inappropriate content.</span>
-                </span>
-              </li>
-            </ul>
-            <div className="text-xs text-gray-500 flex items-center gap-1">
-              <Info size={14} className="text-blue-400" />
-              <span className="font-semibold">Note:</span> Breaking the rules may result in penalties or loss of tokens.
+            </>
+          ) : user && user.profilePicture ? (
+            <img
+              src={user.profilePicture}
+              alt={user.username || user.walletAddress || ""}
+              className="h-16 w-16 rounded-full border border-gray-200 object-cover sm:h-12 sm:w-12"
+            />
+          ) : (
+            <div className="flex h-16 w-16 items-center justify-center sm:h-12 sm:w-12">
+              <Blobbie
+                size={48}
+                address={user?.walletAddress || "0x000"}
+                className="rounded-full"
+              />
             </div>
-          </div>
-        </div>
+          )}
+          {account?.address && (
+            <div className="flex-1 text-center sm:text-left">
+              <CardTitle className="text-lg font-bold">
+                {user ? (
+                  `Welcome back, ${user.username || user.walletAddress || ""}!`
+                ) : (
+                  <Skeleton className="h-6 w-32" />
+                )}
+              </CardTitle>
+              <div className="mt-1 flex items-center justify-center gap-2 sm:justify-start">
+                <Badge variant="secondary">{badge}</Badge>
+                <p className="flex items-center gap-1 text-sm text-gray-500">
+                  <AccountProvider
+                    address={`${account?.address}`}
+                    client={thirdwebClient}
+                  >
+                    <motion.div layout>
+                      <AccountBalance
+                        chain={FORMA_SKETCHPAD}
+                        loadingComponent={<Loading />}
+                        fallbackComponent={<div>Failed to load</div>}
+                      />
+                    </motion.div>
+                  </AccountProvider>
+                  <p>tokens</p>
+                </p>
+              </div>
+            </div>
+          )}
+          {account?.address && (
+            <div className="mt-4 sm:ml-auto sm:mt-0">
+              <Link href="/profile">
+                <Button size="sm" variant="outline" className="cursor-pointer">
+                  View Profile
+                </Button>
+              </Link>
+            </div>
+          )}
+        </CardHeader>
+      </Card>
+
+      {/* Quick Actions */}
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <Link href="/question">
+          <Button className="w-full cursor-pointer" variant="default">
+            Ask a Question
+          </Button>
+        </Link>
+        <Link href="/events">
+          <Button className="w-full cursor-pointer" variant="default">
+            Register Event
+          </Button>
+        </Link>
+        <Link href="/buy">
+          <Button className="w-full cursor-pointer" variant="default">
+            Buy NFT
+          </Button>
+        </Link>
+      </div>
+
+      {/* Featured Sections */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+        {/* Events */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <CardTitle className="text-base sm:text-lg">
+              Featured Events
+            </CardTitle>
+            <Link href="/events">
+              <Button size="sm" variant="ghost" className="cursor-pointer">
+                See all
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {loadingEvents ? (
+                <div className="py-6 text-center">
+                  <Loading text="Đang tải sự kiện..." />
+                </div>
+              ) : errorEvents ? (
+                <div className="py-6 text-center text-red-500">
+                  {errorEvents}
+                </div>
+              ) : events.length === 0 ? (
+                <div className="py-6 text-center text-gray-500">
+                  Chưa có sự kiện nổi bật.
+                </div>
+              ) : (
+                events.map((event) => (
+                  <div
+                    key={event.id}
+                    className="hover:bg-muted flex flex-col items-start gap-2 rounded p-2 transition sm:flex-row sm:items-center sm:gap-4"
+                  >
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold sm:text-base">
+                        {event.title}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {event.date ? event.date.toLocaleDateString() : ""} •{" "}
+                        {typeof event.location === "object" &&
+                        event.location !== null
+                          ? event.location.address
+                          : event.location}
+                      </div>
+                    </div>
+                    <Badge
+                      variant={
+                        event.status === "upcoming" ? "default" : "secondary"
+                      }
+                    >
+                      {event.status}
+                    </Badge>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Questions */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <CardTitle className="text-base sm:text-lg">
+              Latest Questions
+            </CardTitle>
+            <Link href="/question">
+              <Button size="sm" variant="ghost" className="cursor-pointer">
+                See all
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {questions.map((q) => (
+                <div
+                  key={q.id}
+                  className="hover:bg-muted flex flex-col items-start gap-2 rounded p-2 transition sm:flex-row sm:items-center sm:gap-4"
+                >
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold sm:text-base">
+                      {q.title}
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {q.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-end gap-1 sm:flex-col">
+                    <span className="text-xs text-gray-500">
+                      {q.tokens} tokens
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {q.votes} votes
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* NFT Collections */}
+      <div className="mt-6 sm:mt-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-base sm:text-lg">
+              Featured NFT Collections
+            </CardTitle>
+            <Link href="/buy">
+              <Button size="sm" variant="ghost" className="cursor-pointer">
+                See all
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-6">
+              {!account?.address ? (
+                <div className="col-span-full text-center text-gray-500">
+                  Vui lòng đăng nhập để xem NFT của bạn.
+                </div>
+              ) : loadingCollections ? (
+                <div className="col-span-full">
+                  <Loading text="Đang tải NFT..." />
+                </div>
+              ) : errorCollections ? (
+                <div className="col-span-full text-red-500">
+                  {errorCollections}
+                </div>
+              ) : collections.length === 0 ? (
+                <div className="col-span-full text-gray-500">
+                  Bạn chưa sở hữu bộ sưu tập NFT nào.
+                </div>
+              ) : (
+                collections.map((col) => (
+                  <Link
+                    key={col.address}
+                    href={`/buy/${col.address}`}
+                    className="block"
+                  >
+                    <CollectionCard address={col.address} name={col.name} />
+                  </Link>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  )
+  );
 }

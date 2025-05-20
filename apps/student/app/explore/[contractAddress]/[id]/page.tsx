@@ -1,15 +1,46 @@
 import Events from "@/components/nft/events";
-import { thirdwebClient } from "@/lib/thirdweb";
+import { baseUrl } from "@/lib/client";
+import { thirdwebClientPublic } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
+import axios from "axios";
 import { Badge } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getNFT } from "thirdweb/extensions/erc721";
-import { MediaRenderer } from "thirdweb/react";
+import { Blobbie, MediaRenderer } from "thirdweb/react";
 
 type Attribute = {
   trait_type: string;
   value: string;
+};
+
+const OwnerAvatar = async ({ address }: { address: string }) => {
+  try {
+    const response = await axios.get(`${baseUrl}/user/${address}/avatar`);
+    if (response.status === 200) {
+      const data = response.data;
+      if (data.avatar) {
+        return (
+          <img
+            src={data.avatar}
+            alt={`Owner: ${formatAddress(address)}`}
+            width={40}
+            height={40}
+            style={{ borderRadius: "50%", border: "1px solid #ccc" }}
+            className="h-10 w-10 rounded-full border border-gray-300 dark:border-white/20"
+          />
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch user avatar:", error);
+  }
+  return (
+    <Blobbie
+      address={address}
+      className="h-10 w-10 rounded-full border border-gray-300 dark:border-white/20"
+    />
+  );
 };
 
 export default async function Page({
@@ -34,7 +65,7 @@ export default async function Page({
     <div className="mt-4 flex max-w-full flex-col gap-8 sm:flex-row">
       <div className="flex w-full flex-col">
         <MediaRenderer
-          client={thirdwebClient}
+          client={thirdwebClientPublic}
           src={nft.metadata.image}
           className="!h-auto !w-full rounded-lg bg-white/[.04]"
         />
@@ -66,9 +97,12 @@ export default async function Page({
         </div>
         <div className="mt-2 flex flex-col border-t pt-2">
           <span> Owner: </span>
-          <p className="text-text font-medium dark:text-white/90">
-            {nft.owner ? formatAddress(nft.owner) : "Unknown"}
-          </p>
+          <div className="mt-1 flex items-center gap-3">
+            <OwnerAvatar address={nft.owner ?? ""} />
+            <p className="text-text font-medium dark:text-white/90">
+              {nft.owner ? formatAddress(nft.owner) : "Unknown"}
+            </p>
+          </div>
         </div>
       </div>
     </div>

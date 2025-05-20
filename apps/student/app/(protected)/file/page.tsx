@@ -556,7 +556,7 @@ export default function Page() {
                   <Terminal className="h-4 w-4" />
                   <AlertTitle>Heads up!</AlertTitle>
                   <AlertDescription>
-                    Download link will expire after 30 seconds.
+                    Download link will expire after 60 seconds.
                   </AlertDescription>
                 </Alert>
                 {downloadLoading ? (
