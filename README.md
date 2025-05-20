@@ -49,10 +49,10 @@ EduNFT Network is designed with a microservices architecture:
 - **Dashboard & Analytics**: Overview of activities, certificates, and events
 - **Wallet Integration**: Connect with Web3 wallets (MetaMask, Coinbase, Rainbow) to manage NFTs
 - **Content Discovery**: Explore, buy, and sell educational certificates and materials  
-- **File Management**: Upload, share, and version-control educational documents
+- **File Management**: Upload, and version-control educational documents
 - **Q&A System**: Ask questions, receive token rewards for quality answers
 - **Event Management**: Register for events and receive NFT participation certificates
-- **Certificate Verification**: View and verify NFT certificates through blockchain
+
 
 ```typescript
 // Modern Wallet Integration with ThirdWeb
