@@ -32,6 +32,10 @@ export const SidebarData = {
           title: "Sell",
           url: "/sell",
         },
+        {
+          title: "Explore",
+          url: "/explore",
+        },
       ],
     },
     {
@@ -76,7 +80,7 @@ export const SidebarData = {
   more: [
     {
       name: "Resources",
-      url: "#",
+      url: "/resources",
       icon: BookText,
     },
     {
