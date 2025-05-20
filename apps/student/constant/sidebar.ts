@@ -32,6 +32,10 @@ export const SidebarData = {
           title: "Sell",
           url: "/sell",
         },
+        {
+          title: "Explore",
+          url: "/explore",
+        },
       ],
     },
     {
