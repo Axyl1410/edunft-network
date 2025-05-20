@@ -53,19 +53,24 @@ EduNFT Network is designed with a microservices architecture:
 - **Q&A System**: Ask questions, receive token rewards for quality answers
 - **Event Management**: Register for events and receive NFT participation certificates
 
-
-### 🏫 School Portal
-
-- **Student Management**: Manage student records, classes, and track progress
-- **Certificate Issuance**: Create and issue blockchain certificates to students
-- **Content Management**: Create courses and assessments with CKEditor integration
-- **Event Organization**: Schedule events, track attendance, and gather feedback
-
-### 💼 Enterprise Portal
-
-- **Verification System**: Scan and verify certificate authenticity
-- **Recruitment**: Match candidates based on verified skills and certificates
-- **Skill Management**: Track employee certifications and plan training programs
+```typescript
+// Modern Wallet Integration with ThirdWeb
+const handleConnect = async () => {
+  await connect({
+    client: thirdwebClient,
+    chain: FORMA_SKETCHPAD,
+    showThirdwebBranding: false,
+    wallets: [
+      inAppWallet({
+        auth: { options: ["google", "email", "facebook", "apple", "github"] }
+      }),
+      createWallet("io.metamask"),
+      createWallet("com.coinbase.wallet"),
+      createWallet("me.rainbow")
+    ]
+  });
+};
+```
 
 ### ⚙️ Backend & Blockchain
 
