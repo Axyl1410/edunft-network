@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Answer, Question, QuestionDocument } from '../schema/question.schema';
 import { BlockchainService } from '../blockchain/blockchain.service';
 import { ethers } from 'ethers';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class QuestionService {
@@ -93,10 +94,16 @@ export class QuestionService {
 
   async getQuestionById(id: string): Promise<Question | null> {
     try {
+      this.logger.debug('Getting question by id:', id);
+      
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestException('Invalid question ID format');
+      }
+
       // Find and update in one operation to increment views
       const question = await this.questionModel
         .findByIdAndUpdate(
-          id,
+          new Types.ObjectId(id),
           { $inc: { views: 1 } },
           { new: true }
         )
@@ -106,10 +113,14 @@ export class QuestionService {
         throw new BadRequestException('Question not found');
       }
 
+      this.logger.debug('Question found:', question);
       return question;
     } catch (error) {
       this.logger.error('Error getting question by id:', error);
-      throw error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException(error.message || 'Error getting question');
     }
   }
 
@@ -151,18 +162,51 @@ export class QuestionService {
 
   async voteQuestion(
     id: string,
-    type: 'up' | 'down',
+    voterReputation: number,
+    voteType: 'up' | 'down'
   ): Promise<Question | null> {
-    const inc = type === 'up' ? 1 : -1;
-    return this.questionModel
-      .findByIdAndUpdate(id, { $inc: { votes: inc } }, { new: true })
-      .exec();
+    try {
+      const question = await this.questionModel.findById(id);
+      if (!question) {
+        throw new BadRequestException('Question not found');
+      }
+
+      // Check if question is less than 24 hours old
+      const questionAge = Date.now() - question.createdAt.getTime();
+      const hoursOld = questionAge / (1000 * 60 * 60);
+
+      if (hoursOld < 24 && voteType === 'down') {
+        throw new BadRequestException('Cannot downvote questions less than 24 hours old');
+      }
+
+      // Check reputation requirements
+      if (voteType === 'down' && voterReputation < 95) {
+        throw new BadRequestException('You need at least 95 reputation points to downvote');
+      }
+
+      if (voteType === 'up' && voterReputation < 85) {
+        throw new BadRequestException('You need at least 85 reputation points to upvote');
+      }
+
+      return this.questionModel
+        .findByIdAndUpdate(
+          id, 
+          { $inc: { votes: voteType === 'up' ? 1 : -1 } }, 
+          { new: true }
+        )
+        .exec();
+    } catch (error) {
+      this.logger.error('Error voting question:', error);
+      throw error;
+    }
   }
 
   async voteAnswer(
     questionId: string,
     answerId: string,
     voterAddress: string,
+    voterReputation: number,
+    voteType: 'up' | 'down'
   ): Promise<Question | null> {
     try {
       const question = await this.questionModel.findById(questionId);
@@ -175,14 +219,22 @@ export class QuestionService {
         throw new BadRequestException('Answer not found');
       }
 
-      // Submit vote to blockchain
-      const signer = new ethers.Wallet(process.env.PRIVATE_KEY, this.provider);
-      const txHash = await this.blockchainService.voteAnswer(
-        questionId,
-        answerId,
-        1, // Upvote
-        signer
-      );
+      // Check if answer is less than 24 hours old
+      const answerAge = Date.now() - answer.createdAt.getTime();
+      const hoursOld = answerAge / (1000 * 60 * 60);
+
+      if (hoursOld < 24 && voteType === 'down') {
+        throw new BadRequestException('Cannot downvote answers less than 24 hours old');
+      }
+
+      // Check reputation requirements
+      if (voteType === 'down' && voterReputation < 95) {
+        throw new BadRequestException('You need at least 95 reputation points to downvote');
+      }
+
+      if (voteType === 'up' && voterReputation < 85) {
+        throw new BadRequestException('You need at least 85 reputation points to upvote');
+      }
 
       // Update vote count in database
       const updatedQuestion = await this.questionModel
@@ -192,8 +244,7 @@ export class QuestionService {
             'answers._id': answerId
           },
           { 
-            $inc: { 'answers.$.votes': 1 },
-            $set: { 'answers.$.blockchainVoteTxHash': txHash }
+            $inc: { 'answers.$.votes': voteType === 'up' ? 1 : -1 }
           },
           { new: true }
         )
