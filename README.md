@@ -168,7 +168,7 @@ pnpm dev
 - Student Portal: http://localhost:3001
 - School Portal: http://localhost:3002
 - Enterprise Portal: http://localhost:3003
-- API: http://localhost:4000
+- API: http://localhost:8080
 
 ## Development
 
@@ -210,5 +210,5 @@ cd apps/hardhat && pnpm test
 ---
 
 <div align="center">
-  <p>© 2025 EduNFT Network </p>
+  <p>© 2025 EduNFT Network - GDU x KMA ( BuilderBlock  Team ) </p>
 </div>
