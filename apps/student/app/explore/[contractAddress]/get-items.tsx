@@ -35,7 +35,7 @@ export function GetItems({ address }: { address: string }) {
       <AnimatePresence>
         <motion.div
           className={cn(
-            "grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4",
+            "grid-cols-2 place-items-center gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
             NFTs && NFTs.length > 0 && "grid",
           )}
           initial={{ opacity: 0 }}

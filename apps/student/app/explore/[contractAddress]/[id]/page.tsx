@@ -1,3 +1,4 @@
+import BackButton from "@/components/layout/back-button";
 import Events from "@/components/nft/events";
 import { baseUrl } from "@/lib/client";
 import { thirdwebClientPublic } from "@/lib/thirdweb";
@@ -72,6 +73,9 @@ export default async function Page({
       </div>
 
       <div className="relative top-0 w-full max-w-full">
+        <div className="mb-2 flex w-full justify-end">
+          <BackButton className="cursor-pointer" variant={"ghost"} />
+        </div>
         <h1 className="mb-1 break-words text-3xl font-semibold">
           {nft.metadata.name}
         </h1>

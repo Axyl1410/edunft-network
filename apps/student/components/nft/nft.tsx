@@ -46,8 +46,10 @@ export default function NFTComponent({
     <Link href={`/token/${address}/${tokenId.toString()}`}>
       <NFTProvider tokenId={tokenId} contract={contract}>
         <div className="bg-accent flex flex-col gap-1.5 rounded-lg border px-1 py-3 hover:border-sky-400">
-          <NFTMedia className="rounded-md px-2 text-center" />
-          <NFTName className="px-2 font-bold" />
+          <div className="flex w-full justify-center">
+            <NFTMedia className="aspect-square h-[200px] w-[200px] rounded-md object-cover px-2 text-center" />
+          </div>
+          <NFTName className="max-w-[200px] truncate px-2 font-bold" />
           <NFTDescription
             className="px-2 text-sm"
             loadingComponent={<Loading />}

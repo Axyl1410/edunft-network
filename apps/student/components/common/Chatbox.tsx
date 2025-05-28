@@ -79,19 +79,21 @@ export default function Chatbox({ fullScreen, onClose }: ChatboxProps) {
           : "flex h-[400px] w-[350px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg dark:border-neutral-800 dark:bg-neutral-900",
       )}
     >
-      {fullScreen && onClose && (
-        <button
-          className="absolute right-4 top-4 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white shadow hover:bg-red-600"
-          onClick={onClose}
-          aria-label="Đóng chat"
-          type="button"
-        >
-          <X />
-        </button>
-      )}
-      <header className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 dark:border-neutral-800">
-        <Bot className="h-5 w-5 text-blue-500" />
-        <span className="text-sm font-semibold">Nebula Chat</span>
+      <header className="flex items-center justify-between gap-2 border-b border-slate-200 px-4 py-2 dark:border-neutral-800">
+        <div className="flex items-center gap-2">
+          <Bot className="h-5 w-5 text-blue-500" />
+          <span className="text-sm font-semibold">Nebula Chat</span>
+        </div>
+        {fullScreen && onClose && (
+          <button
+            className="right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow hover:bg-red-600"
+            onClick={onClose}
+            aria-label="Đóng chat"
+            type="button"
+          >
+            <X />
+          </button>
+        )}
       </header>
       <main
         className={cn(
