@@ -11,8 +11,6 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
 
-const NEBULA_API_URL = "https://nebula-api.thirdweb.com/chat";
-
 interface ChatboxProps {
   fullScreen?: boolean;
   onClose?: () => void;
@@ -30,31 +28,30 @@ export default function Chatbox({ fullScreen, onClose }: ChatboxProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
   const sendMessage = async (msg: string) => {
     if (!msg.trim()) return;
     setIsLoading(true);
     setError(null);
     setMessages((prev) => [...prev, { role: "user", content: msg }]);
     try {
-      const res = await fetch(NEBULA_API_URL, {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-secret-key": process.env.NEXT_PUBLIC_TW_KEY!,
         },
         body: JSON.stringify({
           message: msg,
-          stream: false,
           context: {
-            chainIds: ["984123"],
             walletAddress: account?.address || null,
           },
         }),
       });
+
       if (!res.ok) {
-        throw new Error(`Nebula API error: ${res.status}`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Server error: ${res.status}`);
       }
+
       const data = await res.json();
       setMessages((prev) => [
         ...prev,

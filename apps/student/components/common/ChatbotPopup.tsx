@@ -12,7 +12,7 @@ export default function ChatbotPopup() {
 
   if (isMobile) {
     return (
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-4 right-4 z-40">
         {open ? (
           <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-neutral-900">
             <button

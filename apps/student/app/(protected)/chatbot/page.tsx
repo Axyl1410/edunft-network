@@ -11,8 +11,6 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
 
-const NEBULA_API_URL = "https://nebula-api.thirdweb.com/chat";
-
 export default function ChatbotPage() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
@@ -32,24 +30,24 @@ export default function ChatbotPage() {
     setError(null);
     setMessages((prev) => [...prev, { role: "user", content: msg }]);
     try {
-      const res = await fetch(NEBULA_API_URL, {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-secret-key": process.env.NEXT_PUBLIC_TW_KEY!,
         },
         body: JSON.stringify({
           message: msg,
-          stream: false,
           context: {
-            chainIds: ["984123"],
             walletAddress: account?.address || null,
           },
         }),
       });
+
       if (!res.ok) {
-        throw new Error(`Nebula API error: ${res.status}`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Server error: ${res.status}`);
       }
+
       const data = await res.json();
       setMessages((prev) => [
         ...prev,
