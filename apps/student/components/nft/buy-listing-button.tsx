@@ -96,9 +96,6 @@ export default function BuyListingButton({
         onTransactionConfirmed={() => {
           handle();
           setCurrentStep("success");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
         }}
       >
         Buy Now

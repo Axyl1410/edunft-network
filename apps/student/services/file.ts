@@ -17,8 +17,7 @@ export async function uploadFile({
       type === "public"
         ? await pinataClient.upload.public.file(file).name(name ?? file.name)
         : await pinataClient.upload.private.file(file).name(name ?? file.name);
-    // For private, return pinataId for later use
-    return type === "private" ? { ...upload, pinataId: upload.id } : upload;
+    return { ...upload, pinataId: upload.id };
   } catch (error) {
     console.error(`Error uploading ${type} file:`, error);
     throw error;

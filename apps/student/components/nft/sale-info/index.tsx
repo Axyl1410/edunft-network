@@ -13,6 +13,7 @@ import { NFT as NFTType } from "thirdweb";
 import { isApprovedForAll } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import ApprovalButton from "./approve-button";
+import CancelButton from "./cancel-button";
 import DirectListingButton from "./direct-listing-button";
 
 type Props = {
@@ -22,7 +23,6 @@ type Props = {
 
 export default function SaleInfo({ nft, address }: Props) {
   const account = useActiveAccount();
-  const [tab, setTab] = useState<"direct">("direct");
   const [loading, setLoading] = useState(true);
 
   const contract = getThirdwebContract(address);
@@ -77,7 +77,9 @@ export default function SaleInfo({ nft, address }: Props) {
         <div className="mt-2 flex flex-row gap-2">
           {!hasApproval ? (
             <ApprovalButton contract={contract} />
-          ) : listingStatus.isSell ? null : (
+          ) : listingStatus.isSell ? (
+            <CancelButton id={listingStatus.listingId} />
+          ) : (
             <DirectListingButton
               nft={nft}
               pricePerToken={directListingState.price}
