@@ -1,4 +1,4 @@
-import ChatbotPopup from "@/components/common/ChatbotPopup";
+import ChatbotPopup from "@/components/common/chatbot-popup";
 import { Providers } from "@/components/context/providers";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import NavAccount from "@/components/layout/nav-acoount";

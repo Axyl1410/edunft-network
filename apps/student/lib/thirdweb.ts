@@ -4,13 +4,13 @@ import {
   getContract,
   type Chain,
 } from "thirdweb";
+import { assertValue } from "./utils";
 
-const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+const clientId = assertValue(
+  process.env.NEXT_PUBLIC_CLIENT_ID,
+  "No client ID provided",
+);
 const secretKey = process.env.TW_SECRET_KEY;
-
-if (!clientId) {
-  throw new Error("No client ID provided");
-}
 
 const marketplace_address = "0xa7d2c8d1Fd78cc65aaC5DBCfd91A4B7190acf89A";
 
