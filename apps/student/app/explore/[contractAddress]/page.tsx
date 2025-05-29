@@ -1,3 +1,4 @@
+import BackButton from "@/components/layout/back-button";
 import { GetItems } from "./get-items";
 import { Metadata } from "./metadata";
 
@@ -10,6 +11,11 @@ export default async function Page({
 
   return (
     <div className="pb-px">
+      <div className="mb-4">
+        <BackButton to="/explore" variant="ghost" className="mb-2">
+          Back to Explore
+        </BackButton>
+      </div>
       <Metadata address={contractAddress} />
       <GetItems address={contractAddress} />
     </div>

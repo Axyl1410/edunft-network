@@ -1,3 +1,4 @@
+import BackButton from "@/components/layout/back-button";
 import { GetItem } from "./get-item";
 
 export default async function Page({
@@ -9,6 +10,9 @@ export default async function Page({
 
   return (
     <>
+      <BackButton to="/buy" variant="ghost" className="mb-2">
+        Back to Buy
+      </BackButton>
       <div className="my-2">
         <GetItem address={contractAddress} />
       </div>

@@ -102,6 +102,8 @@ export default function Page() {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadFile, setDownloadFile] = useState<FileData | null>(null);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     if (!walletAddress) return;
     setLoading(true);
@@ -146,11 +148,14 @@ export default function Page() {
   };
 
   let displayedFiles: FileData[] = [];
+  const filteredFiles = files.filter((file) =>
+    file.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   if (viewMode === "pagination") {
     const start = (currentPage - 1) * filesPerPage;
-    displayedFiles = files.slice(start, start + filesPerPage);
+    displayedFiles = filteredFiles.slice(start, start + filesPerPage);
   } else {
-    displayedFiles = files.slice(0, listCount);
+    displayedFiles = filteredFiles.slice(0, listCount);
   }
 
   return (
@@ -360,6 +365,15 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </div>
+      </div>
+      <div className="mb-4 flex w-full items-center gap-2">
+        <Input
+          type="text"
+          placeholder="Search by file name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className=""
+        />
       </div>
       {loading ? (
         <Loading text="Loading..." />

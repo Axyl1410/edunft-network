@@ -12,7 +12,7 @@ export default function ChatbotPopup() {
 
   if (isMobile) {
     return (
-      <div className="fixed bottom-2 right-2 z-50">
+      <div className="fixed bottom-4 right-4 z-40">
         {open ? (
           <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-neutral-900">
             <button
@@ -41,11 +41,10 @@ export default function ChatbotPopup() {
     );
   }
 
-  // Desktop: giữ popup nhỏ
   return (
     <motion.div
-      initial={{ bottom: 8, right: 8 }}
-      style={{ position: "fixed", zIndex: 9999, bottom: 8, right: 8 }}
+      initial={{ bottom: 16, right: 16 }}
+      style={{ position: "fixed", zIndex: 9999, bottom: 16, right: 16 }}
     >
       {open ? (
         <div className="relative">

@@ -11,8 +11,6 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
 
-const NEBULA_API_URL = "https://nebula-api.thirdweb.com/chat";
-
 interface ChatboxProps {
   fullScreen?: boolean;
   onClose?: () => void;
@@ -30,31 +28,30 @@ export default function Chatbox({ fullScreen, onClose }: ChatboxProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
   const sendMessage = async (msg: string) => {
     if (!msg.trim()) return;
     setIsLoading(true);
     setError(null);
     setMessages((prev) => [...prev, { role: "user", content: msg }]);
     try {
-      const res = await fetch(NEBULA_API_URL, {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-secret-key": process.env.NEXT_PUBLIC_TW_KEY!,
         },
         body: JSON.stringify({
           message: msg,
-          stream: false,
           context: {
-            chainIds: ["984123"],
             walletAddress: account?.address || null,
           },
         }),
       });
+
       if (!res.ok) {
-        throw new Error(`Nebula API error: ${res.status}`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Server error: ${res.status}`);
       }
+
       const data = await res.json();
       setMessages((prev) => [
         ...prev,
@@ -79,19 +76,21 @@ export default function Chatbox({ fullScreen, onClose }: ChatboxProps) {
           : "flex h-[400px] w-[350px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg dark:border-neutral-800 dark:bg-neutral-900",
       )}
     >
-      {fullScreen && onClose && (
-        <button
-          className="absolute right-4 top-4 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white shadow hover:bg-red-600"
-          onClick={onClose}
-          aria-label="Đóng chat"
-          type="button"
-        >
-          <X />
-        </button>
-      )}
-      <header className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 dark:border-neutral-800">
-        <Bot className="h-5 w-5 text-blue-500" />
-        <span className="text-sm font-semibold">Nebula Chat</span>
+      <header className="flex items-center justify-between gap-2 border-b border-slate-200 px-4 py-2 dark:border-neutral-800">
+        <div className="flex items-center gap-2">
+          <Bot className="h-5 w-5 text-blue-500" />
+          <span className="text-sm font-semibold">Nebula Chat</span>
+        </div>
+        {fullScreen && onClose && (
+          <button
+            className="right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow hover:bg-red-600"
+            onClick={onClose}
+            aria-label="Đóng chat"
+            type="button"
+          >
+            <X />
+          </button>
+        )}
       </header>
       <main
         className={cn(
