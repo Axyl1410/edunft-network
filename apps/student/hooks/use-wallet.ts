@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useActiveAccount } from "thirdweb/react";
+
 export function useWallet() {
   const [address, setAddress] = useState<string | null>(null);
   const account = useActiveAccount();
