@@ -4,7 +4,7 @@ import { useIsMobile } from "@workspace/ui/hooks/use-mobile";
 import { Bot, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import Chatbox from "./chatbox";
+import Chatbox from "./chatbot";
 
 export default function ChatbotPopup() {
   const [open, setOpen] = useState(false);
