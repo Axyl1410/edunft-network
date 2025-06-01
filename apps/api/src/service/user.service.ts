@@ -165,4 +165,26 @@ export class UserService {
       return new Fail(new DatabaseFailure('Failed to fetch user avatar.'));
     }
   }
+
+  async searchUsers(query: string): Promise<User[]> {
+    return this.userModel
+      .find({
+        $or: [
+          { username: { $regex: query, $options: 'i' } },
+          { bio: { $regex: query, $options: 'i' } },
+          { walletAddress: { $regex: query, $options: 'i' } },
+          { role: { $regex: query, $options: 'i' } },
+        ],
+      })
+      .lean()
+      .exec();
+  }
+
+  async getAllUsersRandom(limit = 20): Promise<User[]> {
+    // Lấy random user, mặc định 20 user
+    const users = await this.userModel
+      .aggregate([{ $sample: { size: limit } }])
+      .exec();
+    return users as User[];
+  }
 }

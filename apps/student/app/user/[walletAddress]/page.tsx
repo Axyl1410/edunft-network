@@ -5,10 +5,11 @@ import { formatAddress } from "@/lib/utils";
 import { Card } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
+import axios from "axios";
 import { Ban, ShieldOff, Star } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Blobbie } from "thirdweb/react";
+import { Blobbie, useActiveAccount } from "thirdweb/react";
 
 interface UserProfile {
   walletAddress: string;
@@ -27,23 +28,28 @@ export default function PublicProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const account = useActiveAccount();
 
   useEffect(() => {
-    if (!walletAddress) return;
+    if (
+      account?.address &&
+      walletAddress?.toLowerCase() === account.address.toLowerCase()
+    ) {
+      router.replace("/profile");
+      return;
+    }
     setLoading(true);
     setError(null);
-    fetch(`${baseUrl}/user/${walletAddress}`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error("User not found");
-        return res.json();
-      })
-      .then((data) => setUser(data))
+    axios
+      .get(`${baseUrl}/user/${walletAddress}`)
+      .then((res) => setUser(res.data))
       .catch(() => setError("User not found or error fetching profile."))
       .finally(() => setLoading(false));
-  }, [walletAddress]);
+  }, [walletAddress, account?.address]);
 
   return (
-    <div className="bg-background flex min-h-screen items-center justify-center px-2">
+    <div className="bg-background flex items-center justify-center px-2">
       <div className="container mx-auto w-full">
         <Card className="mt-4 overflow-hidden rounded-2xl p-0 shadow-lg dark:border-gray-900 dark:bg-gray-950">
           <div className="flex flex-col md:flex-row">

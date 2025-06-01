@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import { User } from 'src/schema/user.schema';
@@ -37,13 +38,14 @@ export class UserController {
     }
   }
 
-  @Post('login')
-  async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
-    const result = await this.userService.loginUser({
-      walletAddress: WalletAddress,
-    });
+  @Get('search')
+  async searchUsers(@Query('query') query: string): Promise<User[]> {
+    return this.userService.searchUsers(query);
+  }
 
-    return this.handleResult(result);
+  @Get('all')
+  async getAllUsersRandom(): Promise<User[]> {
+    return this.userService.getAllUsersRandom();
   }
 
   @Get(':WalletAddress')
@@ -65,6 +67,15 @@ export class UserController {
       console.log(error);
       return { avatar: null };
     }
+  }
+
+  @Post('login')
+  async getUser(@Body('WalletAddress') WalletAddress: string): Promise<User> {
+    const result = await this.userService.loginUser({
+      walletAddress: WalletAddress,
+    });
+
+    return this.handleResult(result);
   }
 
   @Post('create')

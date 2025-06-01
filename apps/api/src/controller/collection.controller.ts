@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { DatabaseFailure, NotFoundFailure } from 'src/core/failure';
 import {
@@ -110,5 +111,10 @@ export class CollectionController {
     const result =
       await this.collectionService.getCollectionByWalletAddress(walletAddress);
     return this.handleResult(result);
+  }
+
+  @Get('search')
+  async searchOwners(@Query('query') query: string): Promise<OwnerItem[]> {
+    return this.collectionService.searchOwners(query);
   }
 }
