@@ -315,4 +315,32 @@ export class CollectionService {
       );
     }
   }
+
+  async searchOwners(query: string): Promise<OwnerItem[]> {
+    const pipeline = [
+      { $unwind: '$owner' },
+      {
+        $match: {
+          $or: [
+            { 'owner.name': { $regex: query, $options: 'i' } },
+            { 'owner.address': { $regex: query, $options: 'i' } },
+          ],
+        },
+      },
+      { $replaceRoot: { newRoot: '$owner' } },
+      {
+        $group: {
+          _id: { address: '$address', name: '$name' },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: { address: '$_id.address', name: '$_id.name' },
+        },
+      },
+    ];
+    return this.collectionModel.aggregate(pipeline).exec() as Promise<
+      OwnerItem[]
+    >;
+  }
 }

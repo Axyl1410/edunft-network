@@ -45,16 +45,16 @@ export function GetItems({ address }: { address: string }) {
           {NFTs && NFTs.length ? (
             NFTs.map((nft: NFTType) => (
               <a key={nft.id.toString()} href={`/explore/${address}/${nft.id}`}>
-                <div className="min-h-[400px] cursor-pointer rounded-lg border border-gray-500/50 bg-white/[.04] p-4 transition-all hover:scale-105">
+                <div className="min-h-[400px] cursor-pointer rounded-lg border border-gray-500/50 bg-white/[.04] p-4 transition-all hover:border-sky-400">
                   <NFTProvider contract={contract} tokenId={nft.id}>
-                    <NFTMedia className="aspect-square w-full rounded-lg object-cover object-center" />
-                    <h2 className="mt-2 text-lg font-semibold">
+                    <NFTMedia className="aspect-square h-[200px] w-[200px] w-full rounded-lg object-cover object-center" />
+                    <h2 className="mt-2 max-w-[200px] truncate text-lg font-semibold">
                       {nft.metadata.name}
                     </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-200">
                       Token ID: {nft.id.toString()}
                     </p>
-                    <NFTDescription className="mt-2 line-clamp-2 truncate text-sm" />
+                    <NFTDescription className="mt-2 line-clamp-2 max-w-[200px] truncate text-sm" />
                   </NFTProvider>
                 </div>
               </a>
