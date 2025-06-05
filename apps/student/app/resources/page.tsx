@@ -22,7 +22,7 @@ import {
 
 export default function ResourcesPage() {
   return (
-    <div className="container mx-auto max-w-3xl px-2 py-8">
+    <div className="container mx-auto max-w-3xl py-8">
       <h1 className="mb-6 text-center text-3xl font-bold">Resources & Wiki</h1>
       <Card className="mb-8">
         <CardHeader>
@@ -261,7 +261,7 @@ export default function ResourcesPage() {
       </Card>
 
       <div className="mt-8 text-center text-xs text-gray-400">
-        Last updated: {new Date().toLocaleDateString()}
+        Last updated: 6/4/2025
       </div>
     </div>
   );

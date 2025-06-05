@@ -51,12 +51,16 @@ export function GetItem({ address }: { address: string }) {
         >
           {NFTs && NFTs.length ? (
             NFTs.map((nft: NFTType) => (
-              <Link key={nft.id.toString()} href={`/sell/${address}/${nft.id}`}>
+              <Link
+                key={nft.id.toString()}
+                href={`/sell/${address}/${nft.id}`}
+                className="w-full"
+              >
                 <Card className="group flex h-full min-h-[320px] w-full flex-col items-center justify-between rounded-xl border bg-white/80 p-4 shadow-sm transition-all hover:border-blue-400 hover:shadow-md dark:bg-neutral-900 dark:hover:border-blue-500">
                   <CardContent className="flex w-full flex-col items-center gap-2 p-0">
                     <NFTProvider contract={contract} tokenId={nft.id}>
-                      <NFTMedia className="aspect-square w-full rounded-lg bg-gray-100 object-cover object-center dark:bg-neutral-800" />
-                      <h2 className="mt-2 w-full truncate text-base font-semibold text-gray-900 group-hover:text-blue-600 dark:text-white">
+                      <NFTMedia className="aspect-square max-h-[200px] w-full max-w-[200px] rounded-lg bg-gray-100 object-cover object-center dark:bg-neutral-800" />
+                      <h2 className="mt-2 w-full max-w-[200px] truncate text-base font-semibold text-gray-900 group-hover:text-blue-600 dark:text-white">
                         {nft.metadata.name}
                       </h2>
                       <p className="text-xs text-gray-500 dark:text-gray-300">
