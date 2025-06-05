@@ -145,7 +145,7 @@ export default function Buy() {
 
           {collectionsWithNFTs.length > 0 && (
             <>
-              <div className="grid grid-cols-2 place-items-center gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              <div className="grid grid-cols-2 place-items-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {collectionsWithNFTs
                   .slice(0, visibleCount)
                   .map((collection) => (

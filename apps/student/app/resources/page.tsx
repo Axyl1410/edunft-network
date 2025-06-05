@@ -261,7 +261,7 @@ export default function ResourcesPage() {
       </Card>
 
       <div className="mt-8 text-center text-xs text-gray-400">
-        Last updated: {new Date().toLocaleDateString()}
+        Last updated: 6/4/2025
       </div>
     </div>
   );

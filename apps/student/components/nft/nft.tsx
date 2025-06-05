@@ -47,7 +47,7 @@ export default function NFTComponent({
       <NFTProvider tokenId={tokenId} contract={contract}>
         <div className="bg-accent flex flex-col gap-1.5 rounded-lg border px-1 py-3 hover:border-sky-400">
           <div className="flex w-full justify-center">
-            <NFTMedia className="aspect-square h-[200px] w-[200px] rounded-md object-cover px-2 text-center" />
+            <NFTMedia className="aspect-square max-h-[200px] max-w-[200px] rounded-md object-cover px-2 text-center" />
           </div>
           <NFTName className="max-w-[200px] truncate px-2 font-bold" />
           <NFTDescription

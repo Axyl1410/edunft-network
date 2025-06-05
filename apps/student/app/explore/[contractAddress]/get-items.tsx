@@ -4,6 +4,7 @@ import { GetItemLoading } from "@/app/(protected)/sell/[contractAddress]/get-ite
 import getThirdwebContract from "@/services/get-contract";
 import { cn } from "@workspace/ui/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { NFT as NFTType } from "thirdweb";
 import { getNFTs } from "thirdweb/extensions/erc721";
@@ -35,7 +36,7 @@ export function GetItems({ address }: { address: string }) {
       <AnimatePresence>
         <motion.div
           className={cn(
-            "grid-cols-2 place-items-center gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+            "grid-cols-2 place-items-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
             NFTs && NFTs.length > 0 && "grid",
           )}
           initial={{ opacity: 0 }}
@@ -44,10 +45,14 @@ export function GetItems({ address }: { address: string }) {
         >
           {NFTs && NFTs.length ? (
             NFTs.map((nft: NFTType) => (
-              <a key={nft.id.toString()} href={`/explore/${address}/${nft.id}`}>
-                <div className="min-h-[400px] cursor-pointer rounded-lg border border-gray-500/50 bg-white/[.04] p-4 transition-all hover:border-sky-400">
+              <Link
+                key={nft.id.toString()}
+                href={`/explore/${address}/${nft.id}`}
+                className="w-full"
+              >
+                <div className="cursor-pointer rounded-lg border border-gray-500/50 bg-white/[.04] p-4 transition-all hover:border-sky-400">
                   <NFTProvider contract={contract} tokenId={nft.id}>
-                    <NFTMedia className="aspect-square h-[200px] w-[200px] w-full rounded-lg object-cover object-center" />
+                    <NFTMedia className="aspect-square max-h-[200px] w-full max-w-[200px] rounded-lg object-cover object-center" />
                     <h2 className="mt-2 max-w-[200px] truncate text-lg font-semibold">
                       {nft.metadata.name}
                     </h2>
@@ -57,7 +62,7 @@ export function GetItems({ address }: { address: string }) {
                     <NFTDescription className="mt-2 line-clamp-2 max-w-[200px] truncate text-sm" />
                   </NFTProvider>
                 </div>
-              </a>
+              </Link>
             ))
           ) : (
             <div>No NFTs</div>

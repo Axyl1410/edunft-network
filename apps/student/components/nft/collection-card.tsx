@@ -55,18 +55,16 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
               src={metadata.image}
               alt={metadata.name}
               client={thirdwebClient}
-              className="aspect-square h-[200px] w-[200px] rounded-md object-cover"
+              className="aspect-square rounded-md object-cover"
             />
           ) : (
-            <div className="flex h-[200px] w-[200px] items-center justify-center rounded-md bg-gray-200">
+            <div className="flex items-center justify-center rounded-md bg-gray-200">
               <span className="text-gray-400">No Image</span>
             </div>
           )}
         </div>
         <div className="flex w-full flex-col px-2">
-          <span className="text-md w-full max-w-[200px] truncate font-bold">
-            {metadata?.name}
-          </span>
+          <span className="text-md truncate font-bold">{metadata?.name}</span>
           <span className="mb-1 text-sm">
             {`Symbol: ${metadata?.symbol || "N/A"}`}
           </span>

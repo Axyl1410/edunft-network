@@ -42,12 +42,13 @@ export default function ChatbotPopup() {
   }
 
   return (
-    <motion.div
-      initial={{ bottom: 16, right: 16 }}
-      style={{ position: "fixed", zIndex: 9999, bottom: 16, right: 16 }}
-    >
+    <div className="fixed bottom-4 right-4 z-[60]">
       {open ? (
-        <div className="relative">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="relative"
+        >
           <button
             className="absolute -right-1 -top-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow hover:bg-red-600"
             onClick={() => setOpen(false)}
@@ -57,17 +58,18 @@ export default function ChatbotPopup() {
             <X size={16} />
           </button>
           <Chatbox />
-        </div>
+        </motion.div>
       ) : (
-        <button
-          className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-blue-600 shadow-lg hover:bg-blue-700 focus:outline-none"
+        <motion.button
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-600 shadow-lg hover:bg-blue-700 focus:outline-none md:h-12 md:w-12"
           onClick={() => setOpen(true)}
           aria-label="Mở chat"
-          type="button"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
         >
-          <Bot className="h-7 w-7 text-white" />
-        </button>
+          <Bot className="h-5 w-5 text-white md:h-7 md:w-7" />
+        </motion.button>
       )}
-    </motion.div>
+    </div>
   );
 }
