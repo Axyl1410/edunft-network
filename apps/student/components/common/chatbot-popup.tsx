@@ -42,7 +42,7 @@ export default function ChatbotPopup() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[60]">
+    <div className="fixed bottom-2 right-2 z-[60] md:bottom-4 md:right-4">
       {open ? (
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -67,7 +67,7 @@ export default function ChatbotPopup() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <Bot className="h-5 w-5 text-white md:h-7 md:w-7" />
+          <Bot className="h-5 w-5 text-white sm:h-7 sm:w-7" />
         </motion.button>
       )}
     </div>
