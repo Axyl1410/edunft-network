@@ -42,12 +42,15 @@ export default function BuyListingButton({
           TokenId: tokenId,
           name_collection: metadataResult.name,
         }),
-        axios.delete(`${baseUrl}/collections/${account?.address}/holders`, {
-          data: {
-            Address: contractAddress,
-            TokenId: tokenId,
+        axios.delete(
+          `${baseUrl}/collections/${directListing?.creatorAddress}/holders`,
+          {
+            data: {
+              Address: contractAddress,
+              TokenId: tokenId,
+            },
           },
-        }),
+        ),
       ])
         .then(() => toast("Collection created successfully"))
         .catch((error) =>
