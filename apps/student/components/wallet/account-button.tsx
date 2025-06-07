@@ -1,25 +1,28 @@
 import { formatAddress } from "@/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
+import { memo, useCallback } from "react";
 import { Blobbie } from "thirdweb/react";
 
 interface User {
   profilePicture?: string;
 }
 
-export function AccountButton({
-  user,
-  address,
-  onClick,
-}: {
+interface AccountButtonProps {
   user?: User;
   address: string;
   onClick: () => void;
-}) {
+}
+
+const AccountButton = memo(({ user, address, onClick }: AccountButtonProps) => {
+  const handleClick = useCallback(() => {
+    onClick();
+  }, [onClick]);
+
   return (
     <Button
       variant={"outline"}
-      onClick={onClick}
+      onClick={handleClick}
       className="flex cursor-pointer items-center dark:bg-transparent"
     >
       {user?.profilePicture ? (
@@ -37,4 +40,8 @@ export function AccountButton({
       {formatAddress(address)}
     </Button>
   );
-}
+});
+
+AccountButton.displayName = "AccountButton";
+
+export { AccountButton };
