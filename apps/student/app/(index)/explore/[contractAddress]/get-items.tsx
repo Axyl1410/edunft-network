@@ -1,6 +1,6 @@
 "use client";
 
-import { GetItemLoading } from "@/app/(protected)/sell/[contractAddress]/get-item";
+import { GetItemLoading } from "@/app/(index)/(protected)/sell/[contractAddress]/get-item";
 import getThirdwebContract from "@/services/get-contract";
 import { cn } from "@workspace/ui/lib/utils";
 import { AnimatePresence, motion } from "motion/react";

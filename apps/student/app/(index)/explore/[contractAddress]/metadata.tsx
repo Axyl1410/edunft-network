@@ -1,14 +1,13 @@
 "use client";
 
-import { MediaRenderer, useReadContract } from "thirdweb/react";
+import { MetadataLoading } from "@/app/(index)/(protected)/sell/[contractAddress]/metadata";
+import ReadMore from "@/components/common/read-more-text";
+import { thirdwebClient } from "@/lib/thirdweb";
+import getThirdwebContract from "@/services/get-contract";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
-import ReadMore from "@/components/common/read-more-text";
-import getThirdwebContract from "@/services/get-contract";
-import LoadingScreen from "@workspace/ui/components/loading-screen";
-import { thirdwebClient } from "@/lib/thirdweb";
-import { MetadataLoading } from "@/app/(protected)/sell/[contractAddress]/metadata";
+import { MediaRenderer, useReadContract } from "thirdweb/react";
 
 export function Metadata({ address }: { address: string }) {
   const contract = getThirdwebContract(address);
