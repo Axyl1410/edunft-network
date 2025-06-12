@@ -1,4 +1,4 @@
-import BackButton from "@/components/layout/back-button";
+import BackButton from "@/components/common/back-button";
 import { GetItems } from "./get-items";
 import { Metadata } from "./metadata";
 

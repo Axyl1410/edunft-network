@@ -1,4 +1,4 @@
-import BackButton from "@/components/layout/back-button";
+import BackButton from "@/components/common/back-button";
 import Events from "@/components/nft/events";
 import { baseUrl } from "@/lib/client";
 import { thirdwebClientPublic } from "@/lib/thirdweb";

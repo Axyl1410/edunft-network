@@ -1,5 +1,5 @@
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import { thirdwebClient } from "@/lib/thirdweb";
 import { useUserStore } from "@/store";
 import {
   Alert,
@@ -31,6 +31,7 @@ import { ConnectButton } from "./connect-button";
 import { CreateAccountDialog } from "./create-account-dialog";
 import { ErrorDialog } from "./error-dialog";
 import { SwitchNetworkButton } from "./switch-network-button";
+import { FORMA_SKETCHPAD } from "@/constant";
 
 interface CreateUserFormData {
   Username: string;

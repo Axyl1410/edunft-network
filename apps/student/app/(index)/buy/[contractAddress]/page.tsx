@@ -1,4 +1,4 @@
-import BackButton from "@/components/layout/back-button";
+import BackButton from "@/components/common/back-button";
 import { GetItem } from "./get-item";
 
 export default async function Page({

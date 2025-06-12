@@ -2,7 +2,7 @@
 
 import CollectionCard from "@/components/nft/collection-card";
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import { thirdwebClient } from "@/lib/thirdweb";
 import { useUserStore } from "@/store";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -26,6 +26,7 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import type { Event } from "./events/types";
+import { FORMA_SKETCHPAD } from "@/constant";
 
 const questions = [
   {

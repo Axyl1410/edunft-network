@@ -1,2 +1,2 @@
-export { SidebarData } from "./sidebar";
-
+export * from "./sidebar";
+export * from "./thirdweb";

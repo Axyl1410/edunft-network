@@ -2,7 +2,7 @@
 
 "use client";
 
-import { BackButton } from "@/components/layout/back-button";
+import { BackButton } from "@/components/common/back-button";
 import AttributeInput from "@/components/nft/attribute-input";
 import AttributeList from "@/components/nft/attribute-list";
 import DropdownCard from "@/components/nft/dropdown-card";
