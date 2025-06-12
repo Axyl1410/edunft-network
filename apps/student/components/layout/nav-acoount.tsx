@@ -172,7 +172,7 @@ export default function NavAccount() {
                   </div>
                 </div>
               ) : (
-                <ScrollArea className="max-h-12">
+                <ScrollArea className="max-h-72">
                   <ul className="space-y-1">
                     {results.map((user) => (
                       <li

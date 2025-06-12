@@ -1,6 +1,7 @@
 "use client";
 
 import { baseUrl } from "@/lib/client";
+import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
 import { Card } from "@workspace/ui/components/card";
 import {
@@ -20,6 +21,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useActiveAccount } from "thirdweb/react";
 import FormAskQuestion from "./components/FormAskQuestion";
 import QuestionList from "./components/QuestionList";
 import UserStats from "./components/UserStats";
@@ -72,6 +74,8 @@ export default function QuestionPage() {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [useMockData, setUseMockData] = useState(false);
+  const user = useUserStore((state) => state.user);
+  const account = useActiveAccount();
 
   // Fetch questions
   const fetchQuestions = async () => {
@@ -245,7 +249,7 @@ export default function QuestionPage() {
         <span className="mr-2 font-bold text-blue-200">
           <Handshake />
         </span>
-        Welcome Back, Nguyen Phi Long
+        Welcome Back, {user?.username || account?.address}!
       </div>
       <UserStats
         questionsAsked={questionsAsked}
