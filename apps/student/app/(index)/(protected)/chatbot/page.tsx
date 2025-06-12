@@ -9,6 +9,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { Bot, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
 
 export default function ChatbotPage() {
@@ -45,6 +46,9 @@ export default function ChatbotPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
+        toast.error(
+          `Lỗi: ${errorData.error || `Máy chủ trả về mã lỗi ${res.status}`}`,
+        );
         throw new Error(errorData.error || `Server error: ${res.status}`);
       }
 

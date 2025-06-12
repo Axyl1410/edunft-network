@@ -77,7 +77,7 @@ export const FileUpload = ({
               fileInputRef.current.value = "";
             }
           }}
-          className="absolute right-0 top-0 z-40 flex h-8 w-8 cursor-pointer items-center justify-center"
+          className="absolute right-0 top-0 z-30 flex h-8 w-8 cursor-pointer items-center justify-center"
         >
           <X className="h-6 w-6 text-black dark:text-white" />
         </motion.div>

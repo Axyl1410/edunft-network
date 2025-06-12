@@ -1,3 +1,6 @@
+"use client";
+
+import loadingAnimation from "@/public/loader.json";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -8,7 +11,8 @@ import {
   DialogTitle,
 } from "@workspace/ui/components/dialog";
 import { cn } from "@workspace/ui/lib/utils";
-import { CheckCircle, Loader2, XCircle } from "lucide-react";
+import Lottie from "lottie-react";
+import { CheckCircle, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 
@@ -27,7 +31,9 @@ const StepIcon = ({ step }: { step: TransactionStep }) => {
     case "sent":
     case "confirmed":
       return (
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500 dark:text-white" />
+        <div className="h-18 w-18">
+          <Lottie animationData={loadingAnimation} loop={true} autoplay />
+        </div>
       );
     case "success":
       return <CheckCircle className="h-8 w-8 text-green-500" />;
@@ -133,7 +139,7 @@ const TransactionDialog = ({
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center space-y-4 py-4">
+          <div className="flex flex-col items-center justify-center space-y-2 py-4">
             <StepIndicator currentStep={currentStep} />
             <StepIcon step={currentStep} />
             <AnimatePresence mode="wait">

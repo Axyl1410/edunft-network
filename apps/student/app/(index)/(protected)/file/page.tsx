@@ -1,5 +1,6 @@
 "use client";
 
+import loadingAnimation from "@/public/loader.json";
 import {
   deleteFileInDatabase,
   deleteFilePinata,
@@ -43,14 +44,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-import {
-  Download,
-  List,
-  Loader2,
-  PanelLeftIcon,
-  Terminal,
-  Upload,
-} from "lucide-react";
+import Lottie from "lottie-react";
+import { Download, List, PanelLeftIcon, Terminal, Upload } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -474,7 +469,13 @@ export default function Page() {
                   className="cursor-pointer"
                 >
                   {deletingFileId === confirmDelete.file?.id ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <div className="h-10 w-10">
+                      <Lottie
+                        animationData={loadingAnimation}
+                        loop={true}
+                        autoplay
+                      />
+                    </div>
                   ) : (
                     "Delete"
                   )}

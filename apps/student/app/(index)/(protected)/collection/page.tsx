@@ -3,8 +3,9 @@
 import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
+import { FORMA_SKETCHPAD } from "@/constant";
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import { thirdwebClient } from "@/lib/thirdweb";
 import { Button } from "@workspace/ui/components/button";
 import { FileUpload } from "@workspace/ui/components/file-upload";
 import { Input } from "@workspace/ui/components/input";
