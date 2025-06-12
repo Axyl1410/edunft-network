@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FORMASCAN_URL } from "@/lib/thirdweb";
+import { FORMASCAN_URL } from "@/constant";
 import getThirdwebContract from "@/services/get-contract";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";

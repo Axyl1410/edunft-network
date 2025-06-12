@@ -1,4 +1,4 @@
-import logo from "@/asset/images/Logo_320x320.png";
+import logo from "@/public/Logo_320x320.png";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
 
 export default function NavHeader() {

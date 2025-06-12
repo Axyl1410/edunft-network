@@ -1,5 +1,6 @@
+import { FORMA_SKETCHPAD } from "@/constant";
 import { baseUrl } from "@/lib/client";
-import { FORMA_SKETCHPAD, thirdwebClient } from "@/lib/thirdweb";
+import { thirdwebClient } from "@/lib/thirdweb";
 import { useUserStore } from "@/store";
 import {
   Alert,
@@ -65,7 +66,6 @@ interface CreateAccountFormProps {
   onStepChange: (step: number) => void;
 }
 
-// Wrap CreateAccountForm with React.memo
 const CreateAccountForm = React.memo(
   ({
     onSuccess,
@@ -342,7 +342,7 @@ export const WalletConnectButton = React.memo(() => {
   const [createAccountError, setCreateAccountError] = useState<string | null>(
     null,
   );
-  const [createStep, setCreateStep] = useState(0);
+  const [_, setCreateStep] = useState(0);
 
   console.log("WalletConnectButton render");
 
