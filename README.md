@@ -212,3 +212,5 @@ cd apps/hardhat && pnpm test
 <div align="center">
   <p>© 2025 EduNFT Network - GDU x KMA ( BuilderBlock  Team ) </p>
 </div>
+
+<!-- GitAds-Verify: MULMF3N9JG9REIXQJG48OGG7J1X1NURV -->
