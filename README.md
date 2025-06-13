@@ -214,3 +214,7 @@ cd apps/hardhat && pnpm test
 </div>
 
 <!-- GitAds-Verify: MULMF3N9JG9REIXQJG48OGG7J1X1NURV -->
+## GitAds Sponsored
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=axyl1410/edunft-network@github)](https://gitads.dev/v1/ad-track?source=axyl1410/edunft-network@github)
+
+
