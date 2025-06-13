@@ -22,9 +22,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
-import FormAskQuestion from "./components/FormAskQuestion";
-import QuestionList from "./components/QuestionList";
-import UserStats from "./components/UserStats";
+import FormAskQuestion from "./_components/FormAskQuestion";
+import QuestionList from "./_components/QuestionList";
+import UserStats from "./_components/UserStats";
 
 interface Question {
   _id: string;

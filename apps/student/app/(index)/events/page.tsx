@@ -16,13 +16,13 @@ import { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
-import { CalendarSection } from "./components/CalendarSection";
-import { CompetitionList } from "./components/CompetitionList";
-import { EventActionButtons } from "./components/EventActionButtons";
-import { EventList } from "./components/EventList";
-import { EventModal } from "./components/EventModal";
-import RegisteredEventsSection from "./components/RegisteredEventsSection";
-import { TabSwitcher } from "./components/TabSwitcher";
+import { CalendarSection } from "./_components/CalendarSection";
+import { CompetitionList } from "./_components/CompetitionList";
+import { EventActionButtons } from "./_components/EventActionButtons";
+import { EventList } from "./_components/EventList";
+import { EventModal } from "./_components/EventModal";
+import RegisteredEventsSection from "./_components/RegisteredEventsSection";
+import { TabSwitcher } from "./_components/TabSwitcher";
 import { Competition, Event, UserEvents } from "./types";
 
 export default function Events() {

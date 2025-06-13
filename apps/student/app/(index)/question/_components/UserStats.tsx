@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import "../styles/question.css";
+import "../_styles/question.css";
 
 interface Question {
   _id: string;
