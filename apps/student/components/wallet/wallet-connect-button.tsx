@@ -344,8 +344,6 @@ export const WalletConnectButton = React.memo(() => {
   );
   const [_, setCreateStep] = useState(0);
 
-  console.log("WalletConnectButton render");
-
   useEffect(() => {
     if (!wallet) return;
     const unsubscribeAccount = wallet.subscribe(

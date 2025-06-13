@@ -156,7 +156,7 @@ export default function Page() {
           </div>
           <BackButton className="h-fit" to="/" />
         </div>
-        <div className="flex w-full flex-col gap-12 md:flex-row">
+        <div className="flex w-full flex-col gap-4 md:flex-row">
           <div className="flex flex-1 flex-col gap-8">
             {/* FileUpload cho ảnh NFT */}
             <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white p-4 dark:bg-black">

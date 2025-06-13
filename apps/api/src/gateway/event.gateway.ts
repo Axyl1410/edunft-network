@@ -5,7 +5,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -17,13 +17,9 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
-  }
+  handleConnection() {}
 
-  handleDisconnect(client: Socket) {
-    console.log('Client disconnected:', client.id);
-  }
+  handleDisconnect() {}
 
   emitEventCreated(event: any) {
     this.server.emit('eventCreated', event);

@@ -128,7 +128,7 @@ export default function ProfilePage() {
     return (
       <div className="bg-background flex items-center justify-center px-2">
         <div className="container mx-auto w-full">
-          <Card className="mt-4 overflow-hidden rounded-2xl p-0 shadow-lg dark:border-gray-900 dark:bg-gray-950">
+          <Card className="mt-4 overflow-hidden p-0 shadow-lg dark:border-gray-900 dark:bg-gray-950">
             <div className="flex flex-col md:flex-row">
               {/* Left: Banner + Avatar Skeleton */}
               <div className="flex flex-col items-center bg-gradient-to-b from-blue-200 to-indigo-200 p-0 md:w-1/3 md:px-4 md:py-8 dark:from-gray-900 dark:to-gray-800">
@@ -178,7 +178,7 @@ export default function ProfilePage() {
   return (
     <div className="bg-background flex items-center justify-center px-2">
       <div className="container mx-auto w-full">
-        <Card className="mt-4 overflow-hidden rounded-2xl p-0 shadow-lg dark:border-gray-900 dark:bg-gray-950">
+        <Card className="mt-4 overflow-hidden p-0 shadow-lg dark:border-gray-900 dark:bg-gray-950">
           <div className="flex flex-col md:flex-row">
             {/* Left: Banner + Avatar (vertical on mobile, left on desktop) */}
             <div className="flex flex-col items-center bg-gradient-to-b from-blue-200 to-indigo-200 p-0 md:w-1/3 md:px-4 md:py-8 dark:from-gray-900 dark:to-gray-800">
