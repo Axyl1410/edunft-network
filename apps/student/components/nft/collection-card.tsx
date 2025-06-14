@@ -18,6 +18,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   showTotal = true,
   ...props
 }) => {
+  const [total, setTotal] = useState<number | null>(null);
   const contract = getThirdwebContract(address);
   if (!contract) notFound();
 
@@ -28,7 +29,6 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
     },
   });
 
-  const [total, setTotal] = useState<number | null>(null);
   useEffect(() => {
     let mounted = true;
     if (showTotal) {
@@ -58,7 +58,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
               className="aspect-square rounded-md object-cover"
             />
           ) : (
-            <div className="flex items-center justify-center rounded-md bg-gray-200">
+            <div className="flex h-full items-center justify-center rounded-md bg-gray-200">
               <span className="text-gray-400">No Image</span>
             </div>
           )}
