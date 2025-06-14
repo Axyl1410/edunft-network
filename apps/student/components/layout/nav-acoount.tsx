@@ -28,7 +28,7 @@ import {
   User2,
   Users,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { ConnectButton } from "thirdweb/react";
 import { WalletConnectButton } from "../wallet/wallet-connect-button";
@@ -39,7 +39,6 @@ export default function NavAccount() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchType, setSearchType] = useState<"user" | "collection">("user");
-  const router = useRouter();
 
   const handleSearch = async () => {
     if (!search) return;
@@ -175,33 +174,32 @@ export default function NavAccount() {
                 <ScrollArea className="max-h-72">
                   <ul className="space-y-1">
                     {results.map((user) => (
-                      <li
-                        key={user.walletAddress}
-                        className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg p-2 transition"
-                        onClick={() => {
-                          setSearchOpen(false);
-                          router.push(`/user/${user.walletAddress}`);
-                        }}
-                      >
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage
-                            src={user.profilePicture}
-                            alt={user.username || user.walletAddress}
-                          />
-                          <AvatarFallback className="h-10 w-10">
-                            {(user.username || user.walletAddress)
-                              ?.slice(0, 2)
-                              .toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <div className="truncate font-medium">
-                            {user.username || user.walletAddress}
+                      <li key={user.walletAddress}>
+                        <Link
+                          href={`/user/${user.walletAddress}`}
+                          onClick={() => setSearchOpen(false)}
+                          className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg p-2 transition"
+                        >
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage
+                              src={user.profilePicture}
+                              alt={user.username || user.walletAddress}
+                            />
+                            <AvatarFallback className="h-10 w-10">
+                              {(user.username || user.walletAddress)
+                                ?.slice(0, 2)
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate font-medium">
+                              {user.username || user.walletAddress}
+                            </div>
+                            <div className="truncate text-xs text-gray-500">
+                              {user.role}
+                            </div>
                           </div>
-                          <div className="truncate text-xs text-gray-500">
-                            {user.role}
-                          </div>
-                        </div>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -237,23 +235,24 @@ export default function NavAccount() {
                 <ScrollArea className="max-h-72">
                   <ul className="space-y-1">
                     {results.map((col) => (
-                      <li
-                        key={col.address}
-                        className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg p-2 transition"
-                        onClick={() => {
-                          setSearchOpen(false);
-                          router.push(`/explore/${col.address}`);
-                        }}
-                      >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200 text-gray-500">
-                          <Folder size={22} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="truncate font-medium">{col.name}</div>
-                          <div className="truncate text-xs text-gray-500">
-                            {col.address}
+                      <li key={col.address}>
+                        <Link
+                          href={`/explore/${col.address}`}
+                          onClick={() => setSearchOpen(false)}
+                          className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg p-2 transition"
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-200 text-gray-500">
+                            <Folder size={22} />
                           </div>
-                        </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate font-medium">
+                              {col.name}
+                            </div>
+                            <div className="truncate text-xs text-gray-500">
+                              {col.address}
+                            </div>
+                          </div>
+                        </Link>
                       </li>
                     ))}
                   </ul>

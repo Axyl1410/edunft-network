@@ -3,6 +3,7 @@
 import { MetadataLoading } from "@/app/(index)/(protected)/sell/[contractAddress]/metadata";
 import ReadMore from "@/components/common/read-more-text";
 import { thirdwebClient } from "@/lib/thirdweb";
+import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -24,9 +25,14 @@ export function Metadata({ address }: { address: string }) {
     },
   });
 
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "function owner() view returns (address)",
+    params: [],
+  });
+
   if (isLoading) return <MetadataLoading />;
   if (error) return <div>Error</div>;
-  console.table(metadata);
 
   return (
     <div className="mt-4 flex w-full flex-col gap-4 rounded-lg border border-gray-500/50 bg-white/[.04] p-4 sm:flex-row">
@@ -55,9 +61,16 @@ export function Metadata({ address }: { address: string }) {
           <ReadMore
             text={metadata?.description}
             maxLength={50}
-            className="overflow-y-auto break-words pr-2 text-sm"
+            className="overflow-y-auto break-words pr-2"
           />
         </div>
+        <p>
+          {isPending
+            ? "Loading..."
+            : data
+              ? `Owner : ${formatAddress(data)}`
+              : "N/A"}
+        </p>
       </div>
     </div>
   );

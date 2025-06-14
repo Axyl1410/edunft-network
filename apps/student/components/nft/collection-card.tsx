@@ -1,9 +1,7 @@
 import { thirdwebClient } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
-import { getCollectionTotal } from "@/services/get-event";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
@@ -18,7 +16,6 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   showTotal = true,
   ...props
 }) => {
-  const [total, setTotal] = useState<number | null>(null);
   const contract = getThirdwebContract(address);
   if (!contract) notFound();
 
@@ -29,19 +26,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
     },
   });
 
-  useEffect(() => {
-    let mounted = true;
-    if (showTotal) {
-      getCollectionTotal({ address }).then((res) => {
-        if (mounted) setTotal(res);
-      });
-    } else {
-      setTotal(null);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [address, showTotal]);
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "function totalSupply() view returns (uint256)",
+    params: [],
+  });
 
   return (
     <Card
@@ -80,7 +69,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
           )}
           {showTotal && (
             <span className="text-sm">
-              {`Total: ${total === null ? "..." : total}`}
+              {`Total NFTs: ${isPending ? "Loading..." : data ? data.toString() : "N/A"}`}
             </span>
           )}
         </div>
