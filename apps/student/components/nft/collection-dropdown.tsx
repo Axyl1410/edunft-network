@@ -6,11 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 import DropdownCard from "./dropdown-card";
-
-interface Collection {
-  address: string;
-  name: string;
-}
+import { Collection } from "@/types";
 
 interface OptionContent {
   content: React.ReactNode;

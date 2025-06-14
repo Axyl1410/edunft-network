@@ -2,6 +2,7 @@
 
 import { baseUrl } from "@/lib/client";
 import { formatAddress } from "@/lib/utils";
+import { UserProfile } from "@/types";
 import { Card } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { SkeletonImage } from "@workspace/ui/components/skeleton-image";
@@ -10,18 +11,6 @@ import { Ban, ShieldOff, Star } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Blobbie, useActiveAccount } from "thirdweb/react";
-
-interface UserProfile {
-  walletAddress: string;
-  username?: string;
-  bio?: string;
-  profilePicture?: string;
-  banner?: string;
-  reputation?: number;
-  violations?: number;
-  bannedUntil?: string | null;
-  role?: string;
-}
 
 export default function PublicProfilePage() {
   const { walletAddress } = useParams<{ walletAddress: string }>();

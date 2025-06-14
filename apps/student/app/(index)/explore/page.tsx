@@ -3,15 +3,11 @@
 import CollectionCard from "@/components/nft/collection-card";
 import { NFTGridLoading } from "@/components/nft/nft-grid";
 import { baseUrl } from "@/lib/client";
+import { Collection } from "@/types";
 import { cn } from "@workspace/ui/lib/utils";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface Collection {
-  address: string;
-  name: string;
-}
 
 export default function Page() {
   const [data, setData] = useState<Collection[] | null>(null);

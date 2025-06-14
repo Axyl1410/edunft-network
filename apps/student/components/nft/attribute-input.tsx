@@ -1,14 +1,7 @@
+import { AttributeInputProps } from "@/types";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-
-interface AttributeInputProps {
-  traitType: string;
-  attributeValue: string;
-  setTraitType: (value: string) => void;
-  setAttributeValue: (value: string) => void;
-  handleAddAttribute: () => void;
-}
 
 const AttributeInput: React.FC<AttributeInputProps> = ({
   traitType,

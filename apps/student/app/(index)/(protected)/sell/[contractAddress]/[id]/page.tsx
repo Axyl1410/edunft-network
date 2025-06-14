@@ -1,16 +1,12 @@
 import SaleInfo from "@/components/nft/sale-info";
 import { thirdwebClientPublic } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
+import { Attribute } from "@/types";
 import { Badge } from "@workspace/ui/components/badge";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { notFound } from "next/navigation";
 import { getNFT } from "thirdweb/extensions/erc721";
 import { MediaRenderer } from "thirdweb/react";
-
-type Attribute = {
-  trait_type: string;
-  value: string;
-};
 
 export default async function Page({
   params,

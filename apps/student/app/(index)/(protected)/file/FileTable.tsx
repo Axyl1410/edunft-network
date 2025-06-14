@@ -1,4 +1,5 @@
 import { formatBytes, shortenDate } from "@/lib/utils";
+import { FileData } from "@/types";
 import { Button } from "@workspace/ui/components/button";
 import {
   Table,
@@ -58,15 +59,6 @@ function getFileIcon(fileName: string) {
   )
     return <FileCode className="mr-2 h-4 w-4 text-green-500" />;
   return <FileIcon className="mr-2 h-4 w-4 text-gray-400" />;
-}
-
-export interface FileData {
-  id: string;
-  name: string;
-  hash: string;
-  size: number;
-  createdAt: string;
-  pinataId: string;
 }
 
 interface FileTableProps {

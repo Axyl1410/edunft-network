@@ -4,16 +4,12 @@ import { baseUrl } from "@/lib/client";
 import { thirdwebClientPublic } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
+import { Attribute } from "@/types";
 import axios from "axios";
 import { Badge } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getNFT } from "thirdweb/extensions/erc721";
 import { Blobbie, MediaRenderer } from "thirdweb/react";
-
-type Attribute = {
-  trait_type: string;
-  value: string;
-};
 
 const OwnerAvatar = async ({ address }: { address: string }) => {
   try {

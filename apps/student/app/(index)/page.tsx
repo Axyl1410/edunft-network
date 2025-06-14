@@ -1,6 +1,7 @@
 "use client";
 
 import CollectionCard from "@/components/nft/collection-card";
+import { FORMA_SKETCHPAD } from "@/constant";
 import { baseUrl } from "@/lib/client";
 import { thirdwebClient } from "@/lib/thirdweb";
 import { useUserStore } from "@/store";
@@ -26,7 +27,6 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import type { Event } from "./events/types";
-import { FORMA_SKETCHPAD } from "@/constant";
 
 const questions = [
   {
@@ -46,17 +46,6 @@ const questions = [
 ];
 
 const maxToken = Math.max(...questions.map((q) => q.tokens));
-
-const collections = [
-  {
-    address: "0x123...abc",
-    name: "EduNFT Bears",
-  },
-  {
-    address: "0x456...def",
-    name: "Student Artworks",
-  },
-];
 
 export default function HomePage() {
   const user = useUserStore((state) => state.user);

@@ -12,6 +12,7 @@ import TransactionDialog, {
 import { baseUrl } from "@/lib/client";
 import { uploadFile } from "@/services/file";
 import getThirdwebContract from "@/services/get-contract";
+import { Attribute, Collection } from "@/types";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -32,16 +33,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { mintTo } from "thirdweb/extensions/erc721";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
-
-interface Collection {
-  address: string;
-  name: string;
-}
-
-interface Attribute {
-  trait_type: string;
-  value: string;
-}
 
 // Custom hook for managing attributes
 function useAttributes() {
@@ -133,8 +124,6 @@ export default function Page() {
   const handleOpenChange = (open: boolean) => {
     if (currentStep === "success" || currentStep === "error") setIsOpen(open);
   };
-
-  const handleFileUpload = (files: File | null) => setFiles(files);
 
   if (!account || loading) return <LoadingScreen />;
 

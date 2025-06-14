@@ -104,9 +104,6 @@ export default function Page() {
       if (!contractAddress || !name)
         throw new Error("Failed to extract contract address");
 
-      console.log("Contract address:", contractAddress);
-      console.log("Name:", name);
-
       await axios.post(`${baseUrl}/collections/${account.address}/owners`, {
         address: contractAddress,
         name: name,

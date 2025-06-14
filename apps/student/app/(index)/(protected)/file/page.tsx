@@ -9,6 +9,7 @@ import {
   saveFile,
   uploadFile,
 } from "@/services/file";
+import { FileData } from "@/types";
 import {
   Alert,
   AlertDescription,
@@ -50,16 +51,7 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
-import { FileTable, FileData as FileTableData } from "./FileTable";
-
-interface FileData {
-  id: string;
-  name: string;
-  hash: string;
-  size: number;
-  createdAt: string;
-  pinataId: string;
-}
+import { FileTable } from "./FileTable";
 
 export default function Page() {
   const [files, setFiles] = useState<FileData[]>([]);
@@ -375,7 +367,7 @@ export default function Page() {
       ) : (
         <>
           <FileTable
-            files={displayedFiles as FileTableData[]}
+            files={displayedFiles}
             onPreview={handlePreview}
             onDownload={handleDownload}
             onDelete={(file) => {
