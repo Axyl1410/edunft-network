@@ -1,6 +1,7 @@
 import { thirdwebClient } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
 import { Card, CardContent } from "@workspace/ui/components/card";
+import { motion } from "motion/react";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
@@ -38,7 +39,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
       {...props}
     >
       <CardContent className="flex w-full flex-col items-center gap-3 p-2">
-        <div className="flex w-full justify-center">
+        <motion.div
+          className="flex w-full justify-center"
+          layout
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
           {metadata?.image ? (
             <MediaRenderer
               src={metadata.image}
@@ -51,7 +56,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
               <span className="text-gray-400">No Image</span>
             </div>
           )}
-        </div>
+        </motion.div>
         <div className="flex w-full flex-col px-2">
           <span className="text-md truncate font-bold">{metadata?.name}</span>
           <span className="mb-1 text-sm">

@@ -10,7 +10,7 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="bg-background text-primary flex h-screen w-full flex-col items-center justify-center gap-4">
+        <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
           <h2>Something went wrong!</h2>
           <p className="max-w-3xl text-balance text-center text-sm/6">
             {error.message}
