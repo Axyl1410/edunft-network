@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
+import { AnimatePresence, motion } from "motion/react";
 import { prepareEvent } from "thirdweb";
 import { useContractEvents } from "thirdweb/react";
 
@@ -22,7 +23,7 @@ const preparedEvent = prepareEvent({
 export function GetEvents({ contractAddress }: { contractAddress: string }) {
   const contract = getThirdwebContract(contractAddress);
   const {
-    data: event,
+    data: events,
     isLoading,
     isError,
   } = useContractEvents({
@@ -30,41 +31,85 @@ export function GetEvents({ contractAddress }: { contractAddress: string }) {
     events: [preparedEvent],
   });
 
-  if (isLoading) return <Loading text="Loading events..." />;
-  if (isError) return <div>Error loading events</div>;
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex h-32 items-center justify-center"
+      >
+        <Loading text="Loading events..." />
+      </motion.div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="text-red-500"
+      >
+        Error loading events
+      </motion.div>
+    );
+  }
 
   return (
-    <>
-      {event && event.length > 0 ? (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Event Name</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Transaction Hash</TableHead>
-                <TableHead>Block Number</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {event.map((e, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">Transfer</TableCell>
-                  <TableCell className="font-mono text-sm">
-                    {formatAddress(e.address)}
-                  </TableCell>
-                  <TableCell className="font-mono text-sm">
-                    {formatAddress(e.transactionHash)}
-                  </TableCell>
-                  <TableCell>{e.blockNumber.toString()}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <p>No events found for this contract.</p>
-      )}
-    </>
+    <AnimatePresence mode="wait">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+      >
+        {events && events.length > 0 ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Mint Events</h3>
+              <span className="text-muted-foreground text-sm">
+                {events.length} events found
+              </span>
+            </div>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Event Name</TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead>Transaction Hash</TableHead>
+                    <TableHead>Block Number</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {events.map((e, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">Transfer</TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {formatAddress(e.address)}
+                      </TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {formatAddress(e.transactionHash)}
+                      </TableCell>
+                      <TableCell>{e.blockNumber.toString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        ) : (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-muted-foreground text-center"
+          >
+            No events found for this contract.
+          </motion.p>
+        )}
+      </motion.div>
+    </AnimatePresence>
   );
 }
