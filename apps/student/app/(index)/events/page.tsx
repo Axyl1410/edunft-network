@@ -13,7 +13,6 @@ import Loading from "@workspace/ui/components/loading";
 import { Textarea } from "@workspace/ui/components/textarea";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { useActiveAccount } from "thirdweb/react";
 import { CalendarSection } from "./_components/CalendarSection";
@@ -415,43 +414,6 @@ export default function Events() {
       setFormLoading(false);
     }
   };
-
-  useEffect(() => {
-    // Connect to the backend gateway (adjust the URL if needed)
-    const socket: Socket = io(baseUrl.replace(/\/api$/, ""));
-
-    socket.on("eventCreated", (event) => {
-      setEvents((prev) => [{ ...event, id: event._id || event.id }, ...prev]);
-      toast.success("Sự kiện mới được tạo!", { description: event.title });
-    });
-
-    socket.on("competitionCreated", (competition) => {
-      setEvents((prev) => [
-        { ...competition, id: competition._id || competition.id },
-        ...prev,
-      ]);
-      toast.success("Cuộc thi mới được tạo!", {
-        description: competition.title,
-      });
-    });
-
-    socket.on("participantRegistered", ({ type, item, participant }) => {
-      setEvents((prev) =>
-        prev.map((e) =>
-          e.id === item._id || e.id === item.id
-            ? { ...item, id: item._id || item.id }
-            : e,
-        ),
-      );
-      toast("Có người vừa đăng ký tham gia!", {
-        description: `${participant.id} đã đăng ký ${type === "event" ? "sự kiện" : "cuộc thi"} "${item.title}"`,
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-white">

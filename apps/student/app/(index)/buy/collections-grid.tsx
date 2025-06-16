@@ -1,15 +1,11 @@
 "use client";
 
 import CollectionCard from "@/components/nft/collection-card";
-import { baseUrl } from "@/lib/client";
 import { Collection } from "@/types";
 import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/components/loading";
-import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { toast } from "sonner";
+import { useState } from "react";
 
 interface CollectionsGridProps {
   initialCollections: Collection[];
@@ -20,22 +16,6 @@ export function CollectionsGrid({ initialCollections }: CollectionsGridProps) {
     useState<Collection[]>(initialCollections);
   const [loadingCollections, setLoadingCollections] = useState(false);
   const [visibleCount, setVisibleCount] = useState(20);
-
-  // Connect to socket.io for real-time updates
-  useEffect(() => {
-    const socket = io(baseUrl.replace(/\/api$/, ""));
-    socket.on("collectionUpdate", async () => {
-      try {
-        const res = await axios.get(baseUrl + "/collections/owners");
-        setCollections(res.data);
-      } catch {
-        toast.error("Error fetching collections (realtime)");
-      }
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <div className="min-h-[200px]">

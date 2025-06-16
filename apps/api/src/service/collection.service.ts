@@ -9,7 +9,7 @@ import {
   HoldingItem,
   OwnerItem,
 } from 'src/schema/collection.schema';
-import { CollectionGateway } from '../gateway/collection.gateway';
+// import { CollectionGateway } from '../gateway/collection.gateway';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class CollectionService {
     @InjectModel(Collection.name)
     private readonly collectionModel: Model<CollectionDocument>,
     private readonly userService: UserService,
-    private readonly collectionGateway: CollectionGateway,
+    // private readonly collectionGateway: CollectionGateway,
   ) {}
 
   async addHolder(
@@ -57,12 +57,12 @@ export class CollectionService {
         );
       }
 
-      if (updatedCollection) {
-        this.collectionGateway.emitCollectionUpdate({
-          type: 'addHolder',
-          data: updatedCollection,
-        });
-      }
+      // if (updatedCollection) {
+      //   this.collectionGateway.emitCollectionUpdate({
+      //     type: 'addHolder',
+      //     data: updatedCollection,
+      //   });
+      // }
 
       return new Success(updatedCollection);
     } catch (error) {
@@ -108,12 +108,12 @@ export class CollectionService {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
       }
 
-      if (updatedCollection) {
-        this.collectionGateway.emitCollectionUpdate({
-          type: 'removeHolder',
-          data: updatedCollection,
-        });
-      }
+      // if (updatedCollection) {
+      //   this.collectionGateway.emitCollectionUpdate({
+      //     type: 'removeHolder',
+      //     data: updatedCollection,
+      //   });
+      // }
 
       return new Success(updatedCollection);
     } catch (error) {
@@ -160,12 +160,12 @@ export class CollectionService {
         );
       }
 
-      if (updatedCollection) {
-        this.collectionGateway.emitCollectionUpdate({
-          type: 'addOwner',
-          data: updatedCollection,
-        });
-      }
+      // if (updatedCollection) {
+      //   this.collectionGateway.emitCollectionUpdate({
+      //     type: 'addOwner',
+      //     data: updatedCollection,
+      //   });
+      // }
 
       return new Success(updatedCollection);
     } catch (error) {
@@ -210,12 +210,12 @@ export class CollectionService {
         return new Fail(new DatabaseFailure('Failed to update collection.'));
       }
 
-      if (updatedCollection) {
-        this.collectionGateway.emitCollectionUpdate({
-          type: 'removeOwner',
-          data: updatedCollection,
-        });
-      }
+      // if (updatedCollection) {
+      //   this.collectionGateway.emitCollectionUpdate({
+      //     type: 'removeOwner',
+      //     data: updatedCollection,
+      //   });
+      // }
 
       return new Success(updatedCollection);
     } catch (error) {
