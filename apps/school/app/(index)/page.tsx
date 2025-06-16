@@ -1,6 +1,6 @@
 "use client";
 
-import { useFetch } from "@/hooks/use-fetch";
+import { useFetch } from "@/hooks/use-query";
 
 interface Repository {
   full_name: string;

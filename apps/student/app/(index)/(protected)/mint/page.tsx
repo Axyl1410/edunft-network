@@ -299,7 +299,7 @@ export default function Page() {
                 </Label>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <div className="relative mt-2 flex h-24 w-full cursor-pointer items-center gap-4 overflow-hidden rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+                    <div className="relative mt-2 flex h-24 w-full items-center gap-4 overflow-hidden rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
                       {selectedOption || (
                         <>
                           <div className="grid h-16 w-16 place-items-center rounded-md bg-neutral-200 dark:bg-neutral-800">
@@ -341,7 +341,7 @@ export default function Page() {
                             You don't have any collections yet.{" "}
                             <Link
                               href="/collection"
-                              className="cursor-pointer text-blue-500 hover:underline dark:text-blue-400"
+                              className="text-blue-500 hover:underline dark:text-blue-400"
                             >
                               Create one
                             </Link>

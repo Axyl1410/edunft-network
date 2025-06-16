@@ -22,7 +22,7 @@ export default function Page() {
         </p>
         <div className="mt-10 flex-col items-center justify-center gap-2 sm:flex sm:flex-row md:gap-6">
           <Link href="/">
-            <Button className="cursor-pointer bg-blue-600 font-bold text-white hover:bg-blue-500">
+            <Button className="bg-blue-600 font-bold text-white hover:bg-blue-500">
               Go back home
             </Button>
           </Link>

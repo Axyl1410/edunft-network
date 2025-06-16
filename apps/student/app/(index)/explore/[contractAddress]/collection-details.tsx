@@ -52,7 +52,7 @@ export function CollectionDetails({ contractAddress }: CollectionDetailsProps) {
         <h3 className="text-lg font-semibold">Collection Details</h3>
         {account?.address === owner && !isOwnerPending && (
           <Link href={`/edit/${contractAddress}`}>
-            <Button variant="ghost" size="icon" className="cursor-pointer">
+            <Button variant="ghost" size="icon">
               <Edit className="h-4 w-4" />
             </Button>
           </Link>

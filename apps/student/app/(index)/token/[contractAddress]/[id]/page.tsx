@@ -92,7 +92,7 @@ export default async function Page({
     <div className="container mx-auto p-4">
       {/* Breadcrumb Navigation */}
       <div className="mb-2">
-        <BackButton variant="outline" className="cursor-pointer" />
+        <BackButton variant="outline" />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">

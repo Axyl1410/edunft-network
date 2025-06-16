@@ -28,12 +28,8 @@ export default async function Page({
 
       <Tabs defaultValue="tokens" className="mt-6">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="tokens" className="cursor-pointer">
-            Tokens
-          </TabsTrigger>
-          <TabsTrigger value="details" className="cursor-pointer">
-            Details
-          </TabsTrigger>
+          <TabsTrigger value="tokens">Tokens</TabsTrigger>
+          <TabsTrigger value="details">Details</TabsTrigger>
         </TabsList>
         <TabsContent value="details">
           <div className="mt-4 grid gap-6 md:grid-cols-[1fr,300px]">

@@ -21,10 +21,10 @@ export default function GlobalError({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button className="cursor-pointer">Report Error on GitHub</Button>
+              <Button>Report Error on GitHub</Button>
             </a>
             <Button
-              className="cursor-pointer bg-sky-500 hover:bg-sky-600"
+              className="bg-sky-500 hover:bg-sky-600"
               onClick={() => window.location.reload()}
             >
               Refresh

@@ -119,7 +119,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="mt-4 sm:ml-auto sm:mt-0">
-                <Button size="sm" variant="outline" className="cursor-pointer">
+                <Button size="sm" variant="outline">
                   Connect Wallet
                 </Button>
               </div>
@@ -171,7 +171,7 @@ export default function HomePage() {
           {account?.address && (
             <div className="mt-4 sm:ml-auto sm:mt-0">
               <Link href="/profile">
-                <Button size="sm" variant="outline" className="cursor-pointer">
+                <Button size="sm" variant="outline">
                   View Profile
                 </Button>
               </Link>
@@ -183,17 +183,17 @@ export default function HomePage() {
       {/* Quick Actions */}
       <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Link href="/question">
-          <Button className="w-full cursor-pointer" variant="default">
+          <Button className="w-full" variant="default">
             Ask a Question
           </Button>
         </Link>
         <Link href="/events">
-          <Button className="w-full cursor-pointer" variant="default">
+          <Button className="w-full" variant="default">
             Register Event
           </Button>
         </Link>
         <Link href="/buy">
-          <Button className="w-full cursor-pointer" variant="default">
+          <Button className="w-full" variant="default">
             Buy NFT
           </Button>
         </Link>
@@ -208,7 +208,7 @@ export default function HomePage() {
               Featured Events
             </CardTitle>
             <Link href="/events">
-              <Button size="sm" variant="ghost" className="cursor-pointer">
+              <Button size="sm" variant="ghost">
                 See all
               </Button>
             </Link>
@@ -266,7 +266,7 @@ export default function HomePage() {
               Latest Questions
             </CardTitle>
             <Link href="/question">
-              <Button size="sm" variant="ghost" className="cursor-pointer">
+              <Button size="sm" variant="ghost">
                 See all
               </Button>
             </Link>
@@ -330,7 +330,7 @@ export default function HomePage() {
               Featured NFT Collections
             </CardTitle>
             <Link href="/buy">
-              <Button size="sm" variant="ghost" className="cursor-pointer">
+              <Button size="sm" variant="ghost">
                 See all
               </Button>
             </Link>

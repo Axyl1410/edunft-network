@@ -65,7 +65,7 @@ export default function NavAccount() {
   return (
     <>
       <div className="flex items-center">
-        <SidebarTrigger className="!mr-2 cursor-pointer" />
+        <SidebarTrigger className="!mr-2" />
         <div
           className="hidden h-9 w-full cursor-text items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-5 pl-3.5 pr-2 text-sm backdrop-blur-lg transition-[background-color,box-shadow] duration-150 ease-out md:inline-flex lg:w-[360px] dark:bg-neutral-900"
           onClick={() => setSearchOpen(true)}

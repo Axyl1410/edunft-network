@@ -111,9 +111,8 @@ export function FileTable({
                 </TableCell>
                 <TableCell className="flex gap-2 whitespace-nowrap px-3 py-2">
                   <Button
-                    size="icon"
                     variant="ghost"
-                    className="cursor-pointer"
+                    size="icon"
                     onClick={() => {
                       onPreview(file);
                     }}
@@ -124,9 +123,8 @@ export function FileTable({
                   </Button>
 
                   <Button
-                    size="icon"
                     variant="ghost"
-                    className="cursor-pointer"
+                    size="icon"
                     onClick={() => {
                       onDownload(file);
                     }}
@@ -137,9 +135,9 @@ export function FileTable({
                   </Button>
 
                   <Button
-                    size="icon"
                     variant="ghost"
-                    className="cursor-pointer text-red-500"
+                    size="icon"
+                    className="text-red-500"
                     onClick={() => {
                       onDelete(file);
                     }}

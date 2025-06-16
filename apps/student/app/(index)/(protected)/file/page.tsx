@@ -201,7 +201,7 @@ export default function Page() {
             }}
           >
             <DialogTrigger asChild>
-              <Button disabled={uploading} className="cursor-pointer">
+              <Button disabled={uploading}>
                 <Upload className="mr-2 h-4 w-4" /> Upload File
               </Button>
             </DialogTrigger>
@@ -529,7 +529,7 @@ export default function Page() {
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer">Close</Button>
+                  <Button>Close</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
@@ -622,7 +622,7 @@ export default function Page() {
                   Get link again
                 </Button>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer">Close</Button>
+                  <Button>Close</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
