@@ -1,18 +1,9 @@
-import { Providers } from "@/components/providers";
+import { Providers } from "@/components/providers/providers";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "EduNFT",
@@ -26,13 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "font-sans antialiased",
-          fontSans.variable,
-          fontMono.variable,
-        )}
-      >
+      <body className="font-sans antialiased">
+        <NextTopLoader showAtBottom shadow="none" showSpinner={false} />
         <Providers>{children}</Providers>
       </body>
     </html>
