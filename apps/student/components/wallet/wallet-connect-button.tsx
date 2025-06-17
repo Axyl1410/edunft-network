@@ -30,6 +30,7 @@ import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { AccountButton } from "./account-button";
 import { ConnectButton } from "./connect-button";
 import { CreateAccountDialog } from "./create-account-dialog";
+import DisconnectButton from "./disconnect-button";
 import { ErrorDialog } from "./error-dialog";
 import { SwitchNetworkButton } from "./switch-network-button";
 
@@ -344,8 +345,6 @@ export const WalletConnectButton = React.memo(() => {
   );
   const [_, setCreateStep] = useState(0);
 
-  console.log("WalletConnectButton render");
-
   useEffect(() => {
     if (!wallet) return;
     const unsubscribeAccount = wallet.subscribe(
@@ -409,10 +408,10 @@ export const WalletConnectButton = React.memo(() => {
     () => [
       inAppWallet({
         auth: { options: ["google", "email", "facebook", "apple", "github"] },
-        smartAccount: {
-          chain: FORMA_SKETCHPAD,
-          sponsorGas: true,
-        },
+        // smartAccount: {
+        //   chain: FORMA_SKETCHPAD,
+        //   sponsorGas: true,
+        // },
       }),
       createWallet("io.metamask"),
       createWallet("com.coinbase.wallet"),
@@ -432,16 +431,28 @@ export const WalletConnectButton = React.memo(() => {
       theme: theme === "light" ? "light" : "dark",
       size: "compact",
       wallets: wallets,
+      // accountAbstraction: {
+      //   chain: FORMA_SKETCHPAD,
+      //   sponsorGas: true,
+      // },
     });
   }, [connect, theme, wallets]);
 
   const handleDetail = useCallback(async () => {
-    console.log("detail");
     detailsModal.open({
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
       theme: theme === "light" ? "light" : "dark",
       hideSwitchWallet: true,
+      hideDisconnect: true,
+      footer: () => (
+        <>
+          <DisconnectButton className="text-md" />
+          <span className="text-muted-foreground mt-2 flex w-full justify-center text-sm">
+            Made with ❤️ by Axyl team.
+          </span>
+        </>
+      ),
     });
   }, [detailsModal, theme]);
 

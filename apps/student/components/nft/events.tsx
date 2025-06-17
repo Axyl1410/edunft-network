@@ -3,8 +3,11 @@
 "use client";
 
 import { FORMASCAN_URL } from "@/constant";
+import loadingAnimation from "@/public/loader.json";
 import getThirdwebContract from "@/services/get-contract";
 import { Button } from "@workspace/ui/components/button";
+import Lottie from "lottie-react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,19 +45,46 @@ export default function Events({
   }, [address, contract, tokenId]);
 
   if (transferEvents === null) {
-    return <div>Loading...</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex h-32 items-center justify-center"
+      >
+        <div className="h-18 w-18">
+          <Lottie animationData={loadingAnimation} loop={true} autoplay />
+        </div>
+      </motion.div>
+    );
   }
 
   if (transferEvents.length === 0) {
-    return <h1>No history found</h1>;
+    return (
+      <motion.h1
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+      >
+        No history found
+      </motion.h1>
+    );
   }
 
   return (
-    <div className="mt-3 flex flex-col gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="mt-3 flex flex-col gap-4"
+    >
       <div className="divide-y">
-        {transferEvents.slice(0, displayCount).map((event) => (
-          <div
+        {transferEvents.slice(0, displayCount).map((event, index) => (
+          <motion.div
             key={event.transactionHash}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
             className="flex min-h-[32px] min-w-[128px] flex-1 items-center justify-between gap-1 border-white/20 py-2"
           >
             <div className="flex flex-col gap-1">
@@ -87,7 +117,7 @@ export default function Events({
                 ↗
               </Link>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       {displayCount < transferEvents.length && (
@@ -95,6 +125,6 @@ export default function Events({
           Load More
         </Button>
       )}
-    </div>
+    </motion.div>
   );
 }

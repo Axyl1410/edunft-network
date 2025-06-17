@@ -1,9 +1,8 @@
 import { thirdwebClient } from "@/lib/thirdweb";
 import getThirdwebContract from "@/services/get-contract";
-import { getCollectionTotal } from "@/services/get-event";
 import { Card, CardContent } from "@workspace/ui/components/card";
+import { motion } from "motion/react";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
@@ -28,20 +27,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
     },
   });
 
-  const [total, setTotal] = useState<number | null>(null);
-  useEffect(() => {
-    let mounted = true;
-    if (showTotal) {
-      getCollectionTotal({ address }).then((res) => {
-        if (mounted) setTotal(res);
-      });
-    } else {
-      setTotal(null);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [address, showTotal]);
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "function totalSupply() view returns (uint256)",
+    params: [],
+  });
 
   return (
     <Card
@@ -49,7 +39,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
       {...props}
     >
       <CardContent className="flex w-full flex-col items-center gap-3 p-2">
-        <div className="flex w-full justify-center">
+        <motion.div
+          className="flex w-full justify-center"
+          layout
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
           {metadata?.image ? (
             <MediaRenderer
               src={metadata.image}
@@ -58,11 +52,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
               className="aspect-square rounded-md object-cover"
             />
           ) : (
-            <div className="flex items-center justify-center rounded-md bg-gray-200">
+            <div className="flex h-full items-center justify-center rounded-md bg-gray-200">
               <span className="text-gray-400">No Image</span>
             </div>
           )}
-        </div>
+        </motion.div>
         <div className="flex w-full flex-col px-2">
           <span className="text-md truncate font-bold">{metadata?.name}</span>
           <span className="mb-1 text-sm">
@@ -80,7 +74,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
           )}
           {showTotal && (
             <span className="text-sm">
-              {`Total: ${total === null ? "..." : total}`}
+              {`Total NFTs: ${isPending ? "Loading..." : data ? data.toString() : "N/A"}`}
             </span>
           )}
         </div>

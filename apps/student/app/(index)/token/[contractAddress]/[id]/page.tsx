@@ -92,7 +92,7 @@ export default async function Page({
     <div className="container mx-auto p-4">
       {/* Breadcrumb Navigation */}
       <div className="mb-2">
-        <BackButton variant="outline" className="cursor-pointer" />
+        <BackButton variant="outline" />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -177,7 +177,7 @@ export default async function Page({
 
             {/* Owner Info */}
             <Link
-              href={`/profile/${nft.owner}`}
+              href={`/user/${nft.owner}`}
               className="mb-6 mt-4 flex cursor-pointer items-center gap-3 rounded-lg bg-gray-50 p-3 transition hover:bg-blue-50 dark:bg-gray-800/50 dark:hover:bg-gray-800"
             >
               <Suspense

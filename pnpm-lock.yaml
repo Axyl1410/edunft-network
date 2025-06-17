@@ -38,9 +38,6 @@ importers:
       '@nestjs/core':
         specifier: ^11.0.1
         version: 11.1.1(@nestjs/common@11.1.1(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.1.1)(@nestjs/websockets@11.1.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/jwt':
-        specifier: ^11.0.0
-        version: 11.0.0(@nestjs/common@11.1.1(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@nestjs/mongoose':
         specifier: ^11.0.3
         version: 11.0.3(@nestjs/common@11.1.1(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.1.1)(mongoose@8.13.2(socks@2.8.4))(rxjs@7.8.1)
@@ -87,6 +84,9 @@ importers:
       '@nestjs/cli':
         specifier: ^11.0.0
         version: 11.0.7(@swc/cli@0.6.0(@swc/core@1.11.18(@swc/helpers@0.5.15))(chokidar@4.0.3))(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@22.15.19)
+      '@nestjs/jwt':
+        specifier: ^11.0.0
+        version: 11.0.0(@nestjs/common@11.1.1(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@nestjs/schematics':
         specifier: ^11.0.0
         version: 11.0.5(chokidar@4.0.3)(typescript@5.7.3)
@@ -276,22 +276,61 @@ importers:
 
   apps/school:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^5.1.1
+        version: 5.1.1(react-hook-form@7.58.0(react@19.0.0))
+      '@radix-ui/react-label':
+        specifier: ^2.1.3
+        version: 2.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot':
+        specifier: ^1.2.3
+        version: 1.2.3(@types/react@19.0.10)(react@19.0.0)
+      '@tanstack/react-query':
+        specifier: ^5.80.7
+        version: 5.80.7(react@19.0.0)
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      axios:
+        specifier: ^1.10.0
+        version: 1.10.0
       lucide-react:
         specifier: ^0.475.0
         version: 0.475.0(react@19.0.0)
       next:
         specifier: ^15.2.4
         version: 15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next-themes:
+        specifier: ^0.4.4
+        version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      nextjs-toploader:
+        specifier: ^3.8.16
+        version: 3.8.16(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      react-hook-form:
+        specifier: ^7.58.0
+        version: 7.58.0(react@19.0.0)
+      sonner:
+        specifier: ^2.0.3
+        version: 2.0.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      thirdweb:
+        specifier: ^5.102.6
+        version: 5.102.6(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      zod:
+        specifier: ^3.25.24
+        version: 3.25.24
+      zustand:
+        specifier: ^5.0.4
+        version: 5.0.4(@types/react@19.0.10)(immer@10.0.2)(react@19.0.0)(use-sync-external-store@1.5.0(react@19.0.0))
     devDependencies:
+      '@tanstack/eslint-plugin-query':
+        specifier: ^5.78.0
+        version: 5.78.0(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
       '@types/node':
         specifier: ^20
         version: 20.17.19
@@ -313,12 +352,6 @@ importers:
 
   apps/student:
     dependencies:
-      '@ckeditor/ckeditor5-build-classic':
-        specifier: ^44.3.0
-        version: 44.3.0
-      '@ckeditor/ckeditor5-react':
-        specifier: ^9.5.0
-        version: 9.5.0(ckeditor5@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.1.2
         version: 1.2.2(@types/react@19.0.10)(react@18.2.0)
@@ -383,8 +416,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       thirdweb:
-        specifier: ^5.99.1
-        version: 5.99.1(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+        specifier: ^5.102.6
+        version: 5.102.6(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)
       zustand:
         specifier: ^5.0.4
         version: 5.0.4(@types/react@19.0.10)(immer@10.0.2)(react@18.2.0)(use-sync-external-store@1.5.0(react@18.2.0))
@@ -822,78 +855,38 @@ packages:
       '@ckeditor/ckeditor5-utils': '>= 37.0'
       ckeditor5: '>= 37.0'
 
-  '@ckeditor/ckeditor5-adapter-ckfinder@44.3.0':
-    resolution: {integrity: sha512-+LYQi4DJmK87Mx3FU7q8Ei3Jv/BrXScR7P1rJVw9bYSySLISw1lPPGEuzNaDm+aI/IMwxAw6Laf7kp+bBfZg1A==}
-
   '@ckeditor/ckeditor5-adapter-ckfinder@45.0.0':
     resolution: {integrity: sha512-dv+BOds8K86QTEWETvEdbRyvP54z8v//pcBNq0ewHlUUU7dWiOYEiiRITYRO7T0x3HzzmYg+nL9nGU90w469sw==}
-
-  '@ckeditor/ckeditor5-alignment@44.3.0':
-    resolution: {integrity: sha512-PJLPQPJTaEs/TxmXovb5gZWHFk04VdyFxwpy+LFiVKTewV4T5Mz2jinXwL6+DYmlHh0oDu66O2joSdYeL6F9xw==}
 
   '@ckeditor/ckeditor5-alignment@45.0.0':
     resolution: {integrity: sha512-5v93RZT9E5p1vRjPpsG80lYG4K+41uNxsUcBy5/gq5CVR7gWm6X12H2l8Z7RQaGlTe89JWhCscFi3MSXS4QRNg==}
 
-  '@ckeditor/ckeditor5-autoformat@44.3.0':
-    resolution: {integrity: sha512-cKRN73eWaci0px4RL/pu+uFx+/joJyicXjDogqRCqsrHtFnNziAoDxg1aU9F7eReMp+RJc5dqn9R94fZqxdaKQ==}
-
   '@ckeditor/ckeditor5-autoformat@45.0.0':
     resolution: {integrity: sha512-0duphMlUFDSqtNtI2PLsle4lpxDgH00znXA6hEaUuvvWCOAp8SyJ2fOFm19YmxEDcH8svYAE/sfoSn7o+Lm64w==}
-
-  '@ckeditor/ckeditor5-autosave@44.3.0':
-    resolution: {integrity: sha512-vZS8lMUNwtpUplx1WtiywEmgqy2rXSTrwbCqkENZZ6vIOpYZg9sW0XxWAdCMslBiNZRhAF2et3jT+Es01/aEyg==}
 
   '@ckeditor/ckeditor5-autosave@45.0.0':
     resolution: {integrity: sha512-Byu86aceBmki0bxMFXtxq7M9iQB3pppuHq7YuTd7GsAbY7PjZdxs5vWLSFQ0pWL1L8lpEnmiwD2DxRhFjMeTpw==}
 
-  '@ckeditor/ckeditor5-basic-styles@44.3.0':
-    resolution: {integrity: sha512-QxwJqzIMYD8Nq7I8utEm2N1wFYve3jR9W1RoxrP005V7F9hXubcG4VFkk1QspVjiPBBtWjYJh7Iq6LjeMnDXgg==}
-
   '@ckeditor/ckeditor5-basic-styles@45.0.0':
     resolution: {integrity: sha512-eryGuvf6BXic7AHfBwrjrWCUvgDLNmHGiOZ29ZUtLr8ahNnG4e1LpJ7RkzadbRo8MCdvrY9vDk00hUxjEyfxVg==}
-
-  '@ckeditor/ckeditor5-block-quote@44.3.0':
-    resolution: {integrity: sha512-J+t36widj2/f1DCZqZjCssOu4hdKCpX/mDWOAJwp4BNIei0NATmtHoblH4Lb98P0mF5UeneoLqR4XZlwMYD7tw==}
 
   '@ckeditor/ckeditor5-block-quote@45.0.0':
     resolution: {integrity: sha512-9QOOHMouSa9YfP/a+yIxeUZXsgDpBVd1kgDwE8XwoE+n1PY4KlWo5GErEoSfapueNOubRfFX+dSnksmwKABUqA==}
 
-  '@ckeditor/ckeditor5-bookmark@44.3.0':
-    resolution: {integrity: sha512-e3p6hUYC4LavTSVTDaz9VfpMaXpi35HNXqqCpIGJGtMKq7mYPaGf1ZZqIPEWuZz3UH/h/E445Mrm4KOgRo9hfg==}
-
   '@ckeditor/ckeditor5-bookmark@45.0.0':
     resolution: {integrity: sha512-l5CsvSWxfhMSQOOiU/S2g4ZiRtc79Vi6EZIGeKhBACdFTtoFTvQjU03Edi8gPa37o519/2cldE4rWKizILDXAw==}
-
-  '@ckeditor/ckeditor5-build-classic@44.3.0':
-    resolution: {integrity: sha512-tvOwT1dAZlY4v1vZItqR0VFfTzr+OLoEmnOW/Lchl2Y0BUWT99GCfABCvAdakBBYvKdsMLsH0jqZFvnLxJCUmg==}
-    deprecated: The predefined builds are no longer maintained. Check the https://ckeditor.com/docs/ckeditor5/latest/updating/nim-migration/predefined-builds.html page for the details.
-
-  '@ckeditor/ckeditor5-ckbox@44.3.0':
-    resolution: {integrity: sha512-R0cHl7aafBU1dvfpFu/dMq+7SMTKa7dAi1wQyu5RqmdN0glCAGXoyffe5h2gujcHGlUqzjGE9oX3207rrPi12A==}
 
   '@ckeditor/ckeditor5-ckbox@45.0.0':
     resolution: {integrity: sha512-BrB13JVOU/uPSSqQmxbd6LJP/PDtlvCBTrS9Erxa6//U2ZXvfgA+Dova4ghS3sB60w6eTr3JgGAhp2hAi9J/XQ==}
 
-  '@ckeditor/ckeditor5-ckfinder@44.3.0':
-    resolution: {integrity: sha512-h/kQy9nUG2VmxAL28b56xZnVQDrr/N12cu2QE+ODfHIiumMNPPTx2Q+g7s8/eVhKAmNQuZJPXygokjXrirC8TA==}
-
   '@ckeditor/ckeditor5-ckfinder@45.0.0':
     resolution: {integrity: sha512-h/jHx49B4sKYt2uGBUTc4gihPRrk4BTK9mYjxbMhAx5tJzt6P5rtmRpQ6rAWXaqIHeZZit+geOk32GEd9fVDIw==}
-
-  '@ckeditor/ckeditor5-clipboard@44.3.0':
-    resolution: {integrity: sha512-oCQfsHX0Z7RySzszvkpnsFi/p3pqEjpQs4FVpPXXWasK+3F00kWReYNNQFe+0z0eIw7alo/ZzqYTQG/FQHaQUw==}
 
   '@ckeditor/ckeditor5-clipboard@45.0.0':
     resolution: {integrity: sha512-93iWIiMKY6OhhTNZUqCQVSy4MAWyWsdLWGKEn0AUMZpMOsP3CzCWE5Ot29Nool9IUzp1o1z54sWYPIDLliJvuw==}
 
-  '@ckeditor/ckeditor5-cloud-services@44.3.0':
-    resolution: {integrity: sha512-c/jLU3lhoqPmwfwEXcU9fGw0ab6dQUcUjQUjamBH1x92p6NnEJTtXJD97trwgKJryZWZ6bk7vJG5nOC4i0XDZA==}
-
   '@ckeditor/ckeditor5-cloud-services@45.0.0':
     resolution: {integrity: sha512-udnFuhJjNjC30e7pqn3rsWwMhyLkhIK3AnwY2QmSUKsD0vfxyUKvhWyxM5KGGD/6zrbHZfOi4bOf2U1F6RYvKg==}
-
-  '@ckeditor/ckeditor5-code-block@44.3.0':
-    resolution: {integrity: sha512-LNFRr7OIdvyZTfkmyNW/m48EXTsYdrQyDS/9hp4fpHrv9cC3rHhnP4/rS3vkmPh9FOv5I2JvXS36nn75BjWRRQ==}
 
   '@ckeditor/ckeditor5-code-block@45.0.0':
     resolution: {integrity: sha512-SSQiVDjhZ+CulRaS8reCsa0ILq9TR0BnyNrGsHxESkKLqn9FiN3CKz63YHnutAk/ZCVcjW9zDozdfgaAKKPCAQ==}
@@ -904,83 +897,44 @@ packages:
   '@ckeditor/ckeditor5-comments@45.0.0':
     resolution: {integrity: sha512-2spVMto4FvzruMEcxEpXetasOdpN8bSGLEENucEf+vLBrRZ4Ck2fWBwQQKEDyrLfgjrmnI1tXvJIVUQDXROTcA==}
 
-  '@ckeditor/ckeditor5-core@44.3.0':
-    resolution: {integrity: sha512-QYyk00JI2wgE2Lr8/A3roRsms3rSOfwMAF88I6Ff2Qf+c8hT6O11gSX18jdd/bGLhfZ0c4IjWc8v67ohgUdMFg==}
-
   '@ckeditor/ckeditor5-core@45.0.0':
     resolution: {integrity: sha512-+0RDW4ZpEnIEv6yLP3JJ3i0Jelcr71lSsVU7u9Wmnm/0jQF7u/QI4YrvOGBmlyLQ5Ji5d/SNCnOF8CXS+Amtrg==}
 
   '@ckeditor/ckeditor5-document-outline@45.0.0':
     resolution: {integrity: sha512-c3uys8i42EhF9IfCJaDfMqcMCw7Ud28l2RDes5ru6BGr+tjY4eDP5MEardgt8IQbqNaTX/ZfoM6VosZFb+GKKg==}
 
-  '@ckeditor/ckeditor5-easy-image@44.3.0':
-    resolution: {integrity: sha512-s1Qpf45/31J4rW4RC0ArKLb5QqD0VKTn9LCB83qhyCLfGluk18MOZ2Fc7gfYoxZClzhCwdMQE6mhWOC9bQUmPw==}
-
   '@ckeditor/ckeditor5-easy-image@45.0.0':
     resolution: {integrity: sha512-KRZf/mcLGUYgmfwuBnCSW5DyVb9JpUjc+UCeFDdPtu0jWbVXgulV0xVpP6R/7NKdenS3PfkBvr1CzJR8GvBAaw==}
-
-  '@ckeditor/ckeditor5-editor-balloon@44.3.0':
-    resolution: {integrity: sha512-Lw6GIIUW37Pi/ErFqx+ozsqRmbBbvhrJhDJ1zIhILEYcwzADHGP32O2pKGLHDf5Z4QTfwunAyG73jvww/ks3kg==}
 
   '@ckeditor/ckeditor5-editor-balloon@45.0.0':
     resolution: {integrity: sha512-jE+64/8bhA3h/Tut8o4cJu4PHIq/EnhROZmcEdDwoPyon+oBKTPoyUEW5a3w4f/6OvNBA1OWaEo23lZeP2ka2g==}
 
-  '@ckeditor/ckeditor5-editor-classic@44.3.0':
-    resolution: {integrity: sha512-Vi1tNQdKUCw6X66X2RPhtJPjXJHw/UqHw1Y0J4Vpmi5rf5UHerEj5Sjn+KrjUwDNbmeHtVO/egibLhwRMjKn8A==}
-
   '@ckeditor/ckeditor5-editor-classic@45.0.0':
     resolution: {integrity: sha512-7AHVXI/ElCnaP6omdFNaKwaJimlIxKZ+UWV3Lk5VBwroTrqjJYQy4Mav2PRaCSE1INAlBMAdUWdUgaiXlmhOxQ==}
-
-  '@ckeditor/ckeditor5-editor-decoupled@44.3.0':
-    resolution: {integrity: sha512-sG4KO0pPhfwQpiegtncDyL9G7nlCsjcWqDieZvRfwy2Uig7EaChny3BoIQhacjO4xKV8ZhXw+dTBJgZRtfePdQ==}
 
   '@ckeditor/ckeditor5-editor-decoupled@45.0.0':
     resolution: {integrity: sha512-SbIrts0JHj7hRg7SbNUrIyd7KLKgKEp/Cr3yoKA2+loMGT9clKUfhiB/ccs3yZ+dChGQk0Y4JIUV5D3YJqdSXw==}
 
-  '@ckeditor/ckeditor5-editor-inline@44.3.0':
-    resolution: {integrity: sha512-asa9uWhdTGA6BDda7leJEj57UT3lkDmFAHPFL7fWsvQpL2mszbdf7P6L/rOedGcj2/7a9F8CZfb5aVmENrM3Zw==}
-
   '@ckeditor/ckeditor5-editor-inline@45.0.0':
     resolution: {integrity: sha512-B0Mh8Wm02OD+hWGZSeG9zpLrGBeBR9fsHApi+3wvc2u9FdpdCG2mJHGxtsHvyc1MnOFjn3JYl51kqFT8Cc5v4g==}
-
-  '@ckeditor/ckeditor5-editor-multi-root@44.3.0':
-    resolution: {integrity: sha512-2k13l0m9+UGMDOzz2uGkj706iMFsayvn+wp6D4niGUOoDGtKOZSX6gNUwq+WcHJ2+54fsXAAJ2xVZB9juXSuhg==}
 
   '@ckeditor/ckeditor5-editor-multi-root@45.0.0':
     resolution: {integrity: sha512-OJ15Rk90WE68DftCRO6IUA88pR6rdrh1jXH/vrCHru7Sk/9L+C09aysZpHj2wAaQ/dRUdJir9BOd60HCda0DRg==}
 
-  '@ckeditor/ckeditor5-emoji@44.3.0':
-    resolution: {integrity: sha512-NevoSyV8f9F44oTYFJ8DVaOGmqS1XzCisg/lSW5iwfu2R0+6WXCfU6zlGwp9wVedolznUu5OiYpHK0Emz3dmBw==}
-
   '@ckeditor/ckeditor5-emoji@45.0.0':
     resolution: {integrity: sha512-tz5aFp/1uHTYVULpES+5xv7u33A/D7lYmxVyPgydMYUFbrn9uMqioKtZ/1VVW6R7AORI50sayT0AkiaqqkD7Aw==}
-
-  '@ckeditor/ckeditor5-engine@44.3.0':
-    resolution: {integrity: sha512-76nq2oHwQocaGQfRKlaDaYYFSps3yVNfbC4204i4/S0moKtB9fSy9IBKwYm5D9iB+0qjqCYGnsn17wWNuKjCYQ==}
 
   '@ckeditor/ckeditor5-engine@45.0.0':
     resolution: {integrity: sha512-vkCB1/Dmu5Xay4blb5UaLfy6w0QHTm7MFAa/9S3wjacfJyg7YK51o6tWq1UJspn0q66MjJNZYFXuFc488+xRyg==}
 
-  '@ckeditor/ckeditor5-enter@44.3.0':
-    resolution: {integrity: sha512-M5pv6XC5SIqwa9ZiQQsmmvCAot/uiBN/8ax3KvLz8S78eXDHyHKE6mZMWUd0MJCfZ/0b+CnrFVY/kvZkS+h/7g==}
-
   '@ckeditor/ckeditor5-enter@45.0.0':
     resolution: {integrity: sha512-7wv/Y1egq6xG7/O8737zYh217QJS14Rc7wNfvP+y7Lsd+mqhETC4mTSY6iFpBaJqGQN1Ji5QuI+wm5rbwou80g==}
-
-  '@ckeditor/ckeditor5-essentials@44.3.0':
-    resolution: {integrity: sha512-DkE6u0pD3gcFLkyZRNA4IZVvjLQUpgoEeTCaB/QaCQRljSSj9300AtkIFpCdRiWo9RAGw7rs9XmVRoCsTPY4tQ==}
 
   '@ckeditor/ckeditor5-essentials@45.0.0':
     resolution: {integrity: sha512-5YLX+hQrSUz+hsMJ5zozdYxEUMXinR1K6rnrz0l9WxCi12UoYIcUbPuqi1LmlkgZEJk5IcbatnM3TJN9Kef4Hw==}
 
-  '@ckeditor/ckeditor5-find-and-replace@44.3.0':
-    resolution: {integrity: sha512-d4fLo5IWyxPmfuoIqoaWaekoodgtFurKALc2ZyNvto7H9m+ul+uWwhF4A9buovbETv0N0mertDruGENygiuOCg==}
-
   '@ckeditor/ckeditor5-find-and-replace@45.0.0':
     resolution: {integrity: sha512-Hqnn5aLvmfDmdpMccKXbr+Huzw05RzT7WFYZyNv17Cv7KIS4MYHedrHX45PMTLIh/hkIZIUPPU1t5khbIXsBlw==}
-
-  '@ckeditor/ckeditor5-font@44.3.0':
-    resolution: {integrity: sha512-F1cdHNbtXkM/1nvqbCO4XeSCHahNiMnwkQqCm36njxuBRXbAei/qTwxqrwPAukE6Yb2q9boX1prUbvEBbPAqhw==}
 
   '@ckeditor/ckeditor5-font@45.0.0':
     resolution: {integrity: sha512-MX7srmuCJjUeUiDDcPu3MlNn3tJpDnDpyvMU9LtvS2/fKFwoBxv92eAfxoiQuCHgNogjySGxXUtroFSgkEcraA==}
@@ -988,32 +942,17 @@ packages:
   '@ckeditor/ckeditor5-fullscreen@45.0.0':
     resolution: {integrity: sha512-KvGY64OQqcZUvsXgO440uvLvJar++0DLEG7zPqrrnKz9soNVils+DLuiRhlUi2QY9xyyWYjA1e8cyPUSHIxuYg==}
 
-  '@ckeditor/ckeditor5-heading@44.3.0':
-    resolution: {integrity: sha512-7uCSHN2UMTzn/nZpoACOiUyx2dX4ZlC8bfLbpdgMhDPM9vEaa0Tr/lgSFD5C1ugLFFSEJL3pAPGWStvZ4wD6YA==}
-
   '@ckeditor/ckeditor5-heading@45.0.0':
     resolution: {integrity: sha512-xOc7Qu25q4Ih9Dit3YrlwqN087sPzuzGam6F3kUzF3L3Bb1334BzlzwZI0gJLreDeyN0yrvDMxuNzhMD6g114A==}
-
-  '@ckeditor/ckeditor5-highlight@44.3.0':
-    resolution: {integrity: sha512-BwdMrcAbS0J/3q3dmtY0F6sVARVR9oSrWj4/850EfXp0hw9gkpQyEjrds17sIrIchCG+/8/0LM4Z9sADYzmo9w==}
 
   '@ckeditor/ckeditor5-highlight@45.0.0':
     resolution: {integrity: sha512-NN4AWohrIlu4lCtwfgSOusqjkt6L47LHz/4tXvgPMuGuZwbVGq67yD16G85EiUoCV7ClI9fJDFW58gYOZhPD1w==}
 
-  '@ckeditor/ckeditor5-horizontal-line@44.3.0':
-    resolution: {integrity: sha512-k8YuWptng4IKUbXVE+ZjVyNm8JpGU50aFWckYunimlpajNOKC52L8pneIEqIHr/BjA+2P/vtAIf8HDZs+AoNjw==}
-
   '@ckeditor/ckeditor5-horizontal-line@45.0.0':
     resolution: {integrity: sha512-YyLh5qcQ5jUT65jv2Bv+26hEf/3yXu2EUBj7yjW4arWKGFxwl6mnTnpEsnKPh7HPD75Yo45wdG1Ldyp++q22/w==}
 
-  '@ckeditor/ckeditor5-html-embed@44.3.0':
-    resolution: {integrity: sha512-rJV3ikojykVPw9CrtzInh8DsgGuk/2UOi8KUr3b6DEtuYOqJkG5cfpqRy5QVoSRbtpLhVOWNpEKhYGgiv+HUgw==}
-
   '@ckeditor/ckeditor5-html-embed@45.0.0':
     resolution: {integrity: sha512-r6NcNfuAbask61h+4aA5ZHFi+dDZyXvxDwdyT0h8REBB+ltV/WYeiVpKjKtDlNq6iOmsw3LLSyOssObCi0A0lg==}
-
-  '@ckeditor/ckeditor5-html-support@44.3.0':
-    resolution: {integrity: sha512-KFBHMzBNU9/YBj3Eil03qYBLNk7wAuholdZ3YijohgCt2YRw1cRu9krjGaOyhF9E5MEu0cqTJvTjPGBhGE8mVQ==}
 
   '@ckeditor/ckeditor5-html-support@45.0.0':
     resolution: {integrity: sha512-6RaqoRsIp37TN7VyqCdoF0sVdy+8TD+slndtgJ2RWM4+ncfJcnqWiw+r2cKlcnZPU6oqkxLtdJ5aU60MGJ0p8Q==}
@@ -1021,56 +960,26 @@ packages:
   '@ckeditor/ckeditor5-icons@45.0.0':
     resolution: {integrity: sha512-DYLH/Qpy2lPkqrZ1f4R6ruqRwgKzGJbzYuq0wXf1cwrcU2QeK3Q1kToUw8wIZvZayiQj9gKbVOHGQHCfbhfmVQ==}
 
-  '@ckeditor/ckeditor5-image@44.3.0':
-    resolution: {integrity: sha512-3mRgGSOXQ4e/TJZcB7N8SPSnN+pdUzA72kwiN6FrjjdV0CNqehNoSUCFrwra4ctHaFjLBBqFVV+hEvwFlgmlxA==}
-
   '@ckeditor/ckeditor5-image@45.0.0':
     resolution: {integrity: sha512-WhFuZxNDl9ZhN5/C3DLevmR3jpYNOnaaTtzwr+DOxR3YW/qd5XCHEhapZ6vjz5xpjX+0wySwocy+sAW2bfgFjw==}
-
-  '@ckeditor/ckeditor5-indent@44.3.0':
-    resolution: {integrity: sha512-Gju3Lt2/OQB2mzhk/TTtonHTEcmFua4Ag4keB75EbPxthpLZZnMQm3Gl7MvrecjUv4+3nRlEBv/Bon00OIXcqA==}
 
   '@ckeditor/ckeditor5-indent@45.0.0':
     resolution: {integrity: sha512-fTaNB0ji9Nxl27+m1QBFlDloObSZp+z+aGdkfw8Xlk33DEv5WWwqv12F3vUeckc8ASUC8Sr0dRd5kfsDSd497g==}
 
-  '@ckeditor/ckeditor5-integrations-common@2.2.3':
-    resolution: {integrity: sha512-92kQWQj1wiABF7bY1+J79Ze+WHr7pwVBufn1eeJLWcTXbPQq4sAolfKv8Y8Ka9g69mdyE9+GPWmGFYDeQJVPDg==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      ckeditor5: '>=42.0.0 || ^0.0.0-nightly'
-
-  '@ckeditor/ckeditor5-language@44.3.0':
-    resolution: {integrity: sha512-lnhnnsSwMnnyFpUktrvAxuj6tlwn2zjSm7+ZDxMiQpsZuRsmABnSapeKqjlfs8B1rQwrcZIhp1FsHVvnaVOzug==}
-
   '@ckeditor/ckeditor5-language@45.0.0':
     resolution: {integrity: sha512-7mgZxProZqKW2aHrJk3keXcgnv+MI+NPHhSIjn7aPZKVfSupMY6dRaE1pZfy9gIfS+dgp/wzkwTEpCuVvdnZfw==}
-
-  '@ckeditor/ckeditor5-link@44.3.0':
-    resolution: {integrity: sha512-OmOWje1i7tuEBNHoIi/n6M69xE1K97P2xmbSJ9HB5nFFvelfCCMnuLa+7QmT1+/Sxg0VYM175dtTclinEeWJhQ==}
 
   '@ckeditor/ckeditor5-link@45.0.0':
     resolution: {integrity: sha512-pdu0y/+E3iR38iSGINYLop3cOZ/hzghHhE2KtRBXxvlNhuUT5MXi+hQKhXEvs08IiEo+J8KS6CkCIxupyJLymA==}
 
-  '@ckeditor/ckeditor5-list@44.3.0':
-    resolution: {integrity: sha512-66f3n8ASdhA7wxPoGt/sI+Eg/IhDFutSkCEcqL2tsJFVRB0MuhhQIklxdGRVfPrjbpMSUPSRJPMddAFhRCzfUQ==}
-
   '@ckeditor/ckeditor5-list@45.0.0':
     resolution: {integrity: sha512-ZKKIOQTU+nSExrc7/pVx2DHRUH/r1HvVD2VzfEXVm7l67kQ/+ZRbsLoN4Ae8OKiN88UkvFEk0/z51Ck6sf/jIw==}
-
-  '@ckeditor/ckeditor5-markdown-gfm@44.3.0':
-    resolution: {integrity: sha512-q+vblaqjjwQQkcrFfsOCD7ejWl1ltqV982jfFK9LTx7DiJIuR2UwByNrRC00Xeol2rDeC8lYoIH77AZHavFIbw==}
 
   '@ckeditor/ckeditor5-markdown-gfm@45.0.0':
     resolution: {integrity: sha512-DoXul5fiNqBrGuG8WAnJBd9Rwq/t5j6MLD7kyxVRp43c8vTXFeyXS8/dsvaAU99a0cw+zQlweoBAaGuyKd63bg==}
 
-  '@ckeditor/ckeditor5-media-embed@44.3.0':
-    resolution: {integrity: sha512-wlAITZKeNEZfB164hwODXfhg63pYaWynCuIvVCtaeVUmoBqnSkK8gxuZ2ehxUdi4SPlVJwt84afDsD4RU8UYDQ==}
-
   '@ckeditor/ckeditor5-media-embed@45.0.0':
     resolution: {integrity: sha512-IFPsG26+WIyBPMHVCXzfgkfPjEFqR7Lc9m5sR2gbQY0H34EjaoSJ7bxocktSxly/z0Hgoe9oMhMFIzZ5sa2r6A==}
-
-  '@ckeditor/ckeditor5-mention@44.3.0':
-    resolution: {integrity: sha512-pmf7prEvIJgP4rbyeTtY6Ynl2i5jo52G+DlFwJbWUzZDyOZIR41mh4hBimK50QHR0szaXMBGbM+alFu924vZCA==}
 
   '@ckeditor/ckeditor5-mention@45.0.0':
     resolution: {integrity: sha512-ReTMWF6cUgFeB/ZRdxSy6vIoLJlDi2OREPZAsomS1n/7xL0qRsIUeAw3Vb9+CuidP0jepQa6dDicW9RolfFJHQ==}
@@ -1078,17 +987,11 @@ packages:
   '@ckeditor/ckeditor5-merge-fields@45.0.0':
     resolution: {integrity: sha512-nQc8GLwFQEungjMSBX7vbT2jkA03jp9v0Aq66Ecx3n1YxqJkq7Qv8rUWr/ot+5MJk6Isly2uwBKchndK+aUP4w==}
 
-  '@ckeditor/ckeditor5-minimap@44.3.0':
-    resolution: {integrity: sha512-iRO1t1lyeyiFZg4il5JGRVwyoqRYqsRcj9uSh90xNJJAxH5yiPlWAGIvCMzWDwlINFJe/hfaNd0RDzlbNHytgA==}
-
   '@ckeditor/ckeditor5-minimap@45.0.0':
     resolution: {integrity: sha512-xEPctHxG3XgxVXdVg6hmn/9pN1nGBqZHZ0XugWUbROopfy9yCgSGX0sUXad4C8eQQk612B5HFaaXd8L9tQ2d0g==}
 
   '@ckeditor/ckeditor5-operations-compressor@45.0.0':
     resolution: {integrity: sha512-NwXvgXRXLfoM359LirW3Xf8Hmu8dst3bgxxX9EBJrNdXGTAtLfPRRQ7c5vJa3AZpbfAQAG4DJg9OPrcPdbTN4w==}
-
-  '@ckeditor/ckeditor5-page-break@44.3.0':
-    resolution: {integrity: sha512-PzvOsEDNBPWCtN9S6nhJPWYwF/5BoE0klXkNzTgoA28EwsoSA4evU8gztcoxxGkVOskdI2OzZfz1QUaPFczLDQ==}
 
   '@ckeditor/ckeditor5-page-break@45.0.0':
     resolution: {integrity: sha512-SO/so8ACSw50zp/LxDJz0iOnbWfFLpkvjUaUrvX88+rp03NMxFUXQKeuRV+tgI0puKNq2dvl8dfc+bLKZFgNAw==}
@@ -1096,36 +999,17 @@ packages:
   '@ckeditor/ckeditor5-pagination@45.0.0':
     resolution: {integrity: sha512-xim17YZdW8rizVBuqKc2OE5DhDTAxYxtQxZJU4GuCvih2JUT9bsmsksUI6VrloH/cDJ1mUy/aAQpo6ivZLqqzQ==}
 
-  '@ckeditor/ckeditor5-paragraph@44.3.0':
-    resolution: {integrity: sha512-kxZBn/xmz+woXB0fIKWA/ZrFZXqyubX5BhcOYpM2j3CtjsJUJsL6ekwBq/y9HNSkkKfNKHaTzK7IDiPBKblcrw==}
-
   '@ckeditor/ckeditor5-paragraph@45.0.0':
     resolution: {integrity: sha512-0/zTnYNXfp7HTh40MRPPz0hLJu/+SBa0mHFCkpvzU7pFsuvTib5K35NVcEPEVt84aEoyC3EMkMdTAene0P1LMA==}
-
-  '@ckeditor/ckeditor5-paste-from-office@44.3.0':
-    resolution: {integrity: sha512-IHl3YVE6ONGXTxHf+uHvvBMFR90nxTz7nB9eA8DzuWskF+fOo+wtVdfZaafLUs0kJJXBTRebsv2Sa5onLLL6tA==}
 
   '@ckeditor/ckeditor5-paste-from-office@45.0.0':
     resolution: {integrity: sha512-rRyXjpFGzknQa+0g5vQ8ufvOUI1YViuHzW1ReXMqYnLU3ubrfwOV0kPOH343ahitGjrHqSciZQ5wdbezroL1gQ==}
 
-  '@ckeditor/ckeditor5-react@9.5.0':
-    resolution: {integrity: sha512-0NEBg3EDQaQDwj9xswC34qspDiNgXMIn41lZ3pjNx915NWRabqQDnR5a8TisPaOlx3gHnIdOXJ0BH1wRHsJxhQ==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      ckeditor5: '>=42.0.0 || ^0.0.0-nightly'
-      react: ^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@ckeditor/ckeditor5-real-time-collaboration@45.0.0':
     resolution: {integrity: sha512-WaNQDJgTdl1s+sML0pyFmCs6IvQdG7ra8F2jAdxWIk1WA1YkbdFEKwFkJR/UW5zS0cdvN21SWnWpfoeuzKYyMw==}
 
-  '@ckeditor/ckeditor5-remove-format@44.3.0':
-    resolution: {integrity: sha512-ZlbJNaX+IGui9C3NDC/W/4M308RzD3+jnk5iDGXENjBstNB99AnwpfDXel+Tc0t5rTd7D1fSr9eaxScnPLdgwA==}
-
   '@ckeditor/ckeditor5-remove-format@45.0.0':
     resolution: {integrity: sha512-HWVO26OpxDGf9WNmck3TgDZsQc7Rcxzstuu9lwzJc9D1kJlPgNTRuYNwEPEn2ijdNdgDOPCo6PgUvZcmuTkw1g==}
-
-  '@ckeditor/ckeditor5-restricted-editing@44.3.0':
-    resolution: {integrity: sha512-0V/can4jw70DMBPwex1MRiUHRsvFdbjZp/RaHagazen6gOZZOAo3R7vJjp+qBQrHmXP6T6aTGn89Y9NxYI9OIw==}
 
   '@ckeditor/ckeditor5-restricted-editing@45.0.0':
     resolution: {integrity: sha512-pYQJxuVTuJvHOvu0DR9D+AVi6OUIYSoOkGdoaak3OULn5pQz2QDzXVfdIOlQA6ooLBkvg4bYcY3V4lWEkrNYQw==}
@@ -1133,44 +1017,23 @@ packages:
   '@ckeditor/ckeditor5-revision-history@45.0.0':
     resolution: {integrity: sha512-zTKb7UFEh7e5U6G8o2+PbG6huheZQ1hAj33jMuJ+ZA83cSh2bwVOUL4NBfvzPaQm5W+R41G7o1eOf5NcRFDHdA==}
 
-  '@ckeditor/ckeditor5-select-all@44.3.0':
-    resolution: {integrity: sha512-GDNl6Iex1cyHAQgjR6cqIklH8QPO1x1Z87gwi93lX3mgm47DW6Q12jvwfRc36+d1zGf5W7+eH0xaP7jQPWYUPg==}
-
   '@ckeditor/ckeditor5-select-all@45.0.0':
     resolution: {integrity: sha512-rOQEZ5BpGbEXqV3YLPvDrtGImM8c0Gy7AMDPH8OlSFHIasQnhdRCj91DhgAiSs3BNvG2xVwpf5TFWvHcOFi4oQ==}
-
-  '@ckeditor/ckeditor5-show-blocks@44.3.0':
-    resolution: {integrity: sha512-4Qp992YWOby7+MiyX0PwD8bg/+PgsRFNXd9DLyhCvmmiFmkwUzbYmA8t3lp+V3uefg5SrcylzWn4QHlUNVg1iw==}
 
   '@ckeditor/ckeditor5-show-blocks@45.0.0':
     resolution: {integrity: sha512-HqnyWEoORir9zh6EcoIrBCpnpPVGQhM7N2kXPaWPek1mJKC77tEEXavGwGN/KdYkw6jRc7vnG5slJZYz1LPAbQ==}
 
-  '@ckeditor/ckeditor5-source-editing@44.3.0':
-    resolution: {integrity: sha512-OCv2oO6ok0UrZJHOoJRnywFpv3+UntOs7TuvEw35zDYJCgcmICfzqqTZ++ZcZaq1oOERbwk2L4E4uy2H8KXWQA==}
-
   '@ckeditor/ckeditor5-source-editing@45.0.0':
     resolution: {integrity: sha512-es6kx14NnHew/GYVWBCvdXP0mvRLSwq/WEL4R/rGDkvTyxFICea2bEoGCEeiw47BMYu/5G6b+7GjDBiYJgJSPw==}
-
-  '@ckeditor/ckeditor5-special-characters@44.3.0':
-    resolution: {integrity: sha512-K3cOw/aMUmkXofUVFpUXTHLNYlwvcT3KUyfvTO3oT8ae3ecQlG4btTjgnzgVD2zIXFSEpguSBYywVUhMAZWNMA==}
 
   '@ckeditor/ckeditor5-special-characters@45.0.0':
     resolution: {integrity: sha512-T/ELE3gpvKne9cfQNRsP4aZl84DFMknsQp6G6lFrk/1QZOnsWRp3uDvYiHhpjtGKw+R/2FXbgA18OVOEFvNC7Q==}
 
-  '@ckeditor/ckeditor5-style@44.3.0':
-    resolution: {integrity: sha512-IUd5yRea8uh/VyAJ6p1NdXL9wWywQYfIOubzNgiP1b58q0psfWYxwsREekE6Epd+sMHC1H4wc+dZsIxfi+stKw==}
-
   '@ckeditor/ckeditor5-style@45.0.0':
     resolution: {integrity: sha512-Chhx4CFTDYgmcLBNtMXPNNyzh/xejMOuJ9eOTjHQ7EJDdF7+hMK5cK5Yk+noeHhLMeyxCQe7hmOQNmkE1f9Nbg==}
 
-  '@ckeditor/ckeditor5-table@44.3.0':
-    resolution: {integrity: sha512-kFPvQWe/7Iq9tPzq788HLax7Ss8SJaS5+bkhbUmH+k4RM4NABl1ABRa+EzyMIrdqz9KLYr0B57jUoCU8Y2HLsg==}
-
   '@ckeditor/ckeditor5-table@45.0.0':
     resolution: {integrity: sha512-LgF5AF9x9epul0UogXBpK9UUE4iamwTyL6niWyGd/qUEl3LQbX0aSBnHTfrATcHhbo+DmIaDQDEsU7IVrDLkDw==}
-
-  '@ckeditor/ckeditor5-theme-lark@44.3.0':
-    resolution: {integrity: sha512-Druy7S1e3bjwMVLkld7ZPGIU6tdI9E6bn/AS+OrQF3mDck14mFP+K4qnMbYNCeYngMqv8Se0eSHtAmQhU7It0A==}
 
   '@ckeditor/ckeditor5-theme-lark@45.0.0':
     resolution: {integrity: sha512-PLtgUsE0mV2HfbBzLLW+BxUrtPQDEbumfIb8RlOVEd1yg6aTp3qNBQWDfiKL3eBJRFlh3qWYVouwu1S35JYn5w==}
@@ -1178,50 +1041,26 @@ packages:
   '@ckeditor/ckeditor5-track-changes@45.0.0':
     resolution: {integrity: sha512-2i6H5pB55l1D+BihDT9kUUWcGF8he1IBSMBrQ3uvbEdo3OLd9sgw0ZrREo84Z5S0r5dsdaJA97/JatW2Q3KZXg==}
 
-  '@ckeditor/ckeditor5-typing@44.3.0':
-    resolution: {integrity: sha512-ojAuhhd/PfO5Oko94ObgEmuvQzqApARb2H0R5YEySSRj9oek4Nm1NGMhHMvIC0sMP2hSVxhfSbHcHY3vDjGwiA==}
-
   '@ckeditor/ckeditor5-typing@45.0.0':
     resolution: {integrity: sha512-sQonahw1LdeOoXgfeKZ//seh066sBJ7ABK1kyXfI5a7rPVZ1K28G4mOyvVBMwXq4Vot0Gffc5V8sW9CmcOr/5A==}
-
-  '@ckeditor/ckeditor5-ui@44.3.0':
-    resolution: {integrity: sha512-Sotme1g/xwhmDYes+bXEU/9hbGXcaKC952Yck6UiYgZyhei28lErlNwtSOAKfpQ2gHbPjWRt7rigSH22EN+iqw==}
 
   '@ckeditor/ckeditor5-ui@45.0.0':
     resolution: {integrity: sha512-kbZ02pu9xBl7OAf5Reou/9VsQwsOChw4n7xMWTqL4SzDpCweULpUugtiGW1n/zpF956PN6hAaWAbpSgXFBjAAw==}
 
-  '@ckeditor/ckeditor5-undo@44.3.0':
-    resolution: {integrity: sha512-cogFPl7QoDrmoUPKTZI0/LiUYoFboqm0lqBK168nh5VRgy53RuGgbXJ4+hCOHNuzdUnVUlWvl/2u0vR4/R07+A==}
-
   '@ckeditor/ckeditor5-undo@45.0.0':
     resolution: {integrity: sha512-b3ZGzUM4kN6rgNboUxLMhPW0ChvmlmC82I/Up/LAAImUO4BQSKIBc9wxSPnd9raMHFi28v1q3v6g6y041VpKgQ==}
-
-  '@ckeditor/ckeditor5-upload@44.3.0':
-    resolution: {integrity: sha512-oJgsw374nHeVKx1qvnlQzEyDhfFvC/su84f00nOdDGWfsHabU3hE0hZE+yoBtreRViORwwe6Ftg5qbhl5OVyuA==}
 
   '@ckeditor/ckeditor5-upload@45.0.0':
     resolution: {integrity: sha512-yZI8FNoxJV1CANYuafX8d2LNZD2OvMSiKOoqpRIuqZcRuzxQVOmsnCc+Mbd+MGGRePFZ+izeaxfD1d+YwUBs9Q==}
 
-  '@ckeditor/ckeditor5-utils@44.3.0':
-    resolution: {integrity: sha512-Z/ttfLhu9QnuMc9BBdQfH9Do6JD01ijUkUmUB41BPByYfOjZbGYGfZmhywH9OjXmHnSDQSUqwRnxqqM3nceR1g==}
-
   '@ckeditor/ckeditor5-utils@45.0.0':
     resolution: {integrity: sha512-U/1uPk/dcrO2uzRUzuzmXM+YCm7Tjfwfi49MNgC2zdSSWzhT+HTeGGXgLSAFMOptfzKYmxmYj5cadfDs13p4eA==}
-
-  '@ckeditor/ckeditor5-watchdog@44.3.0':
-    resolution: {integrity: sha512-7Y4FOWB021CLEUDsIf61tZzd9ZrZ8JkD8lQeRZOmv+bBLTxgjyz2/7MCjIDR7NN0xdASXTFwRS6XO32HbdrN0Q==}
 
   '@ckeditor/ckeditor5-watchdog@45.0.0':
     resolution: {integrity: sha512-rjZVYQPXM7Scqrheh2gblVWb0GsuH5JRV3rn4e+3+MOcI/UfepmLFifIVzuBIYm1uhrMx9M14THFVyceDbNkCQ==}
 
-  '@ckeditor/ckeditor5-widget@44.3.0':
-    resolution: {integrity: sha512-nFEKBE33RnZ2bOeD9L9jfyKYaFw/xKY543ZNQWxWHcmI70AX3U2KJ8wUnuMjMknHafyMuH6bSlWjKtn5vz3w+g==}
-
   '@ckeditor/ckeditor5-widget@45.0.0':
     resolution: {integrity: sha512-yANcyKsyniJrcGsAdV3FD+Oz/OWLTezMf83jXaVzaxYU/gImukpGG/62sDWp2OaNMxqc+Qr64vSoi8lXA17LTg==}
-
-  '@ckeditor/ckeditor5-word-count@44.3.0':
-    resolution: {integrity: sha512-9iNiF1wq1f9npT/KhBAgDfM6kFbJ0GyUdlXt3V6zyLY2K3SILQ6q5B23jhtABZny8zxA+f528ClxDSTFh9bXDA==}
 
   '@ckeditor/ckeditor5-word-count@45.0.0':
     resolution: {integrity: sha512-72Fd2mUKN8dXRMKGKLPhUiQHhoGnp0ZyPwP8Ezcpbwfn/mh5SBxP3LyQGg35sKy1xJgDYywHlWvjVhw95LgIjg==}
@@ -1469,6 +1308,7 @@ packages:
 
   '@hey-api/client-fetch@0.10.0':
     resolution: {integrity: sha512-C7vzj4t52qPiHCqjn1l8cRTI2p4pZCd7ViLtJDTHr5ZwI4sWOYC1tmv6bd529qqY6HFFbhGCz4TAZSwKAMJncg==}
+    deprecated: Starting with v0.73.0, this package is bundled directly inside @hey-api/openapi-ts.
     peerDependencies:
       '@hey-api/openapi-ts': < 2
 
@@ -1482,6 +1322,11 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: ^5.5.3
+
+  '@hookform/resolvers@5.1.1':
+    resolution: {integrity: sha512-J/NVING3LMAEvexJkyTLjruSm7aOFx7QX21pzkiJfMoNG0wl5aFEjLTl7ay7IQb9EWY6AkrBy7tHL2Alijpdcg==}
+    peerDependencies:
+      react-hook-form: ^7.55.0
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3354,6 +3199,9 @@ packages:
   '@solidity-parser/parser@0.19.0':
     resolution: {integrity: sha512-RV16k/qIxW/wWc+mLzV3ARyKUaMUTBy9tOLMzFhtNSKYeTAanQ3a5MudJKf/8arIFnA2L27SNjarQKmFg0w/jA==}
 
+  '@standard-schema/utils@0.3.0':
+    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+
   '@swc/cli@0.6.0':
     resolution: {integrity: sha512-Q5FsI3Cw0fGMXhmsg7c08i4EmXCrcl+WnAxb6LYOLHw4JFFC3yzmx9LaXZ7QMbA+JZXbigU2TirI7RAfO0Qlnw==}
     engines: {node: '>= 16.14.0'}
@@ -3523,11 +3371,24 @@ packages:
   '@tailwindcss/postcss@4.0.8':
     resolution: {integrity: sha512-SUwlrXjn1ycmUbA0o0n3Y0LqlXqxN5R8HR+ti+OBbRS79wl2seDmiypEs3xJCuQXe07ol81s1AmRMitBmPveJA==}
 
+  '@tanstack/eslint-plugin-query@5.78.0':
+    resolution: {integrity: sha512-hYkhWr3UP0CkAsn/phBVR98UQawbw8CmTSgWtdgEBUjI60/GBaEIkpgi/Bp/2I8eIDK4+vdY7ac6jZx+GR+hEQ==}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+
   '@tanstack/query-core@5.74.4':
     resolution: {integrity: sha512-YuG0A0+3i9b2Gfo9fkmNnkUWh5+5cFhWBN0pJAHkHilTx6A0nv8kepkk4T4GRt4e5ahbtFj2eTtkiPcVU1xO4A==}
 
+  '@tanstack/query-core@5.80.7':
+    resolution: {integrity: sha512-s09l5zeUKC8q7DCCCIkVSns8zZrK4ZDT6ryEjxNBFi68G4z2EBobBS7rdOY3r6W1WbUDpc1fe5oY+YO/+2UVUg==}
+
   '@tanstack/react-query@5.74.4':
     resolution: {integrity: sha512-mAbxw60d4ffQ4qmRYfkO1xzRBPUEf/72Dgo3qqea0J66nIKuDTLEqQt0ku++SDFlMGMnB6uKDnEG1xD/TDse4Q==}
+    peerDependencies:
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.80.7':
+    resolution: {integrity: sha512-u2F0VK6+anItoEvB3+rfvTO9GEh2vb00Je05OwlUe/A0lkJBgW1HckiY3f9YZa+jx6IOe4dHPh10dyp9aY3iRQ==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3550,8 +3411,8 @@ packages:
     resolution: {integrity: sha512-YVsz+jUWbwj+6aF2eTZGMfyw47a1HRmgNl4LQ3gW9gwYL5y5+OX/yOzv6aV5ibvoqCk/k10aIVK2eFrcpMubQA==}
     engines: {node: '>=18.0.0'}
 
-  '@thirdweb-dev/engine@3.0.0':
-    resolution: {integrity: sha512-D8rtb/FB7nXUCAYFMTBFyaR0dgT7I2nBtiB6XgyigOeaahCJeW714lt+KHsPn2HmT4LNS7aD8slc2d0QIyoXyA==}
+  '@thirdweb-dev/engine@3.0.3':
+    resolution: {integrity: sha512-2fWAHq5ZnGScGAMWwsfrCnasVf0+3BbnHvDa5GApQUPjD5qGSCoEJejmzQkjPVLSTLNPjYRxSUjSxUI67zlQfg==}
     engines: {node: '>=18'}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -3562,8 +3423,8 @@ packages:
   '@thirdweb-dev/generated-abis@0.0.1':
     resolution: {integrity: sha512-vO9/3lSLO8smyyH1QVeYravSTzFwV1nf1C/Im1NBDPdH8//YvcbhtETGGiNfHWpyCvSi0vRYwvf+/7FKdwpDGQ==}
 
-  '@thirdweb-dev/insight@1.0.0':
-    resolution: {integrity: sha512-7A84reyKVhFSZXzKiuUYLgllPqyDQjZj5MebasetkCAB0VK8L0cv09VrfiBOd+eJDvJkhJfnAV/q3ujXegsVfg==}
+  '@thirdweb-dev/insight@1.0.2':
+    resolution: {integrity: sha512-3pIAmGc0V9b23y5LyGuN7nR7M0prv3EE/Us6Y73UAx3b0C7MGH3OqnmZ6rRzU/RVT9XwBGBB3lWIJHQQxfK05w==}
     engines: {node: '>=18'}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -3674,6 +3535,9 @@ packages:
   '@types/bn.js@5.1.6':
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
 
+  '@types/bn.js@5.2.0':
+    resolution: {integrity: sha512-DLbJ1BPqxvQhIGbeu8VbUC1DiAiahHtAYvA0ZEAa4P31F7IaArc8z3C3BRQdWX4mtLQuABG4yzp76ZrS02Ui1Q==}
+
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
 
@@ -3764,12 +3628,6 @@ packages:
   '@types/jsonwebtoken@9.0.7':
     resolution: {integrity: sha512-ugo316mmTYBl2g81zDFnZ7cfxlut3o+/EQdaP7J8QN2kY6lJ22hmQYCK5EHcJHbrW+dkCGSCPgbG8JtYj6qSrg==}
 
-  '@types/lodash-es@4.17.12':
-    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
-
-  '@types/lodash@4.17.16':
-    resolution: {integrity: sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==}
-
   '@types/lru-cache@5.1.1':
     resolution: {integrity: sha512-ssE3Vlrys7sdIzs5LOxCzTVMsU7i9oa/IaW92wF32JFb3CVczqOkru2xspuKczHEbG3nvmPY7IFqVmGGHdNbYw==}
 
@@ -3803,6 +3661,9 @@ packages:
   '@types/node@20.17.19':
     resolution: {integrity: sha512-LEwC7o1ifqg/6r2gn9Dns0f1rhK+fPFDoMiceTJ6kWmVk6bgXBI/9IOWfVan4WiAavK9pIVWdX0/e3J+eEUh5A==}
 
+  '@types/node@20.19.0':
+    resolution: {integrity: sha512-hfrc+1tud1xcdVTABC2JiomZJEklMcXYNTVtZLAeqTVWD+qL5jkHKT+1lOtqDdGxt+mB53DTtiz673vfjU8D1Q==}
+
   '@types/node@22.15.19':
     resolution: {integrity: sha512-3vMNr4TzNQyjHcRZadojpRaD9Ofr6LsonZAoQ+HMUa/9ORTPoxVIw0e0mpqWpdjj8xybyCM+oKOUH2vwFu/oEw==}
 
@@ -3820,6 +3681,9 @@ packages:
 
   '@types/prettier@2.7.3':
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
+
+  '@types/qs@6.14.0':
+    resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
 
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
@@ -4162,6 +4026,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  acorn@8.15.0:
+    resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
   adm-zip@0.4.16:
     resolution: {integrity: sha512-TFi4HBKSGfIKsK5YCkKaaFG2m4PEDyViZmEwof3MTIgzimHLto6muaHVpbrljdIvIrFZzEq/p4nafOeLcYegrg==}
     engines: {node: '>=0.3.0'}
@@ -4379,6 +4248,9 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
+  axios@1.10.0:
+    resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
+
   axios@1.8.4:
     resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
@@ -4481,6 +4353,9 @@ packages:
 
   bn.js@5.2.1:
     resolution: {integrity: sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==}
+
+  bn.js@5.2.2:
+    resolution: {integrity: sha512-v2YAxEmKaBLahNwE1mjp4WON6huMNeuDvagFZW+ASCuA/ku0bXR9hSMw0XpiqMoA3+rmnyck/tPRSFQkoC9Cuw==}
 
   body-parser@2.2.0:
     resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
@@ -4734,9 +4609,6 @@ packages:
 
   ckeditor5-collaboration@45.0.0:
     resolution: {integrity: sha512-5Uz3VJOYfepeFNgiJvdIwLuKqj582kx8Yldwfdmn/GMWemhDXpz2XYmvZhCPPPQXQl/aRrUu4ewpjNHnShHr2A==}
-
-  ckeditor5@44.3.0:
-    resolution: {integrity: sha512-g2arr/fejYAiOkdMeYvz1ficRPJ42OvO+pYROhre08YjIbAtJBr8wO9DPk9nCV3msnyYE+B02bs+TppazhYNtw==}
 
   ckeditor5@45.0.0:
     resolution: {integrity: sha512-83LLE6nK6oeq2zGf2H5dwECtKET9/WBkFFwbaks7INmW2EqgijBluLwm2gnX/FPLpHzXxUUESAisr9HlH1gerQ==}
@@ -5036,6 +4908,15 @@ packages:
 
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.4.1:
+    resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -5741,6 +5622,10 @@ packages:
 
   form-data@4.0.2:
     resolution: {integrity: sha512-hGfm/slu0ZabnNt4oaRZ6uREyfCj6P4fT/n6A1rGV+Z0VdGXjfOhVUpkn6qVQONHGIFwmveGXyDs75+nr6FM8w==}
+    engines: {node: '>= 6'}
+
+  form-data@4.0.3:
+    resolution: {integrity: sha512-qsITQPfmvMOSAdeyZ+12I1c+CKSstAFAwu+97zrnWAbIr5u8wfsExUzCesVLC8NgHuRUqNN4Zy6UPWUTRGslcA==}
     engines: {node: '>= 6'}
 
   formdata-polyfill@4.0.10:
@@ -6794,9 +6679,6 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
@@ -7253,6 +7135,7 @@ packages:
   multer@1.4.5-lts.2:
     resolution: {integrity: sha512-VzGiVigcG9zUAoCNU+xShztrlr1auZOlurXynNvO9GiWD1/mTBbUljOKY+qMeazBqXgRnjzeEgJI/wyjJUHg9A==}
     engines: {node: '>= 6.0.0'}
+    deprecated: Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version.
 
   multibase@4.0.6:
     resolution: {integrity: sha512-x23pDe5+svdLz/k5JPGCVdfn7Q5mZVMBETiC+ORfO+sor9Sgs0smJzAjfTbM5tckeCqnaUuMYoz+k3RXMmJClQ==}
@@ -7944,6 +7827,12 @@ packages:
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
 
+  react-hook-form@7.58.0:
+    resolution: {integrity: sha512-zGijmEed35oNfOfy7ub99jfjkiLhHwA3dl5AgyKdWC6QQzhnc7tkWewSa+T+A2EpLrc6wo5DUoZctS9kufWJjA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -8243,6 +8132,11 @@ packages:
 
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.7.2:
+    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -8712,8 +8606,8 @@ packages:
     resolution: {integrity: sha512-3ZBiG7JvP3wbDzA9iNY5zJQcHL4jn/0BWtXIkagfz7QgOL/LqjCEOBQuJNZfu0XYnv5JhKh+cDxCPM4ILrqruA==}
     engines: {node: '>=6.0.0'}
 
-  thirdweb@5.99.1:
-    resolution: {integrity: sha512-wyUM/Jtt93BNxARGuzl8JeewRpzmHD+mm7g17b2aAYaCIC4yQ3yR3Sd9rZlCpoFAaBAe8qa1PZf/YVc40+vmhQ==}
+  thirdweb@5.102.6:
+    resolution: {integrity: sha512-jlvOXEPav0NcXIBHd5gbxl6hQPzs+2I9pIHBP9VmZ70jLZT6Kk+HVGVPtch9uxdLevIAExttThLGSKpfliiJmg==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -9569,6 +9463,9 @@ packages:
   zod@3.24.2:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
+  zod@3.25.24:
+    resolution: {integrity: sha512-E77RpEqxeBGBVbcK/5QKQsLM+3u6aN7pVgiGJENbwYfdsExPS/xyyUMfmeM3eY32LBCIjuzv6XU505sHn2t+Kw==}
+
   zustand@5.0.4:
     resolution: {integrity: sha512-39VFTN5InDtMd28ZhjLyuTnlytDr9HfwO512Ai4I8ZABCoyAj4F1+sr7sD1jP/+p7k77Iko0Pb5NhgBFDCX0kQ==}
     engines: {node: '>=12.20.0'}
@@ -9876,12 +9773,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-adapter-ckfinder@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-upload': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-adapter-ckfinder@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9898,13 +9789,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-alignment@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-alignment@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9917,14 +9801,14 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-autoformat@44.3.0':
+  '@ckeditor/ckeditor5-autoformat@45.0.0':
     dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-heading': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
+      '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-heading': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-typing': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ckeditor5: 45.0.0
 
   '@ckeditor/ckeditor5-autoformat@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9939,13 +9823,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-autosave@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-autosave@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -9956,14 +9833,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-basic-styles@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-basic-styles@45.0.0':
     dependencies:
@@ -9986,15 +9855,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-block-quote@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-block-quote@45.0.0':
     dependencies:
@@ -10020,15 +9880,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-bookmark@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-bookmark@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10042,42 +9893,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-build-classic@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-adapter-ckfinder': 44.3.0
-      '@ckeditor/ckeditor5-autoformat': 44.3.0
-      '@ckeditor/ckeditor5-basic-styles': 44.3.0
-      '@ckeditor/ckeditor5-block-quote': 44.3.0
-      '@ckeditor/ckeditor5-ckbox': 44.3.0
-      '@ckeditor/ckeditor5-ckfinder': 44.3.0
-      '@ckeditor/ckeditor5-cloud-services': 44.3.0
-      '@ckeditor/ckeditor5-easy-image': 44.3.0
-      '@ckeditor/ckeditor5-editor-classic': 44.3.0
-      '@ckeditor/ckeditor5-essentials': 44.3.0
-      '@ckeditor/ckeditor5-heading': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-indent': 44.3.0
-      '@ckeditor/ckeditor5-link': 44.3.0
-      '@ckeditor/ckeditor5-list': 44.3.0
-      '@ckeditor/ckeditor5-media-embed': 44.3.0
-      '@ckeditor/ckeditor5-paragraph': 44.3.0
-      '@ckeditor/ckeditor5-paste-from-office': 44.3.0
-      '@ckeditor/ckeditor5-table': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-
-  '@ckeditor/ckeditor5-ckbox@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-cloud-services': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-upload': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      blurhash: 2.0.5
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-ckbox@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10097,14 +9912,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-ckfinder@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-ckfinder@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10118,15 +9925,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-clipboard@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-clipboard@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10139,12 +9937,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-cloud-services@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-cloud-services@45.0.0':
     dependencies:
@@ -10161,16 +9953,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-code-block@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-code-block@45.0.0':
     dependencies:
@@ -10261,14 +10043,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-core@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-watchdog': 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-core@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-engine': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10309,14 +10083,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-easy-image@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-cloud-services': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-upload': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-easy-image@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-cloud-services': 45.0.0
@@ -10336,15 +10102,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-editor-balloon@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-editor-balloon@45.0.0':
     dependencies:
@@ -10368,15 +10125,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-editor-classic@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-editor-classic@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10398,15 +10146,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-editor-decoupled@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-editor-decoupled@45.0.0':
     dependencies:
@@ -10430,15 +10169,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-editor-inline@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-editor-inline@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10461,15 +10191,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-editor-multi-root@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-editor-multi-root@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10482,17 +10203,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-emoji@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-mention': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      fuzzysort: 3.1.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-emoji@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10510,11 +10220,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-engine@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-engine@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-utils': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10523,12 +10228,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-enter@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
 
   '@ckeditor/ckeditor5-enter@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10539,17 +10238,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-essentials@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-select-all': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-undo': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-essentials@45.0.0':
     dependencies:
@@ -10577,14 +10265,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-find-and-replace@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-find-and-replace@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10606,14 +10286,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-font@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-font@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10647,15 +10319,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-heading@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-paragraph': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-heading@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10670,13 +10333,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-highlight@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-highlight@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10688,14 +10344,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-horizontal-line@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-horizontal-line@45.0.0':
     dependencies:
@@ -10719,14 +10367,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-html-embed@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-html-embed@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10748,20 +10388,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-html-support@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-heading': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-list': 44.3.0
-      '@ckeditor/ckeditor5-table': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-html-support@45.0.0':
     dependencies:
@@ -10797,20 +10423,6 @@ snapshots:
 
   '@ckeditor/ckeditor5-icons@45.0.0': {}
 
-  '@ckeditor/ckeditor5-image@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-undo': 44.3.0
-      '@ckeditor/ckeditor5-upload': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-image@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10830,16 +10442,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-indent@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-heading': 44.3.0
-      '@ckeditor/ckeditor5-list': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-indent@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10855,17 +10457,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-integrations-common@2.2.3(ckeditor5@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
-    dependencies:
-      ckeditor5: 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-
-  '@ckeditor/ckeditor5-language@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-language@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10876,20 +10467,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-link@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-bookmark': 44.3.0
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-link@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -10909,17 +10486,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-list@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-list@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -10935,18 +10501,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-markdown-gfm@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@types/marked': 4.3.2
-      '@types/turndown': 5.0.5
-      ckeditor5: 44.3.0
-      marked: 4.0.12
-      turndown: 7.2.0
-      turndown-plugin-gfm: 1.0.2
 
   '@ckeditor/ckeditor5-markdown-gfm@45.0.0':
     dependencies:
@@ -10975,18 +10529,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-media-embed@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-undo': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-media-embed@45.0.0':
     dependencies:
@@ -11018,15 +10560,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-mention@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-mention@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11052,14 +10585,6 @@ snapshots:
       ckeditor5: 45.0.0
       es-toolkit: 1.32.0
 
-  '@ckeditor/ckeditor5-minimap@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-minimap@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11078,14 +10603,6 @@ snapshots:
       ckeditor5: 45.0.0
       es-toolkit: 1.32.0
       protobufjs: 7.4.0
-
-  '@ckeditor/ckeditor5-page-break@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-page-break@45.0.0':
     dependencies:
@@ -11119,13 +10636,6 @@ snapshots:
       ckeditor5: 45.0.0
       es-toolkit: 1.32.0
 
-  '@ckeditor/ckeditor5-paragraph@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-
   '@ckeditor/ckeditor5-paragraph@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11137,13 +10647,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-paste-from-office@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-paste-from-office@45.0.0':
     dependencies:
@@ -11162,12 +10665,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-react@9.5.0(ckeditor5@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react@18.2.0)':
-    dependencies:
-      '@ckeditor/ckeditor5-integrations-common': 2.2.3(ckeditor5@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      ckeditor5: 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      react: 18.2.0
 
   '@ckeditor/ckeditor5-real-time-collaboration@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11191,13 +10688,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-remove-format@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-remove-format@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11217,14 +10707,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-restricted-editing@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-restricted-editing@45.0.0':
     dependencies:
@@ -11264,13 +10746,6 @@ snapshots:
       es-toolkit: 1.32.0
       luxon: 3.5.0
 
-  '@ckeditor/ckeditor5-select-all@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-
   '@ckeditor/ckeditor5-select-all@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11282,13 +10757,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-show-blocks@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-show-blocks@45.0.0':
     dependencies:
@@ -11309,14 +10777,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-source-editing@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-theme-lark': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
 
   '@ckeditor/ckeditor5-source-editing@45.0.0':
     dependencies:
@@ -11344,14 +10804,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-special-characters@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-
   '@ckeditor/ckeditor5-special-characters@45.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11373,18 +10825,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-style@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-html-support': 44.3.0
-      '@ckeditor/ckeditor5-list': 44.3.0
-      '@ckeditor/ckeditor5-table': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-style@45.0.0':
     dependencies:
@@ -11414,17 +10854,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-table@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-table@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-clipboard': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11440,10 +10869,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-theme-lark@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-ui': 44.3.0
 
   '@ckeditor/ckeditor5-theme-lark@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11487,13 +10912,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-typing@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-typing@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11504,18 +10922,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-ui@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-editor-multi-root': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@types/color-convert': 2.0.4
-      color-convert: 2.0.1
-      color-parse: 1.4.2
-      lodash-es: 4.17.21
-      vanilla-colorful: 0.7.2
 
   '@ckeditor/ckeditor5-ui@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11534,13 +10940,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-undo@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-
   '@ckeditor/ckeditor5-undo@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11553,11 +10952,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-upload@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-
   '@ckeditor/ckeditor5-upload@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11567,12 +10961,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@ckeditor/ckeditor5-utils@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@types/lodash-es': 4.17.12
-      lodash-es: 4.17.21
-
   '@ckeditor/ckeditor5-utils@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ckeditor/ckeditor5-ui': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -11581,14 +10969,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-watchdog@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-editor-multi-root': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-watchdog@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11601,16 +10981,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-widget@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-widget@45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
@@ -11626,14 +10996,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@ckeditor/ckeditor5-word-count@44.3.0':
-    dependencies:
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      ckeditor5: 44.3.0
-      lodash-es: 4.17.21
 
   '@ckeditor/ckeditor5-word-count@45.0.0':
     dependencies:
@@ -11722,6 +11084,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0)':
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@emotion/babel-plugin': 11.13.5
+      '@emotion/cache': 11.14.0
+      '@emotion/serialize': 1.3.3
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.0.0)
+      '@emotion/utils': 1.4.2
+      '@emotion/weak-memoize': 0.4.0
+      hoist-non-react-statics: 3.3.2
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.10
+    transitivePeerDependencies:
+      - supports-color
+
   '@emotion/serialize@1.3.3':
     dependencies:
       '@emotion/hash': 0.9.2
@@ -11747,11 +11125,30 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)':
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@emotion/babel-plugin': 11.13.5
+      '@emotion/is-prop-valid': 1.3.1
+      '@emotion/react': 11.14.0(@types/react@19.0.10)(react@19.0.0)
+      '@emotion/serialize': 1.3.3
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.0.0)
+      '@emotion/utils': 1.4.2
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.10
+    transitivePeerDependencies:
+      - supports-color
+
   '@emotion/unitless@0.10.0': {}
 
   '@emotion/use-insertion-effect-with-fallbacks@1.2.0(react@18.2.0)':
     dependencies:
       react: 18.2.0
+
+  '@emotion/use-insertion-effect-with-fallbacks@1.2.0(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
 
   '@emotion/utils@1.4.2': {}
 
@@ -12151,6 +11548,11 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
+  '@hookform/resolvers@5.1.1(react-hook-form@7.58.0(react@19.0.0))':
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.58.0(react@19.0.0)
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -12392,7 +11794,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -12437,7 +11839,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       jest-mock: 29.7.0
 
   '@jest/expect-utils@29.7.0':
@@ -12455,7 +11857,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -12477,7 +11879,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -12971,7 +12373,7 @@ snapshots:
       '@ethersproject/abi': 5.8.0
       '@ethersproject/address': 5.8.0
       cbor: 8.1.0
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       hardhat: 2.23.0(bufferutil@4.0.9)(ts-node@10.9.2(@swc/core@1.11.18(@swc/helpers@0.5.15))(@types/node@20.17.19)(typescript@5.7.3))(typescript@5.7.3)(utf-8-validate@5.0.10)
       lodash.clonedeep: 4.5.0
       picocolors: 1.1.1
@@ -13099,6 +12501,15 @@ snapshots:
       '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-arrow@1.1.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
@@ -13270,6 +12681,28 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-dialog@1.1.10(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.2
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-dismissable-layer': 1.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-focus-guards': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-focus-scope': 1.1.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-id': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-portal': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-presence': 1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot': 1.2.0(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-controllable-state': 1.2.2(@types/react@19.0.10)(react@19.0.0)
+      aria-hidden: 1.2.4
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-remove-scroll: 2.6.3(@types/react@19.0.10)(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-dialog@1.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/primitive': 1.1.2
@@ -13320,6 +12753,19 @@ snapshots:
       '@radix-ui/react-use-escape-keydown': 1.1.1(@types/react@19.0.10)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-dismissable-layer@1.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.2
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-escape-keydown': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
@@ -13386,6 +12832,17 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-focus-scope@1.1.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-focus-scope@1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
@@ -13400,6 +12857,10 @@ snapshots:
   '@radix-ui/react-icons@1.3.2(react@18.2.0)':
     dependencies:
       react: 18.2.0
+
+  '@radix-ui/react-icons@1.3.2(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
 
   '@radix-ui/react-id@1.1.1(@types/react@19.0.10)(react@18.2.0)':
     dependencies:
@@ -13509,6 +12970,24 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-popper@1.2.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-arrow': 1.1.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-callback-ref': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-rect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-size': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/rect': 1.1.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-popper@1.2.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@floating-ui/react-dom': 2.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -13543,6 +13022,16 @@ snapshots:
       '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
+  '@radix-ui/react-portal@1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-use-layout-effect': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
@@ -13890,6 +13379,26 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-tooltip@1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.2
+      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-dismissable-layer': 1.1.7(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-id': 1.1.1(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-popper': 1.2.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-portal': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-presence': 1.1.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-slot': 1.2.0(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-use-controllable-state': 1.2.2(@types/react@19.0.10)(react@19.0.0)
+      '@radix-ui/react-visually-hidden': 1.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-use-callback-ref@1.1.1(@types/react@19.0.10)(react@18.2.0)':
     dependencies:
       react: 18.2.0
@@ -14024,6 +13533,15 @@ snapshots:
       '@types/react': 19.0.10
       '@types/react-dom': 19.0.4(@types/react@19.0.10)
 
+  '@radix-ui/react-visually-hidden@1.2.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+
   '@radix-ui/react-visually-hidden@1.2.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-primitive': 2.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -14046,24 +13564,58 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@reown/appkit-common@1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-controllers@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@reown/appkit-controllers@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
-      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       valtio: 1.13.2(@types/react@19.0.10)(react@18.2.0)
-      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - zod
+
+  '@reown/appkit-controllers@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      valtio: 1.13.2(@types/react@19.0.10)(react@19.0.0)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -14095,12 +13647,12 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-scaffold-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.24.2)':
+  '@reown/appkit-scaffold-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.25.24)':
     dependencies:
-      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.24.2)
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.25.24)
       '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
       lit: 3.1.0
     transitivePeerDependencies:
@@ -14131,10 +13683,46 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@reown/appkit-scaffold-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))(zod@3.25.24)':
     dependencies:
-      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))(zod@3.25.24)
+      '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      lit: 3.1.0
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - valtio
+      - zod
+
+  '@reown/appkit-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
       lit: 3.1.0
       qrcode: 1.5.3
@@ -14165,16 +13753,87 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.24.2)':
+  '@reown/appkit-ui@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      lit: 3.1.0
+      qrcode: 1.5.3
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - zod
+
+  '@reown/appkit-utils@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@reown/appkit-polyfills': 1.7.3
       '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       valtio: 1.13.2(@types/react@19.0.10)(react@18.2.0)
-      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - zod
+
+  '@reown/appkit-utils@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-polyfills': 1.7.3
+      '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      '@walletconnect/logger': 2.1.2
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      valtio: 1.13.2(@types/react@19.0.10)(react@19.0.0)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -14213,20 +13872,61 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@reown/appkit@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@reown/appkit@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@reown/appkit-polyfills': 1.7.3
-      '@reown/appkit-scaffold-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.24.2)
-      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.24.2)
+      '@reown/appkit-scaffold-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.25.24)
+      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0))(zod@3.25.24)
       '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
       '@walletconnect/types': 2.19.2
-      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       bs58: 6.0.0
       valtio: 1.13.2(@types/react@19.0.10)(react@18.2.0)
-      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - zod
+
+  '@reown/appkit@1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit-common': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-controllers': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-polyfills': 1.7.3
+      '@reown/appkit-scaffold-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))(zod@3.25.24)
+      '@reown/appkit-ui': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@reown/appkit-utils': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))(zod@3.25.24)
+      '@reown/appkit-wallet': 1.7.3(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      '@walletconnect/types': 2.19.2
+      '@walletconnect/universal-provider': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      bs58: 6.0.0
+      valtio: 1.13.2(@types/react@19.0.10)(react@19.0.0)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -14373,6 +14073,8 @@ snapshots:
 
   '@solidity-parser/parser@0.19.0': {}
 
+  '@standard-schema/utils@0.3.0': {}
+
   '@swc/cli@0.6.0(@swc/core@1.11.18(@swc/helpers@0.5.15))(chokidar@4.0.3)':
     dependencies:
       '@swc/core': 1.11.18(@swc/helpers@0.5.15)
@@ -14511,12 +14213,32 @@ snapshots:
       postcss: 8.5.3
       tailwindcss: 4.0.8
 
+  '@tanstack/eslint-plugin-query@5.78.0(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      eslint: 9.20.1(jiti@2.4.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@tanstack/query-core@5.74.4': {}
+
+  '@tanstack/query-core@5.80.7': {}
 
   '@tanstack/react-query@5.74.4(react@18.2.0)':
     dependencies:
       '@tanstack/query-core': 5.74.4
       react: 18.2.0
+
+  '@tanstack/react-query@5.74.4(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.74.4
+      react: 19.0.0
+
+  '@tanstack/react-query@5.80.7(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.80.7
+      react: 19.0.0
 
   '@thirdweb-dev/chains@0.1.54': {}
 
@@ -14550,7 +14272,7 @@ snapshots:
 
   '@thirdweb-dev/dynamic-contracts@1.2.5': {}
 
-  '@thirdweb-dev/engine@3.0.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)':
+  '@thirdweb-dev/engine@3.0.3(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
       '@hey-api/client-fetch': 0.10.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))
     optionalDependencies:
@@ -14560,10 +14282,9 @@ snapshots:
 
   '@thirdweb-dev/generated-abis@0.0.1': {}
 
-  '@thirdweb-dev/insight@1.0.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)':
+  '@thirdweb-dev/insight@1.0.2(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
       '@hey-api/client-fetch': 0.10.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))
-      tslib: 2.8.1
     optionalDependencies:
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -14575,7 +14296,7 @@ snapshots:
       '@thirdweb-dev/contracts-js': 1.3.13(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       '@thirdweb-dev/generated-abis': 0.0.1
       '@thirdweb-dev/storage': 1.2.11
-      abitype: 0.2.5(typescript@5.7.3)(zod@3.24.2)
+      abitype: 0.2.5(typescript@5.7.3)(zod@3.25.24)
       bn.js: 5.2.1
       bs58: 5.0.0
       buffer: 6.0.3
@@ -14588,7 +14309,7 @@ snapshots:
       tweetnacl: 1.0.3
       uuid: 9.0.1
       yaml: 2.8.0
-      zod: 3.24.2
+      zod: 3.25.24
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -14599,7 +14320,7 @@ snapshots:
     dependencies:
       cid-tool: 3.0.0
       cross-fetch: 3.2.0
-      form-data: 4.0.2
+      form-data: 4.0.3
       uuid: 9.0.1
     transitivePeerDependencies:
       - encoding
@@ -14705,6 +14426,10 @@ snapshots:
     dependencies:
       '@types/node': 20.17.19
 
+  '@types/bn.js@5.2.0':
+    dependencies:
+      '@types/node': 20.19.0
+
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
@@ -14726,17 +14451,17 @@ snapshots:
 
   '@types/concat-stream@1.6.1':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/cookiejar@2.1.5': {}
 
   '@types/cors@2.8.18':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/debug@4.1.12':
     dependencies:
@@ -14773,16 +14498,16 @@ snapshots:
 
   '@types/form-data@0.0.33':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/hast@3.0.4':
     dependencies:
@@ -14816,13 +14541,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.7':
     dependencies:
-      '@types/node': 20.17.19
-
-  '@types/lodash-es@4.17.12':
-    dependencies:
-      '@types/lodash': 4.17.16
-
-  '@types/lodash@4.17.16': {}
+      '@types/node': 20.19.0
 
   '@types/lru-cache@5.1.1': {}
 
@@ -14850,6 +14569,10 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
+  '@types/node@20.19.0':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@22.15.19':
     dependencies:
       undici-types: 6.21.0
@@ -14864,9 +14587,11 @@ snapshots:
 
   '@types/pbkdf2@3.1.2':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/prettier@2.7.3': {}
+
+  '@types/qs@6.14.0': {}
 
   '@types/qs@6.9.18': {}
 
@@ -14889,12 +14614,12 @@ snapshots:
 
   '@types/secp256k1@4.0.6':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/serve-static@1.15.7':
     dependencies:
@@ -14909,7 +14634,7 @@ snapshots:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
       '@types/node': 20.17.19
-      form-data: 4.0.2
+      form-data: 4.0.3
 
   '@types/supertest@6.0.3':
     dependencies:
@@ -14918,7 +14643,7 @@ snapshots:
 
   '@types/through@0.0.33':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
 
   '@types/tinycolor2@1.4.6': {}
 
@@ -15021,7 +14746,7 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@walletconnect/core@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/core@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
@@ -15035,7 +14760,7 @@ snapshots:
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.19.2
-      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.33.0
       events: 3.3.0
@@ -15064,7 +14789,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/core@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/core@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
@@ -15078,7 +14803,7 @@ snapshots:
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.20.1
-      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.33.0
       events: 3.3.0
@@ -15111,18 +14836,58 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/ethereum-provider@2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/ethereum-provider@2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@reown/appkit': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@reown/appkit': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/jsonrpc-http-connection': 1.0.8
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
-      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/types': 2.20.1
-      '@walletconnect/universal-provider': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/universal-provider': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      events: 3.3.0
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@react-native-async-storage/async-storage'
+      - '@types/react'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react
+      - typescript
+      - uploadthing
+      - utf-8-validate
+      - zod
+
+  '@walletconnect/ethereum-provider@2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
+    dependencies:
+      '@reown/appkit': 1.7.3(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/jsonrpc-http-connection': 1.0.8
+      '@walletconnect/jsonrpc-provider': 1.0.14
+      '@walletconnect/jsonrpc-types': 1.0.4
+      '@walletconnect/jsonrpc-utils': 1.0.8
+      '@walletconnect/keyvaluestorage': 1.1.1
+      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/types': 2.20.1
+      '@walletconnect/universal-provider': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -15243,16 +15008,16 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/sign-client@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/sign-client@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@walletconnect/core': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/core': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.19.2
-      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -15278,16 +15043,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/sign-client@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/sign-client@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
-      '@walletconnect/core': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/core': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
       '@walletconnect/types': 2.20.1
-      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -15373,7 +15138,7 @@ snapshots:
       - ioredis
       - uploadthing
 
-  '@walletconnect/universal-provider@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/universal-provider@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8
@@ -15382,9 +15147,9 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/sign-client': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/types': 2.19.2
-      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       es-toolkit: 1.33.0
       events: 3.3.0
     transitivePeerDependencies:
@@ -15412,7 +15177,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/universal-provider@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/universal-provider@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8
@@ -15421,9 +15186,9 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       '@walletconnect/types': 2.20.1
-      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      '@walletconnect/utils': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
       es-toolkit: 1.33.0
       events: 3.3.0
     transitivePeerDependencies:
@@ -15451,7 +15216,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/utils@2.19.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@noble/ciphers': 1.2.1
       '@noble/curves': 1.8.1
@@ -15469,7 +15234,7 @@ snapshots:
       detect-browser: 5.3.0
       query-string: 7.1.3
       uint8arrays: 3.1.0
-      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -15494,7 +15259,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)':
+  '@walletconnect/utils@2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)':
     dependencies:
       '@noble/ciphers': 1.2.1
       '@noble/curves': 1.8.1
@@ -15512,7 +15277,7 @@ snapshots:
       detect-browser: 5.3.0
       query-string: 7.1.3
       uint8arrays: 3.1.0
-      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -15696,21 +15461,21 @@ snapshots:
 
   abbrev@1.0.9: {}
 
-  abitype@0.2.5(typescript@5.7.3)(zod@3.24.2):
+  abitype@0.2.5(typescript@5.7.3)(zod@3.25.24):
     dependencies:
       typescript: 5.7.3
     optionalDependencies:
-      zod: 3.24.2
+      zod: 3.25.24
 
   abitype@1.0.8(typescript@5.7.3)(zod@3.22.4):
     optionalDependencies:
       typescript: 5.7.3
       zod: 3.22.4
 
-  abitype@1.0.8(typescript@5.7.3)(zod@3.24.2):
+  abitype@1.0.8(typescript@5.7.3)(zod@3.25.24):
     optionalDependencies:
       typescript: 5.7.3
-      zod: 3.24.2
+      zod: 3.25.24
 
   accepts@1.3.8:
     dependencies:
@@ -15731,6 +15496,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  acorn@8.15.0: {}
 
   adm-zip@0.4.16: {}
 
@@ -15931,6 +15698,14 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
+  axios@1.10.0:
+    dependencies:
+      follow-redirects: 1.15.9(debug@4.4.0)
+      form-data: 4.0.3
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
   axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9(debug@4.4.0)
@@ -16057,6 +15832,8 @@ snapshots:
   bn.js@4.12.1: {}
 
   bn.js@5.2.1: {}
+
+  bn.js@5.2.2: {}
 
   body-parser@2.2.0:
     dependencies:
@@ -16376,73 +16153,11 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-collaboration-core': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
 
-  ckeditor5@44.3.0:
-    dependencies:
-      '@ckeditor/ckeditor5-adapter-ckfinder': 44.3.0
-      '@ckeditor/ckeditor5-alignment': 44.3.0
-      '@ckeditor/ckeditor5-autoformat': 44.3.0
-      '@ckeditor/ckeditor5-autosave': 44.3.0
-      '@ckeditor/ckeditor5-basic-styles': 44.3.0
-      '@ckeditor/ckeditor5-block-quote': 44.3.0
-      '@ckeditor/ckeditor5-bookmark': 44.3.0
-      '@ckeditor/ckeditor5-ckbox': 44.3.0
-      '@ckeditor/ckeditor5-ckfinder': 44.3.0
-      '@ckeditor/ckeditor5-clipboard': 44.3.0
-      '@ckeditor/ckeditor5-cloud-services': 44.3.0
-      '@ckeditor/ckeditor5-code-block': 44.3.0
-      '@ckeditor/ckeditor5-core': 44.3.0
-      '@ckeditor/ckeditor5-easy-image': 44.3.0
-      '@ckeditor/ckeditor5-editor-balloon': 44.3.0
-      '@ckeditor/ckeditor5-editor-classic': 44.3.0
-      '@ckeditor/ckeditor5-editor-decoupled': 44.3.0
-      '@ckeditor/ckeditor5-editor-inline': 44.3.0
-      '@ckeditor/ckeditor5-editor-multi-root': 44.3.0
-      '@ckeditor/ckeditor5-emoji': 44.3.0
-      '@ckeditor/ckeditor5-engine': 44.3.0
-      '@ckeditor/ckeditor5-enter': 44.3.0
-      '@ckeditor/ckeditor5-essentials': 44.3.0
-      '@ckeditor/ckeditor5-find-and-replace': 44.3.0
-      '@ckeditor/ckeditor5-font': 44.3.0
-      '@ckeditor/ckeditor5-heading': 44.3.0
-      '@ckeditor/ckeditor5-highlight': 44.3.0
-      '@ckeditor/ckeditor5-horizontal-line': 44.3.0
-      '@ckeditor/ckeditor5-html-embed': 44.3.0
-      '@ckeditor/ckeditor5-html-support': 44.3.0
-      '@ckeditor/ckeditor5-image': 44.3.0
-      '@ckeditor/ckeditor5-indent': 44.3.0
-      '@ckeditor/ckeditor5-language': 44.3.0
-      '@ckeditor/ckeditor5-link': 44.3.0
-      '@ckeditor/ckeditor5-list': 44.3.0
-      '@ckeditor/ckeditor5-markdown-gfm': 44.3.0
-      '@ckeditor/ckeditor5-media-embed': 44.3.0
-      '@ckeditor/ckeditor5-mention': 44.3.0
-      '@ckeditor/ckeditor5-minimap': 44.3.0
-      '@ckeditor/ckeditor5-page-break': 44.3.0
-      '@ckeditor/ckeditor5-paragraph': 44.3.0
-      '@ckeditor/ckeditor5-paste-from-office': 44.3.0
-      '@ckeditor/ckeditor5-remove-format': 44.3.0
-      '@ckeditor/ckeditor5-restricted-editing': 44.3.0
-      '@ckeditor/ckeditor5-select-all': 44.3.0
-      '@ckeditor/ckeditor5-show-blocks': 44.3.0
-      '@ckeditor/ckeditor5-source-editing': 44.3.0
-      '@ckeditor/ckeditor5-special-characters': 44.3.0
-      '@ckeditor/ckeditor5-style': 44.3.0
-      '@ckeditor/ckeditor5-table': 44.3.0
-      '@ckeditor/ckeditor5-theme-lark': 44.3.0
-      '@ckeditor/ckeditor5-typing': 44.3.0
-      '@ckeditor/ckeditor5-ui': 44.3.0
-      '@ckeditor/ckeditor5-undo': 44.3.0
-      '@ckeditor/ckeditor5-upload': 44.3.0
-      '@ckeditor/ckeditor5-utils': 44.3.0
-      '@ckeditor/ckeditor5-watchdog': 44.3.0
-      '@ckeditor/ckeditor5-widget': 44.3.0
-      '@ckeditor/ckeditor5-word-count': 44.3.0
-
   ckeditor5@45.0.0:
     dependencies:
       '@ckeditor/ckeditor5-adapter-ckfinder': 45.0.0
       '@ckeditor/ckeditor5-alignment': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ckeditor/ckeditor5-autoformat': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ckeditor/ckeditor5-autoformat': 45.0.0
       '@ckeditor/ckeditor5-autosave': 45.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ckeditor/ckeditor5-basic-styles': 45.0.0
       '@ckeditor/ckeditor5-block-quote': 45.0.0
@@ -16865,15 +16580,15 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  debug@4.4.0:
-    dependencies:
-      ms: 2.1.3
-
   debug@4.4.0(supports-color@8.1.1):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 8.1.1
+
+  debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
 
   decamelize@1.2.0: {}
 
@@ -16960,6 +16675,10 @@ snapshots:
   derive-valtio@0.1.0(valtio@1.13.2(@types/react@19.0.10)(react@18.2.0)):
     dependencies:
       valtio: 1.13.2(@types/react@19.0.10)(react@18.2.0)
+
+  derive-valtio@0.1.0(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0)):
+    dependencies:
+      valtio: 1.13.2(@types/react@19.0.10)(react@19.0.0)
 
   destr@2.0.5: {}
 
@@ -17415,7 +17134,7 @@ snapshots:
   eth-gas-reporter@0.2.27(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@solidity-parser/parser': 0.14.5
-      axios: 1.8.4
+      axios: 1.10.0
       cli-table3: 0.5.1
       colors: 1.4.0
       ethereum-cryptography: 1.2.0
@@ -17470,8 +17189,8 @@ snapshots:
 
   ethereumjs-util@7.1.5:
     dependencies:
-      '@types/bn.js': 5.1.6
-      bn.js: 5.2.1
+      '@types/bn.js': 5.2.0
+      bn.js: 5.2.2
       create-hash: 1.2.0
       ethereum-cryptography: 0.1.3
       rlp: 2.2.7
@@ -17794,6 +17513,14 @@ snapshots:
       es-set-tostringtag: 2.1.0
       mime-types: 2.1.35
 
+  form-data@4.0.3:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      hasown: 2.0.2
+      mime-types: 2.1.35
+
   formdata-polyfill@4.0.10:
     dependencies:
       fetch-blob: 3.2.0
@@ -17934,7 +17661,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.5
       data-uri-to-buffer: 6.0.2
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -18255,7 +17982,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -18278,7 +18005,7 @@ snapshots:
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -18332,6 +18059,11 @@ snapshots:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  input-otp@1.4.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   inquirer@7.3.3:
     dependencies:
@@ -18603,7 +18335,7 @@ snapshots:
       '@babel/parser': 7.27.0
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.1
+      semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
 
@@ -18660,7 +18392,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
@@ -18785,7 +18517,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -18795,7 +18527,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -18834,7 +18566,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -18869,7 +18601,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -18897,7 +18629,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -18936,7 +18668,7 @@ snapshots:
       jest-util: 29.7.0
       natural-compare: 1.4.0
       pretty-format: 29.7.0
-      semver: 7.7.1
+      semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
 
@@ -18962,7 +18694,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -18971,13 +18703,13 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -19052,7 +18784,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.7.1
+      semver: 7.7.2
 
   jsx-ast-utils@3.3.5:
     dependencies:
@@ -19177,8 +18909,6 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
-  lodash-es@4.17.21: {}
-
   lodash.camelcase@4.3.0: {}
 
   lodash.clonedeep@4.5.0: {}
@@ -19279,7 +19009,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
 
   make-error@1.3.6: {}
 
@@ -19635,7 +19365,7 @@ snapshots:
 
   mlly@1.7.4:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.15.0
       pathe: 2.0.3
       pkg-types: 1.3.1
       ufo: 1.6.1
@@ -19847,6 +19577,14 @@ snapshots:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  nextjs-toploader@3.8.16(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      next: 15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      nprogress: 0.2.0
+      prop-types: 15.8.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   no-case@2.3.2:
     dependencies:
@@ -20063,14 +19801,14 @@ snapshots:
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
-  ox@0.6.7(typescript@5.7.3)(zod@3.24.2):
+  ox@0.6.7(typescript@5.7.3)(zod@3.25.24):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.7.3
@@ -20091,28 +19829,28 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  ox@0.6.9(typescript@5.7.3)(zod@3.24.2):
+  ox@0.6.9(typescript@5.7.3)(zod@3.25.24):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.7.3
     transitivePeerDependencies:
       - zod
 
-  ox@0.7.0(typescript@5.7.3)(zod@3.24.2):
+  ox@0.7.0(typescript@5.7.3)(zod@3.25.24):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.7.3
@@ -20151,7 +19889,7 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
       get-uri: 6.0.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
@@ -20380,7 +20118,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.17.19
+      '@types/node': 20.19.0
       long: 5.3.2
 
   proxy-addr@2.0.7:
@@ -20391,7 +20129,7 @@ snapshots:
   proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       lru-cache: 7.18.3
@@ -20490,6 +20228,10 @@ snapshots:
       attr-accept: 2.2.5
       file-selector: 2.1.2
       prop-types: 15.8.1
+      react: 19.0.0
+
+  react-hook-form@7.58.0(react@19.0.0):
+    dependencies:
       react: 19.0.0
 
   react-is@16.13.1: {}
@@ -20735,7 +20477,7 @@ snapshots:
 
   rlp@2.2.7:
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 5.2.2
 
   router@2.2.0:
     dependencies:
@@ -20842,7 +20584,7 @@ snapshots:
 
   semver-truncate@3.0.0:
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
 
   semver@5.7.2: {}
 
@@ -20851,6 +20593,8 @@ snapshots:
   semver@7.6.2: {}
 
   semver@7.7.1: {}
+
+  semver@7.7.2: {}
 
   send@1.2.0:
     dependencies:
@@ -21073,7 +20817,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@8.1.1)
       socks: 2.8.4
     transitivePeerDependencies:
       - supports-color
@@ -21116,7 +20860,7 @@ snapshots:
       pify: 4.0.1
       recursive-readdir: 2.2.3
       sc-istanbul: 0.4.6
-      semver: 7.7.1
+      semver: 7.7.2
       shelljs: 0.8.5
       web3-utils: 1.10.4
 
@@ -21362,7 +21106,7 @@ snapshots:
       cookiejar: 2.1.4
       debug: 4.4.0(supports-color@8.1.1)
       fast-safe-stringify: 2.1.1
-      form-data: 4.0.2
+      form-data: 4.0.3
       formidable: 3.5.4
       methods: 1.1.2
       mime: 2.6.0
@@ -21486,7 +21230,7 @@ snapshots:
       '@types/concat-stream': 1.6.1
       '@types/form-data': 0.0.33
       '@types/node': 8.10.66
-      '@types/qs': 6.9.18
+      '@types/qs': 6.14.0
       caseless: 0.12.0
       concat-stream: 1.6.2
       form-data: 2.5.3
@@ -21495,7 +21239,7 @@ snapshots:
       promise: 8.3.0
       qs: 6.14.0
 
-  thirdweb@5.99.1(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2):
+  thirdweb@5.102.6(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10):
     dependencies:
       '@coinbase/wallet-sdk': 4.3.0
       '@emotion/react': 11.14.0(@types/react@19.0.10)(react@18.2.0)
@@ -21508,22 +21252,23 @@ snapshots:
       '@radix-ui/react-icons': 1.3.2(react@18.2.0)
       '@radix-ui/react-tooltip': 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@tanstack/react-query': 5.74.4(react@18.2.0)
-      '@thirdweb-dev/engine': 3.0.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
-      '@thirdweb-dev/insight': 1.0.0(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
-      '@walletconnect/ethereum-provider': 2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      '@thirdweb-dev/engine': 3.0.3(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
+      '@thirdweb-dev/insight': 1.0.2(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
+      '@walletconnect/ethereum-provider': 2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@18.2.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       cross-spawn: 7.0.6
       fuse.js: 7.1.0
       input-otp: 1.4.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       mipd: 0.0.7(typescript@5.7.3)
       open: 10.1.1
       ora: 8.2.0
-      ox: 0.7.0(typescript@5.7.3)(zod@3.24.2)
+      ox: 0.7.0(typescript@5.7.3)(zod@3.25.24)
       prompts: 2.4.2
       toml: 3.0.0
       uqr: 0.1.2
-      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      zod: 3.25.24
     optionalDependencies:
       ethers: 6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       react: 18.2.0
@@ -21554,7 +21299,67 @@ snapshots:
       - supports-color
       - uploadthing
       - utf-8-validate
-      - zod
+
+  thirdweb@5.102.6(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(ethers@6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10):
+    dependencies:
+      '@coinbase/wallet-sdk': 4.3.0
+      '@emotion/react': 11.14.0(@types/react@19.0.10)(react@19.0.0)
+      '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(@types/react@19.0.10)(react@19.0.0)
+      '@noble/curves': 1.8.2
+      '@noble/hashes': 1.7.2
+      '@passwordless-id/webauthn': 2.3.0
+      '@radix-ui/react-dialog': 1.1.10(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-focus-scope': 1.1.4(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-icons': 1.3.2(react@19.0.0)
+      '@radix-ui/react-tooltip': 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@tanstack/react-query': 5.74.4(react@19.0.0)
+      '@thirdweb-dev/engine': 3.0.3(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
+      '@thirdweb-dev/insight': 1.0.2(@hey-api/openapi-ts@0.67.3(typescript@5.7.3))(typescript@5.7.3)
+      '@walletconnect/ethereum-provider': 2.20.1(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      '@walletconnect/sign-client': 2.20.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
+      cross-spawn: 7.0.6
+      fuse.js: 7.1.0
+      input-otp: 1.4.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      mipd: 0.0.7(typescript@5.7.3)
+      open: 10.1.1
+      ora: 8.2.0
+      ox: 0.7.0(typescript@5.7.3)(zod@3.25.24)
+      prompts: 2.4.2
+      toml: 3.0.0
+      uqr: 0.1.2
+      viem: 2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24)
+      zod: 3.25.24
+    optionalDependencies:
+      ethers: 6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      react: 19.0.0
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@hey-api/openapi-ts'
+      - '@netlify/blobs'
+      - '@planetscale/database'
+      - '@types/react'
+      - '@types/react-dom'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/kv'
+      - aws4fetch
+      - bufferutil
+      - db0
+      - encoding
+      - ioredis
+      - react-dom
+      - supports-color
+      - uploadthing
+      - utf-8-validate
 
   thread-stream@0.15.2:
     dependencies:
@@ -21793,7 +21598,7 @@ snapshots:
   typechain@8.3.2(typescript@5.7.3):
     dependencies:
       '@types/prettier': 2.7.3
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.1
       fs-extra: 7.0.1
       glob: 7.1.7
       js-sha3: 0.8.0
@@ -22014,6 +21819,10 @@ snapshots:
     dependencies:
       react: 18.2.0
 
+  use-sync-external-store@1.2.0(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+
   use-sync-external-store@1.5.0(react@18.2.0):
     dependencies:
       react: 18.2.0
@@ -22057,6 +21866,15 @@ snapshots:
       '@types/react': 19.0.10
       react: 18.2.0
 
+  valtio@1.13.2(@types/react@19.0.10)(react@19.0.0):
+    dependencies:
+      derive-valtio: 0.1.0(valtio@1.13.2(@types/react@19.0.10)(react@19.0.0))
+      proxy-compare: 2.6.0
+      use-sync-external-store: 1.2.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.10
+      react: 19.0.0
+
   vanilla-colorful@0.7.2: {}
 
   varint@5.0.2: {}
@@ -22084,15 +21902,15 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  viem@2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2):
+  viem@2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24):
     dependencies:
       '@noble/curves': 1.8.1
       '@noble/hashes': 1.7.1
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       isows: 1.0.6(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      ox: 0.6.7(typescript@5.7.3)(zod@3.24.2)
+      ox: 0.6.7(typescript@5.7.3)(zod@3.25.24)
       ws: 8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     optionalDependencies:
       typescript: 5.7.3
@@ -22118,15 +21936,15 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2):
+  viem@2.28.1(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.25.24):
     dependencies:
       '@noble/curves': 1.8.2
       '@noble/hashes': 1.7.2
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.2)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.25.24)
       isows: 1.0.6(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      ox: 0.6.9(typescript@5.7.3)(zod@3.24.2)
+      ox: 0.6.9(typescript@5.7.3)(zod@3.25.24)
       ws: 8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     optionalDependencies:
       typescript: 5.7.3
@@ -22402,11 +22220,20 @@ snapshots:
 
   zod@3.24.2: {}
 
+  zod@3.25.24: {}
+
   zustand@5.0.4(@types/react@19.0.10)(immer@10.0.2)(react@18.2.0)(use-sync-external-store@1.5.0(react@18.2.0)):
     optionalDependencies:
       '@types/react': 19.0.10
       immer: 10.0.2
       react: 18.2.0
       use-sync-external-store: 1.5.0(react@18.2.0)
+
+  zustand@5.0.4(@types/react@19.0.10)(immer@10.0.2)(react@19.0.0)(use-sync-external-store@1.5.0(react@19.0.0)):
+    optionalDependencies:
+      '@types/react': 19.0.10
+      immer: 10.0.2
+      react: 19.0.0
+      use-sync-external-store: 1.5.0(react@19.0.0)
 
   zwitch@2.0.4: {}

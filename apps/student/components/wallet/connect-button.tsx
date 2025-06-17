@@ -10,11 +10,7 @@ const ConnectButton = memo(({ onClick }: ConnectButtonProps) => {
     onClick();
   }, [onClick]);
 
-  return (
-    <Button onClick={handleClick} className="cursor-pointer">
-      Connect
-    </Button>
-  );
+  return <Button onClick={handleClick}>Connect</Button>;
 });
 
 ConnectButton.displayName = "ConnectButton";

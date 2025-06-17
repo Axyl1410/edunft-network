@@ -1,11 +1,7 @@
+import { Attribute } from "@/types";
 import { Label } from "@workspace/ui/components/label";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-
-interface Attribute {
-  trait_type: string;
-  value: string;
-}
 
 interface AttributeListProps {
   attributesArray: Attribute[];

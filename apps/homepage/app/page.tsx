@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <main className="flex flex-col [&_a]:text-sky-600 [&_a]:underline">
       <div className="flex h-screen w-full items-center justify-center p-8 font-mono">
-        <div className="flex flex-col gap-8 text-left sm:w-[25rem]">
+        <div className="flex flex-col gap-8 text-left">
           <div className="items-center gap-2 font-medium sm:flex">
             <Link className="inline-block" href="/">
               Edunft
@@ -25,7 +25,7 @@ export default function Page() {
             </a>
           </div>
           <form className="flex flex-col gap-2">
-            <p className="text-balance font-medium">
+            <p className="text-balance font-medium sm:w-[25rem]">
               We are run a newsletter about design, coding, ai and open source
               soon.
             </p>

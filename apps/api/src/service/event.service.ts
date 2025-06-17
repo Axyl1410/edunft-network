@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { EventGateway } from '../gateway/event.gateway';
+// import { EventGateway } from '../gateway/event.gateway';
 import {
   Competition,
   CompetitionDocument,
   Event,
   EventDocument,
-  Participant,
 } from '../schema/event.schema';
 
 @Injectable()
@@ -16,20 +15,20 @@ export class EventService {
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
     @InjectModel(Competition.name)
     private competitionModel: Model<CompetitionDocument>,
-    private readonly eventGateway: EventGateway,
+    // private readonly eventGateway: EventGateway,
   ) {}
 
   async createEvent(data: Partial<Event>): Promise<Event> {
     const created = new this.eventModel(data);
     const saved = await created.save();
-    this.eventGateway.emitEventCreated(saved);
+    // this.eventGateway.emitEventCreated(saved);
     return saved;
   }
 
   async createCompetition(data: Partial<Competition>): Promise<Competition> {
     const created = new this.competitionModel(data);
     const saved = await created.save();
-    this.eventGateway.emitCompetitionCreated(saved);
+    // this.eventGateway.emitCompetitionCreated(saved);
     return saved;
   }
 
@@ -80,13 +79,13 @@ export class EventService {
         { new: true },
       )
       .exec();
-    if (updated) {
-      this.eventGateway.emitParticipantRegistered({
-        type: 'event',
-        item: updated,
-        participant,
-      });
-    }
+    // if (updated) {
+    //   this.eventGateway.emitParticipantRegistered({
+    //     type: 'event',
+    //     item: updated,
+    //     participant,
+    //   });
+    // }
     return updated;
   }
 
@@ -113,13 +112,13 @@ export class EventService {
         { new: true },
       )
       .exec();
-    if (updated) {
-      this.eventGateway.emitParticipantRegistered({
-        type: 'competition',
-        item: updated,
-        participant,
-      });
-    }
+    // if (updated) {
+    //   this.eventGateway.emitParticipantRegistered({
+    //     type: 'competition',
+    //     item: updated,
+    //     participant,
+    //   });
+    // }
     return updated;
   }
 

@@ -12,6 +12,7 @@ import TransactionDialog, {
 import { baseUrl } from "@/lib/client";
 import { uploadFile } from "@/services/file";
 import getThirdwebContract from "@/services/get-contract";
+import { Attribute, Collection } from "@/types";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -32,16 +33,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { mintTo } from "thirdweb/extensions/erc721";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
-
-interface Collection {
-  address: string;
-  name: string;
-}
-
-interface Attribute {
-  trait_type: string;
-  value: string;
-}
 
 // Custom hook for managing attributes
 function useAttributes() {
@@ -134,8 +125,6 @@ export default function Page() {
     if (currentStep === "success" || currentStep === "error") setIsOpen(open);
   };
 
-  const handleFileUpload = (files: File | null) => setFiles(files);
-
   if (!account || loading) return <LoadingScreen />;
 
   const handleContract = (contractAddress: string) => {
@@ -156,7 +145,7 @@ export default function Page() {
           </div>
           <BackButton className="h-fit" to="/" />
         </div>
-        <div className="flex w-full flex-col gap-12 md:flex-row">
+        <div className="flex w-full flex-col gap-4 md:flex-row">
           <div className="flex flex-1 flex-col gap-8">
             {/* FileUpload cho ảnh NFT */}
             <div className="mx-auto w-full max-w-5xl gap-4 rounded-lg border border-dashed bg-white p-4 dark:bg-black">
@@ -310,7 +299,7 @@ export default function Page() {
                 </Label>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <div className="relative mt-2 flex h-24 w-full cursor-pointer items-center gap-4 overflow-hidden rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+                    <div className="relative mt-2 flex h-24 w-full items-center gap-4 overflow-hidden rounded-md border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
                       {selectedOption || (
                         <>
                           <div className="grid h-16 w-16 place-items-center rounded-md bg-neutral-200 dark:bg-neutral-800">
@@ -352,7 +341,7 @@ export default function Page() {
                             You don't have any collections yet.{" "}
                             <Link
                               href="/collection"
-                              className="cursor-pointer text-blue-500 hover:underline dark:text-blue-400"
+                              className="text-blue-500 hover:underline dark:text-blue-400"
                             >
                               Create one
                             </Link>

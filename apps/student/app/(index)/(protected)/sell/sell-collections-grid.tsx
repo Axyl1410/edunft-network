@@ -3,6 +3,7 @@
 import CollectionCard from "@/components/nft/collection-card";
 import { NFTGridLoading } from "@/components/nft/nft-grid";
 import { baseUrl } from "@/lib/client";
+import { Collection, NFT } from "@/types";
 import LoadingScreen from "@workspace/ui/components/loading-screen";
 import { cn } from "@workspace/ui/lib/utils";
 import axios from "axios";
@@ -10,16 +11,6 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
-
-interface Collection {
-  address: string;
-  name: string;
-}
-
-interface NFT {
-  address: string;
-  tokenId: string;
-}
 
 export function SellCollectionsGrid() {
   const account = useActiveAccount();

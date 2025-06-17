@@ -10,11 +10,7 @@ const SwitchNetworkButton = memo(({ onClick }: SwitchNetworkButtonProps) => {
     onClick();
   }, [onClick]);
 
-  return (
-    <Button onClick={handleClick} className="cursor-pointer">
-      Switch network
-    </Button>
-  );
+  return <Button onClick={handleClick}>Switch network</Button>;
 });
 
 SwitchNetworkButton.displayName = "SwitchNetworkButton";

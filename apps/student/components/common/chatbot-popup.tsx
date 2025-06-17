@@ -64,7 +64,7 @@ export default function ChatbotPopup() {
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-600 shadow-lg hover:bg-blue-700 focus:outline-none md:h-12 md:w-12"
           onClick={() => setOpen(true)}
           aria-label="Mở chat"
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
           <Bot className="h-5 w-5 text-white sm:h-7 sm:w-7" />

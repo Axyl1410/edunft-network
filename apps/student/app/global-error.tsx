@@ -10,7 +10,7 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="bg-background text-primary flex h-screen w-full flex-col items-center justify-center gap-4">
+        <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
           <h2>Something went wrong!</h2>
           <p className="max-w-3xl text-balance text-center text-sm/6">
             {error.message}
@@ -21,10 +21,10 @@ export default function GlobalError({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button className="cursor-pointer">Report Error on GitHub</Button>
+              <Button>Report Error on GitHub</Button>
             </a>
             <Button
-              className="cursor-pointer bg-sky-500 hover:bg-sky-600"
+              className="bg-sky-500 hover:bg-sky-600"
               onClick={() => window.location.reload()}
             >
               Refresh

@@ -1,6 +1,7 @@
 import { NFTGridLoading } from "@/components/nft/nft-grid";
 import { baseUrl } from "@/lib/client";
 import { checkCollectionHasNFTs } from "@/services/check-collection-has-nft";
+import { Collection } from "@/types";
 import axios from "axios";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -12,11 +13,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
-
-interface Collection {
-  address: string;
-  name: string;
-}
 
 async function getCollections(): Promise<Collection[]> {
   try {

@@ -3,15 +3,12 @@
 import CollectionCard from "@/components/nft/collection-card";
 import { NFTGridLoading } from "@/components/nft/nft-grid";
 import { baseUrl } from "@/lib/client";
+import { Collection } from "@/types";
 import { cn } from "@workspace/ui/lib/utils";
 import axios from "axios";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface Collection {
-  address: string;
-  name: string;
-}
 
 export default function Page() {
   const [data, setData] = useState<Collection[] | null>(null);
@@ -37,32 +34,57 @@ export default function Page() {
 
   return (
     <div className="my-6">
-      {loading ? (
-        <NFTGridLoading />
-      ) : (
-        <div
-          className={cn(
-            "grid-cols-2 place-items-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
-            data?.length && "grid",
-          )}
-        >
-          {data?.length ? (
-            <>
-              {data.map((collection: Collection) => (
-                <Link
-                  key={collection.address}
-                  href={`/explore/${collection.address}`}
-                  className="w-full"
-                >
-                  <CollectionCard address={collection.address} />
-                </Link>
-              ))}
-            </>
-          ) : (
-            <div>No collections</div>
-          )}
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <NFTGridLoading />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={cn(
+              "grid-cols-2 place-items-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+              data?.length && "grid",
+            )}
+          >
+            {data?.length ? (
+              <>
+                {data.map((collection: Collection, index) => (
+                  <motion.div
+                    key={collection.address}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="w-full"
+                  >
+                    <Link href={`/explore/${collection.address}`}>
+                      <CollectionCard address={collection.address} />
+                    </Link>
+                  </motion.div>
+                ))}
+              </>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                No collections
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
