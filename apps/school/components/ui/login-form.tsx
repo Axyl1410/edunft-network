@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { cn } from "@workspace/ui/lib/utils";
-import Link from "next/link";
 import { WalletConnectButton } from "./wallet-connect-button";
 
 export function LoginForm({
@@ -25,7 +24,6 @@ export function LoginForm({
         <CardContent>
           <div className="grid gap-6">
             <WalletConnectButton />
-           
           </div>
         </CardContent>
       </Card>

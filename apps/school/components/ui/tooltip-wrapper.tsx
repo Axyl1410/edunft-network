@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  TooltipTrigger,
   Tooltip,
   TooltipContent,
+  TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import { cn } from "@workspace/ui/lib/utils";
 import { ComponentProps } from "react";

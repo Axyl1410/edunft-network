@@ -52,7 +52,9 @@ export class AuthService {
 
   async login(
     walletAddress: string,
-  ): Promise<Result<Auth, DatabaseFailure | ValidationFailure>> {
+  ): Promise<
+    Result<Auth, DatabaseFailure | ValidationFailure | NotFoundFailure>
+  > {
     if (!walletAddress) {
       return new Fail(new ValidationFailure('Wallet address'));
     }
@@ -90,7 +92,9 @@ export class AuthService {
   async approveUser(
     adminWalletAddress: string,
     userWalletAddress: string,
-  ): Promise<Result<Auth, DatabaseFailure | ValidationFailure>> {
+  ): Promise<
+    Result<Auth, DatabaseFailure | ValidationFailure | NotFoundFailure>
+  > {
     try {
       const admin = await this.authModel.findOne({
         walletAddress: adminWalletAddress,
@@ -127,7 +131,9 @@ export class AuthService {
     adminWalletAddress: string,
     userWalletAddress: string,
     reason: string,
-  ): Promise<Result<Auth, DatabaseFailure | ValidationFailure>> {
+  ): Promise<
+    Result<Auth, DatabaseFailure | ValidationFailure | NotFoundFailure>
+  > {
     try {
       const admin = await this.authModel.findOne({
         walletAddress: adminWalletAddress,

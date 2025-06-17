@@ -36,16 +36,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setError(null);
         setIsPending(false);
         setUser(data);
-
-        if (data.status === UserStatus.PENDING) {
-          setError(
-            "Tài khoản của bạn đang chờ xác thực. Vui lòng liên hệ admin để được xác thực.",
-          );
-        } else if (data.status === UserStatus.REJECTED) {
-          setError(
-            "Tài khoản của bạn đã bị từ chối. Vui lòng liên hệ admin để biết thêm chi tiết.",
-          );
-        }
       },
       onError: (error) => {
         if (error?.message.includes("401")) {

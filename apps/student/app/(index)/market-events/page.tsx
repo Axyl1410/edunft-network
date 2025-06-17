@@ -2,13 +2,13 @@ import { marketplace_address } from "@/constant";
 import { formatAddress } from "@/lib/utils";
 import getThirdwebContract from "@/services/get-contract";
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import { Table } from "lucide-react";
 import { getContractEvents } from "thirdweb";
 import {
   buyerApprovedForListingEvent,
