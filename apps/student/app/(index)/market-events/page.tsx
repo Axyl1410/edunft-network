@@ -39,7 +39,7 @@ export default async function Page() {
       {events && events.length > 0 ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Mint Events</h3>
+            <h3 className="text-lg font-semibold">Marketplace Events</h3>
             <span className="text-muted-foreground text-sm">
               {events.length} events found
             </span>
@@ -57,7 +57,7 @@ export default async function Page() {
               <TableBody>
                 {events.map((e, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">Transfer</TableCell>
+                    <TableCell className="font-medium">{e.eventName}</TableCell>
                     <TableCell className="font-mono text-sm">
                       {formatAddress(e.address)}
                     </TableCell>

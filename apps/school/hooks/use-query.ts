@@ -4,7 +4,6 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
 
 interface FetchOptions<T>
   extends Omit<UseQueryOptions<T>, "queryKey" | "queryFn"> {
@@ -12,7 +11,7 @@ interface FetchOptions<T>
 }
 
 interface MutationOptions<T, V>
-  extends Omit<UseMutationOptions<T, AxiosError, V>, "mutationFn"> {}
+  extends Omit<UseMutationOptions<T, Error, V>, "mutationFn"> {}
 
 export function useFetch<T>(
   url: string,
@@ -22,11 +21,15 @@ export function useFetch<T>(
   return useQuery<T>({
     queryKey,
     queryFn: async () => {
-      const response = await axios.get(url);
-      if (axios.isAxiosError(response)) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      } catch (error) {
+        throw error;
       }
-      return response.data;
     },
     ...options,
   });
@@ -36,13 +39,23 @@ export function usePost<T, V = any>(
   url: string,
   options?: MutationOptions<T, V>,
 ) {
-  return useMutation<T, AxiosError, V>({
+  return useMutation<T, Error, V>({
     mutationFn: async (data) => {
-      const response = await axios.post(url, data);
-      if (axios.isAxiosError(response)) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      } catch (error) {
+        throw error;
       }
-      return response.data;
     },
     ...options,
   });
@@ -52,13 +65,23 @@ export function usePut<T, V = any>(
   url: string,
   options?: MutationOptions<T, V>,
 ) {
-  return useMutation<T, AxiosError, V>({
+  return useMutation<T, Error, V>({
     mutationFn: async (data) => {
-      const response = await axios.put(url, data);
-      if (axios.isAxiosError(response)) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      try {
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      } catch (error) {
+        throw error;
       }
-      return response.data;
     },
     ...options,
   });
