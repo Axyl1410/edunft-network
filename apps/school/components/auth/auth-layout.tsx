@@ -9,19 +9,21 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { GalleryVerticalEnd } from "lucide-react";
+import Link from "next/link";
 import { LoginForm } from "../ui/login-form";
-import { WalletConnectButton } from "../ui/wallet-connect-button";
 
 interface AuthLayoutProps {
   error: string | null;
   isPending: boolean;
   onDisconnect: () => void;
+  onClearError: () => void;
 }
 
 export function AuthLayout({
   error,
   isPending,
   onDisconnect,
+  onClearError,
 }: AuthLayoutProps) {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -50,6 +52,16 @@ export function AuthLayout({
               >
                 Disconnect
               </Button>
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/register"
+                  onClick={onClearError}
+                  className="underline underline-offset-4"
+                >
+                  Sign up
+                </Link>
+              </div>
             </CardContent>
           </Card>
         ) : isPending ? (

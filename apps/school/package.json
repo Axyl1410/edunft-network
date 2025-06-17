@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-label": "^2.1.3",
     "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.80.7",
@@ -23,8 +24,10 @@
     "nextjs-toploader": "^3.8.16",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.58.0",
     "sonner": "^2.0.3",
     "thirdweb": "^5.102.6",
+    "zod": "^3.25.24",
     "zustand": "^5.0.4"
   },
   "devDependencies": {

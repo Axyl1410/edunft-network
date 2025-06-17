@@ -58,7 +58,7 @@ export function EditForm({ address }: EditFormProps) {
             }}
             onTransactionConfirmed={() => {
               setCurrentStep("success");
-              setMessage("Transaction is being confirmed...");
+              setMessage("Transaction completed successfully!");
               setIsLoading(false);
               toast.success("Owner updated successfully");
               router.push(`/explore/${address}`);

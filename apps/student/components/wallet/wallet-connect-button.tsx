@@ -30,6 +30,7 @@ import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { AccountButton } from "./account-button";
 import { ConnectButton } from "./connect-button";
 import { CreateAccountDialog } from "./create-account-dialog";
+import DisconnectButton from "./disconnect-button";
 import { ErrorDialog } from "./error-dialog";
 import { SwitchNetworkButton } from "./switch-network-button";
 
@@ -438,12 +439,20 @@ export const WalletConnectButton = React.memo(() => {
   }, [connect, theme, wallets]);
 
   const handleDetail = useCallback(async () => {
-    console.log("detail");
     detailsModal.open({
       client: thirdwebClient,
       chains: [FORMA_SKETCHPAD],
       theme: theme === "light" ? "light" : "dark",
       hideSwitchWallet: true,
+      hideDisconnect: true,
+      footer: () => (
+        <>
+          <DisconnectButton className="text-md" />
+          <span className="text-muted-foreground mt-2 flex w-full justify-center text-sm">
+            Made with ❤️ by Axyl team.
+          </span>
+        </>
+      ),
     });
   }, [detailsModal, theme]);
 

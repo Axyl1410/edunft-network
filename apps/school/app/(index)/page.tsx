@@ -1,5 +1,7 @@
 "use client";
 
+import DisconnectButton from "@/components/ui/disconnect-button";
+import { WalletConnectButton } from "@/components/ui/wallet-connect-button";
 import { useFetch } from "@/hooks/use-query";
 
 interface Repository {
@@ -28,6 +30,8 @@ export default function Page() {
         <strong>✨ {data.stargazers_count}</strong>{" "}
         <strong>🍴 {data.forks_count}</strong>
         <div>{isFetching ? "Updating..." : ""}</div>
+        <WalletConnectButton />
+        <DisconnectButton />
       </div>
     </div>
   );

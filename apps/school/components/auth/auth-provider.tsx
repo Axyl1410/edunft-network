@@ -3,6 +3,8 @@
 import { usePost } from "@/hooks/use-query";
 import { baseUrl } from "@/lib/client";
 import { thirdwebClient } from "@/lib/thirdweb";
+import { UserInfo, UserStatus, useUserStore } from "@/store";
+import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import {
   ConnectButton,
@@ -10,7 +12,6 @@ import {
   useActiveWallet,
   useDisconnect,
 } from "thirdweb/react";
-import { WalletConnectButton } from "../ui/wallet-connect-button";
 import { AuthLayout } from "./auth-layout";
 
 interface AuthProviderProps {
@@ -23,18 +24,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { disconnect } = useDisconnect();
+  const setUser = useUserStore((state) => state.setUser);
+  const clearUser = useUserStore((state) => state.clearUser);
+  const user = useUserStore((state) => state.user);
+  const pathname = usePathname();
 
-  const { mutate: login } = usePost<any, { walletAddress: string }>(
+  const { mutate: login } = usePost<UserInfo, { walletAddress: string }>(
     baseUrl + "/auth/login",
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setError(null);
         setIsPending(false);
+        setUser(data);
+
+        if (data.status === UserStatus.PENDING) {
+          setError(
+            "Tài khoản của bạn đang chờ xác thực. Vui lòng liên hệ admin để được xác thực.",
+          );
+        } else if (data.status === UserStatus.REJECTED) {
+          setError(
+            "Tài khoản của bạn đã bị từ chối. Vui lòng liên hệ admin để biết thêm chi tiết.",
+          );
+        }
       },
       onError: (error) => {
-        if (error?.message === "401") {
+        if (error?.message.includes("401")) {
           setError(
-            "Tài khoản của bạn chưa được xác thực. Vui lòng liên hệ admin để được xác thực.",
+            "Tài khoản của bạn đang chờ xác thực. Vui lòng liên hệ admin để được xác thực.",
           );
         } else {
           setError("Đăng nhập thất bại. Vui lòng thử lại sau.");
@@ -55,16 +71,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (wallet) {
       disconnect(wallet);
       setError(null);
+      clearUser();
     }
   };
 
+  const clearError = () => {
+    setError(null);
+  };
+
+  // Show auth layout if:
+  // 1. No wallet connected
+  // 2. Login is pending
+  // 3. User is not approved AND not on register page
+  const shouldShowAuthLayout =
+    error ||
+    !account?.address ||
+    isPending ||
+    (user?.status !== UserStatus.APPROVED && pathname !== "/register");
+
   return (
     <>
-      {!account?.address || error || isPending ? (
+      {shouldShowAuthLayout ? (
         <AuthLayout
           error={error}
           isPending={isPending}
           onDisconnect={handleDisconnect}
+          onClearError={clearError}
         />
       ) : (
         <>{children}</>

@@ -14,6 +14,7 @@ import {
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { AccountButton } from "./account-button";
 import { ConnectButton } from "./connect-button";
+import DisconnectButton from "./disconnect-button";
 import { SwitchNetworkButton } from "./switch-network-button";
 
 const WalletConnectButtonComponent = () => {
@@ -71,6 +72,15 @@ const WalletConnectButtonComponent = () => {
       chains: [FORMA_SKETCHPAD],
       theme: "light",
       hideSwitchWallet: true,
+      hideDisconnect: true,
+      footer: () => (
+        <>
+          <DisconnectButton className="text-md" />
+          <span className="text-muted-foreground mt-2 flex w-full justify-center text-sm">
+            Made with ❤️ by Axyl team.
+          </span>
+        </>
+      ),
     });
   }, [detailsModal]);
 
@@ -79,7 +89,6 @@ const WalletConnectButtonComponent = () => {
       try {
         await wallet.switchChain(FORMA_SKETCHPAD);
       } catch (error) {
-        console.error("Failed to switch chain:", error);
         toast.error(
           "Failed to switch chain. Please ensure your wallet supports this network.",
         );

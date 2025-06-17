@@ -24,7 +24,7 @@ export function useFetch<T>(
       try {
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(response.status.toString());
         }
         return response.json();
       } catch (error) {
@@ -50,7 +50,7 @@ export function usePost<T, V = any>(
           body: JSON.stringify(data),
         });
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(response.status.toString());
         }
         return response.json();
       } catch (error) {
@@ -76,7 +76,7 @@ export function usePut<T, V = any>(
           body: JSON.stringify(data),
         });
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(response.status.toString());
         }
         return response.json();
       } catch (error) {

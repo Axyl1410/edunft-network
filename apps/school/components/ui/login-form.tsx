@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -6,6 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { cn } from "@workspace/ui/lib/utils";
+import Link from "next/link";
 import { WalletConnectButton } from "./wallet-connect-button";
 
 export function LoginForm({
@@ -22,12 +25,7 @@ export function LoginForm({
         <CardContent>
           <div className="grid gap-6">
             <WalletConnectButton />
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
+           
           </div>
         </CardContent>
       </Card>
