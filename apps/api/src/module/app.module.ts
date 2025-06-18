@@ -7,7 +7,7 @@ import { AuthModule } from './auth.module';
 import { CollectionModule } from './collection.module';
 import { EventModule } from './event.module';
 import { FileModule } from './file.module';
-// import { QuestionModule } from './question.module';
+import { QuestionModule } from './question.module';
 import { ReportModule } from './report.module';
 import { UserModule } from './user.module';
 import { VoteModule } from './vote.module';
@@ -30,7 +30,7 @@ import { VoteModule } from './vote.module';
     UserModule,
     VoteModule,
     ReportModule,
-    // QuestionModule,
+    QuestionModule,
     EventModule,
     AuthModule,
   ],
