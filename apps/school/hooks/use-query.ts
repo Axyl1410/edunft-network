@@ -28,7 +28,7 @@ export function useFetch<T>(
             status: response.status,
             statusText: response.statusText,
           };
-          throw new Error(JSON.stringify(errorData));
+          throw Error(JSON.stringify(errorData));
         }
         return response.json();
       } catch (error) {
@@ -59,7 +59,7 @@ export function usePost<T, V = any>(
             statusText: response.statusText,
           };
           console.log(JSON.stringify(errorData));
-          throw new Error(JSON.stringify(errorData));
+          throw Error(JSON.stringify(errorData));
         }
         return response.json();
       } catch (error) {
@@ -89,7 +89,7 @@ export function usePut<T, V = any>(
             status: response.status,
             statusText: response.statusText,
           };
-          throw new Error(JSON.stringify(errorData));
+          throw Error(JSON.stringify(errorData));
         }
         return response.json();
       } catch (error) {

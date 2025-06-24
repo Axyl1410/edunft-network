@@ -10,16 +10,24 @@ import { useEffect, useState } from "react";
 export default function UserListPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    axios.get(baseUrl + "/user/all").then((res) => {
-      setUsers(res.data);
-      setLoading(false);
-    });
+    axios
+      .get(baseUrl + "/user/all")
+      .then((res) => {
+        setUsers(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) return <div className="p-8">Loading...</div>;
+  if (error) return <div className="p-8">Error: {error}</div>;
 
   return (
     <div className="container mx-auto py-8">
