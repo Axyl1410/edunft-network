@@ -82,13 +82,17 @@ export function SellCollectionsGrid() {
         <h1 className="mb-2 text-xl font-bold">Other</h1>
         <div
           className={cn(
-            "grid-cols-2 place-items-center gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+            "grid-cols-2 place-items-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
             data?.holders && data.holders.length > 0 && "grid",
           )}
         >
           {data?.holders && data.holders.length > 0 ? (
             data.holders.map((nft: NFT) => (
-              <Link href={`/sell/${nft.address}`} key={nft.address}>
+              <Link
+                href={`/sell/${nft.address}`}
+                key={nft.address}
+                className="w-full"
+              >
                 <CollectionCard address={nft.address} />
               </Link>
             ))

@@ -38,9 +38,8 @@ export default function BuyListingButton({
 
       await Promise.all([
         axios.post(`${baseUrl}/collections/${account?.address}/holders`, {
-          Address: contractAddress,
-          TokenId: tokenId,
-          name_collection: metadataResult.name,
+          address: contractAddress,
+          tokenId: tokenId,
         }),
         axios.delete(
           `${baseUrl}/collections/${directListing?.creatorAddress}/holders`,
