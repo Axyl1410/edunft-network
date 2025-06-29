@@ -1,6 +1,7 @@
 "use client";
 
 import CollectionCard from "@/components/nft/collection-card";
+import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import { FORMA_SKETCHPAD } from "@/constant";
 import { baseUrl } from "@/lib/client";
 import { thirdwebClient } from "@/lib/thirdweb";
@@ -119,9 +120,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="mt-4 sm:ml-auto sm:mt-0">
-                <Button size="sm" variant="outline">
-                  Connect Wallet
-                </Button>
+                <WalletConnectButton />
               </div>
             </>
           ) : user && user.profilePicture ? (
