@@ -21,7 +21,7 @@ export default function DisconnectButton({ className }: DisconnectButtonProps) {
   };
 
   return (
-    <div className="flex w-full">
+    <div className="group flex w-full">
       <Button
         onClick={handleDisconnect}
         variant="ghost"
@@ -31,7 +31,7 @@ export default function DisconnectButton({ className }: DisconnectButtonProps) {
         )}
       >
         <div className="h-6 w-6">
-          <LogOutIcon className="!h-6 !w-6 text-[#6f6d78]" />
+          <LogOutIcon className="!h-6 !w-6 text-[#6f6d78] group-hover:text-[#3385ff]" />
         </div>
         Disconnect
       </Button>

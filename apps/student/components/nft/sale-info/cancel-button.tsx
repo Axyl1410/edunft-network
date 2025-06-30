@@ -2,6 +2,7 @@ import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
 import { MARKETPLACE } from "@/lib/thirdweb";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { cancelListing } from "thirdweb/extensions/marketplace";
 import { TransactionButton } from "thirdweb/react";
@@ -14,6 +15,7 @@ const CancelButton: React.FC<CancelButtonProps> = ({ id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<TransactionStep>("sent");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   if (id === undefined) return null;
 
@@ -42,6 +44,7 @@ const CancelButton: React.FC<CancelButtonProps> = ({ id }) => {
         onTransactionConfirmed={(txResult) => {
           setCurrentStep("success");
           console.log(txResult);
+          router.refresh();
         }}
       >
         Cancel Listing
