@@ -408,10 +408,6 @@ export const WalletConnectButton = React.memo(() => {
     () => [
       inAppWallet({
         auth: { options: ["google", "email", "facebook", "apple", "github"] },
-        // smartAccount: {
-        //   chain: FORMA_SKETCHPAD,
-        //   sponsorGas: true,
-        // },
       }),
       createWallet("io.metamask"),
       createWallet("com.coinbase.wallet"),
@@ -431,10 +427,6 @@ export const WalletConnectButton = React.memo(() => {
       theme: theme === "light" ? "light" : "dark",
       size: "compact",
       wallets: wallets,
-      // accountAbstraction: {
-      //   chain: FORMA_SKETCHPAD,
-      //   sponsorGas: true,
-      // },
     });
   }, [connect, theme, wallets]);
 
