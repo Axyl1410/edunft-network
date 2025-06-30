@@ -25,7 +25,10 @@ export default function DisconnectButton({ className }: DisconnectButtonProps) {
       <Button
         onClick={handleDisconnect}
         variant="ghost"
-        className={cn(className, "flex items-center !gap-3 !p-3")}
+        className={cn(
+          className,
+          "flex w-full items-center justify-start !gap-3 !p-3",
+        )}
       >
         <div className="h-6 w-6">
           <LogOutIcon className="!h-6 !w-6 text-[#6f6d78]" />
