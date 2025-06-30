@@ -4,7 +4,8 @@ import Events from "@/components/nft/events";
 import { thirdwebClientPublic } from "@/lib/thirdweb";
 import { formatAddress } from "@/lib/utils";
 import { Attribute } from "@/types";
-import { Badge } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import { Badge, Flag } from "lucide-react";
 import { motion } from "motion/react";
 import { NFT } from "thirdweb";
 import { MediaRenderer } from "thirdweb/react";
@@ -92,6 +93,20 @@ export function NFTDetails({
             <p className="text-text font-medium dark:text-white/90">
               {nft.owner ? formatAddress(nft.owner) : "Unknown"}
             </p>
+          </div>
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="destructive"
+              size="sm"
+              className="flex items-center gap-2"
+              onClick={() => {
+                // TODO: Implement report functionality
+                console.log("Report button clicked");
+              }}
+            >
+              <Flag className="h-4 w-4" />
+              Report
+            </Button>
           </div>
         </motion.div>
       </motion.div>

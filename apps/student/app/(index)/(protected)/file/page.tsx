@@ -486,7 +486,7 @@ export default function Page() {
             </DialogContent>
           </Dialog>
           <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>
                   <p className="text-lg font-semibold">

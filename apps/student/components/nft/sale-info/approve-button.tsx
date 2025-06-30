@@ -2,6 +2,7 @@ import TransactionDialog, {
   TransactionStep,
 } from "@/components/wallet/transaction-dialog";
 import { MARKETPLACE } from "@/lib/thirdweb";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ThirdwebContract } from "thirdweb";
 import { setApprovalForAll } from "thirdweb/extensions/erc721";
@@ -15,6 +16,7 @@ export default function ApprovalButton({ contract }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<TransactionStep>("sent");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
     if (currentStep === "success" || currentStep === "error") setIsOpen(open);
@@ -42,6 +44,7 @@ export default function ApprovalButton({ contract }: Props) {
         onTransactionConfirmed={(txResult) => {
           setCurrentStep("success");
           console.log(txResult);
+          router.refresh();
         }}
       >
         Approve
