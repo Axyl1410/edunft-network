@@ -1,5 +1,7 @@
 import { useUserStore } from "@/store";
 import { Button } from "@workspace/ui/components/button";
+import { cn } from "@workspace/ui/lib/utils";
+import { LogOutIcon } from "lucide-react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 
 interface DisconnectButtonProps {
@@ -19,8 +21,17 @@ export default function DisconnectButton({ className }: DisconnectButtonProps) {
   };
 
   return (
-    <Button onClick={handleDisconnect} variant="outline" className={className}>
-      Disconnect
-    </Button>
+    <div className="flex w-full">
+      <Button
+        onClick={handleDisconnect}
+        variant="ghost"
+        className={cn(className, "flex items-center !gap-3 !p-3")}
+      >
+        <div className="h-6 w-6">
+          <LogOutIcon className="!h-6 !w-6 text-[#6f6d78]" />
+        </div>
+        Disconnect
+      </Button>
+    </div>
   );
 }
