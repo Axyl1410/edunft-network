@@ -296,7 +296,7 @@ export default function FormAskQuestion({
                   </label>
                   <div className="rounded border">
                     <Editor
-                      apiKey="dy7n25j6dc5ptz1vvsl9nmxdzobyxut20g2e2debmf99cuvk" // Bạn cần đăng ký key tại https://www.tiny.cloud/
+                      apiKey={process.env.NEXt_PUBLIC_POST}
                       value={description}
                       onEditorChange={(content) => setDescription(content)}
                       init={{
