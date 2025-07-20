@@ -309,6 +309,7 @@ export default function FormAskQuestion({
                           "link",
                           "image",
                           "charmap",
+
                           "preview",
                           "anchor",
                           "searchreplace",
