@@ -22,4 +22,4 @@ export const FORMA_SKETCHPAD: Chain = defineChain({
 	testnet: true,
 });
 
-export const SEPOLIA_URL = "https://sepolia-blockscout.lisk.com";
+export const FORMASCAN_URL = "https://sepolia-blockscout.lisk.com";
